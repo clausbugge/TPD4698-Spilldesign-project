@@ -326,7 +326,7 @@ public class InputHandler : MonoBehaviour {
         if (state != (int)HERO_STATE.DASHING)
         {
             newVelocity = new Vector3(0, 0, 0);
-            float speed = 1000 * Time.fixedDeltaTime;
+            float speed = 200 * Time.fixedDeltaTime;
             if (inputs.up)
             {
                 newVelocity.y += 1;

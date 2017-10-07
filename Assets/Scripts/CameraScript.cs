@@ -11,11 +11,11 @@ public class CameraScript : MonoBehaviour {
         targetOffset = new Vector3(0, 0, 0);
 	}
 	// Update is called once per frame
-	void LateUpdate () {
+	void FixedUpdate () {
         float followSpeed = 1.0f;
         Vector3 distanceVector = target.transform.position+(new Vector3(targetOffset.x, targetOffset.y,0)) - transform.position;
         float distanceFromTarget = distanceVector.magnitude;
-        transform.Translate(new Vector3(distanceVector.x, distanceVector.y, 0)*distanceFromTarget*followSpeed*Time.deltaTime);
+        transform.Translate(new Vector3(distanceVector.x, distanceVector.y, 0)*distanceFromTarget*followSpeed*Time.fixedDeltaTime);
         targetOffset = new Vector3(0, 0, 0);
 	}
 }
