@@ -246,6 +246,7 @@ public class InputHandler : MonoBehaviour {
         dasher.transform.parent = this.transform;
         Camera.main.GetComponent<CameraScript>().target = dasher;
         dasher.transform.Translate(new Vector3(0, 0, 0.2f));
+        dasher.GetComponent<BoxCollider2D>().size = new Vector2(1.0f, 1.0f);
         dasher.transform.transform.localPosition = new Vector3(0, 0, 0);
         dasher.GetComponent<SpriteRenderer>().sprite = dashSprite;
         dasher.GetComponent<SpriteRenderer>().sortingOrder = 1;
@@ -264,12 +265,12 @@ public class InputHandler : MonoBehaviour {
             case (int)GHOST_STATE.HUMAN:
                 gameObject.GetComponent<SpriteRenderer>().sprite = humanIdleDashingSprite;
                 dashSprite = humanDashingSprite;
-                dashLayer = LayerMask.NameToLayer("Dashing Human");
+                dashLayer = LayerMask.NameToLayer("Human Dasher");
                 break;
             case (int)GHOST_STATE.GHOST:
                 gameObject.GetComponent<SpriteRenderer>().sprite = ghostIdleDashingSprite;
                 dashSprite = ghostDashingSprite;
-                dashLayer = LayerMask.NameToLayer("Dashing Ghost");
+                dashLayer = LayerMask.NameToLayer("Ghost Dasher");
                 break;
             default:
                 print("SOMETHING BROKE! invalid ghost state(and game will probably break because of it..."); 

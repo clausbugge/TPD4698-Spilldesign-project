@@ -13,10 +13,10 @@ TagManager:
   - UI
   - 
   - 
-  - Dark Floor
-  - Light Floor
-  - Dashing Human
-  - Dashing Ghost
+  - Floor
+  - Unlit Floor
+  - Ghost Dasher
+  - Human Dasher
   - 
   - 
   - 
