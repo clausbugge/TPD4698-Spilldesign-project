@@ -16,6 +16,6 @@ public class CameraScript : MonoBehaviour {
         Vector3 distanceVector = target.transform.position+(new Vector3(targetOffset.x, targetOffset.y,0)) - transform.position;
         float distanceFromTarget = distanceVector.magnitude;
         transform.Translate(new Vector3(distanceVector.x, distanceVector.y, 0)*distanceFromTarget*followSpeed*Time.fixedDeltaTime);
-        targetOffset = new Vector3(0, 0, 0);
+        //targetOffset = new Vector3(0, 0, 0);
 	}
 }
