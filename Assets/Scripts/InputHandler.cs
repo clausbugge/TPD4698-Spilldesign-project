@@ -53,11 +53,13 @@ public class InputHandler : MonoBehaviour {
     private int ghostState;
     private float dt;
     private GameObject flashLightChild;
+    private GameObject ghostHighlightChild;
     private Inputs inputs;
     private int direction;
     private void Awake()
     {
         flashLightChild = transform.GetChild(0).gameObject;
+        ghostHighlightChild = transform.GetChild(1).gameObject;
         inputs.up = false;
         inputs.down = false;
         inputs.left = false;
@@ -76,7 +78,9 @@ public class InputHandler : MonoBehaviour {
     {
         dt = Time.deltaTime;
         checkInput();
-        
+
+        //if is in ghost state
+        updateGhostHighlight();
         switch (state)
         {
             case (int)HERO_STATE.IDLE:
@@ -85,6 +89,7 @@ public class InputHandler : MonoBehaviour {
                 break;
             case (int)HERO_STATE.MOVING:
                 updateFlashlight();
+                
                 updateCamera();
                 if (inputs.space) //can't dash unless you're moving(aka:holding a direction, can change l8r if we want OBVIOUSLY!)
                 {
@@ -128,7 +133,21 @@ public class InputHandler : MonoBehaviour {
             inputs.space = true;
         }
     }
+    bool increase = true;
 
+    private void updateGhostHighlight()
+    {
+
+        ghostHighlightChild.GetComponent<Light>().intensity += increase ? 1.0f*dt : -1.0f*dt;
+            //Random.Range(0.005f, 0.04f) : 1
+            //-Random.Range(0.005f, 0.04f);
+        if (ghostHighlightChild.GetComponent<Light>().intensity >= 2.0f 
+            || ghostHighlightChild.GetComponent<Light>().intensity <= 1.0f
+            )
+        {
+            increase = !increase;
+        }
+    }
     private void updateFlashlight()
     {
         int inputsHeld = 0;
@@ -150,12 +169,12 @@ public class InputHandler : MonoBehaviour {
         }
         if (inputs.right)
         {
-            newXRot += 0.0f;
+            newXRot += 360.0f;
             inputsHeld++;
         }
         if (inputsHeld != 0)
         {
-            newXRot %= 360;
+            //newXRot %= 360;
             newXRot /= inputsHeld;
             if (!Mathf.Approximately(flashLightChild.transform.localRotation.x, newXRot)) //don't do it if flashlight already facing correct location
             {
