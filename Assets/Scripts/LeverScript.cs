@@ -6,8 +6,9 @@ public class LeverScript : MonoBehaviour
 {
 
 
-    private bool Activated = false;
+    private bool Activated = true;
     public List<GameObject> triggerList;
+    private bool playerOnTrigger = false;
     // Use this for initialization
     void Start()
     {
@@ -16,6 +17,11 @@ public class LeverScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (playerOnTrigger && Input.GetKeyDown(KeyCode.F))
+        {
+            Activated = !Activated;
+            onTrigger();
+        }
     }
 
     void onTrigger()
@@ -28,16 +34,19 @@ public class LeverScript : MonoBehaviour
             }
         }
     }
-    private void OnCollisionStay2D(Collision2D collision)
+
+    public void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                Activated = !Activated;
-                onTrigger();
-            }
+            playerOnTrigger = true;
         }
     }
-
+    public void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            playerOnTrigger = false;
+        }
+    }
 }

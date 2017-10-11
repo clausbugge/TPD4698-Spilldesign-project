@@ -54,12 +54,15 @@ public class InputHandler : MonoBehaviour {
     private float dt;
     private GameObject flashLightChild;
     private GameObject ghostHighlightChild;
+    private Light ghostHighlightChildComponent;
     private Inputs inputs;
     private int direction;
     private void Awake()
     {
         flashLightChild = transform.GetChild(0).gameObject;
         ghostHighlightChild = transform.GetChild(1).gameObject;
+        ghostHighlightChildComponent = ghostHighlightChild.GetComponent<Light>();
+        ghostHighlightChildComponent.enabled = false;
         inputs.up = false;
         inputs.down = false;
         inputs.left = false;
@@ -305,10 +308,12 @@ public class InputHandler : MonoBehaviour {
                 case (int)GHOST_STATE.HUMAN:
                     gameObject.GetComponent<SpriteRenderer>().sprite = ghostSprite;
                     ghostState = (int)GHOST_STATE.GHOST;
+                    ghostHighlightChildComponent.enabled = true;
                     break;
                 case (int)GHOST_STATE.GHOST:
                     gameObject.GetComponent<SpriteRenderer>().sprite = humanSprite;
                     ghostState = (int)GHOST_STATE.HUMAN;
+                    ghostHighlightChildComponent.enabled = false;
                     break;
                 default:
                     print("SOMETHING BROKE! invalid ghost state(and game will probably break because of it...");

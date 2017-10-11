@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Triggerable : MonoBehaviour {
 
-    public bool triggered = false;
+    public bool triggered;
 	// Use this for initialization
 	void Start () {
 		
