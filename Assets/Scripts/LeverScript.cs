@@ -6,7 +6,7 @@ public class LeverScript : MonoBehaviour
 {
 
 
-    private bool Activated = true;
+    //private bool Activated = true;
     public List<GameObject> triggerList;
     private bool playerOnTrigger = false;
     // Use this for initialization
@@ -19,7 +19,6 @@ public class LeverScript : MonoBehaviour
     {
         if (playerOnTrigger && Input.GetKeyDown(KeyCode.F))
         {
-            Activated = !Activated;
             onTrigger();
         }
     }
@@ -30,7 +29,7 @@ public class LeverScript : MonoBehaviour
         {
             if (obj != null)
             {
-                obj.GetComponent<Triggerable>().setTriggered(Activated);
+                obj.GetComponent<Triggerable>().startTrigger();
             }
         }
     }

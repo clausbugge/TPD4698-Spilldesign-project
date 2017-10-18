@@ -4,27 +4,8 @@ using UnityEngine;
 
 public class Triggerable : MonoBehaviour {
 
-    public bool triggered;
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-    public void setTriggered(bool triggered)
+    public void startTrigger()//GameObject triggeringObject)
     {
-        gameObject.GetComponentInChildren<Light>().enabled = triggered;
-        if(!triggered)
-        {
-            gameObject.layer = LayerMask.NameToLayer("Unlit Floor");
-        }
-        else
-        {
-            gameObject.layer = LayerMask.NameToLayer("Floor");
-        }
+        gameObject.SendMessage("trigger",SendMessageOptions.DontRequireReceiver);//, triggeringObject);
     }
 }

@@ -37,7 +37,7 @@ struct Inputs
 }
 
 public class InputHandler : MonoBehaviour {
-
+    public LayerMask soup;
     public int moveSpeed = 1;
     public Sprite humanIdleDashingSprite; //idle hero sprite when he is dashing
     public Sprite ghostIdleDashingSprite; //idle ghost sprite when he is dashing
@@ -56,7 +56,7 @@ public class InputHandler : MonoBehaviour {
     private GameObject ghostHighlightChild;
     private Light ghostHighlightChildComponent;
     private Inputs inputs;
-    private int direction;
+   // private int direction;
     private void Awake()
     {
         flashLightChild = transform.GetChild(0).gameObject;
@@ -67,7 +67,7 @@ public class InputHandler : MonoBehaviour {
         inputs.down = false;
         inputs.left = false;
         inputs.right = false;
-        direction = (int)MOVE_DIRECTION.LEFT;
+       // direction = (int)MOVE_DIRECTION.LEFT;
         ghostState = (int)GHOST_STATE.HUMAN;
     }
 
@@ -76,12 +76,47 @@ public class InputHandler : MonoBehaviour {
         state = (int)HERO_STATE.IDLE;
 	}
 
+    int findMask(string[] layers, bool flipped = false)
+    {
+        int layerMask = 0;
+        foreach (var layer in layers)
+        {
+            layerMask += 1 << LayerMask.NameToLayer(layer);
+        }
+        return flipped ? ~layerMask : layerMask;
+    }
+
+
     // Update is called once per frame
     void Update()
     {
         dt = Time.deltaTime;
         checkInput();
-
+        Light[] lights =GameObject.FindObjectsOfType<Light>();
+        LayerMask lightStopperMask = findMask(new string[] { "default" });
+        bool isLighted = false;
+        foreach (Light light in lights)
+        {
+            if (light.isActiveAndEnabled)
+            {
+                float distance = ((Vector2)light.transform.position - (Vector2)transform.position).magnitude;
+                Ray2D ray = new Ray2D();
+                ray.origin = transform.position;
+                ray.direction = (light.transform.position - transform.position).normalized;
+                if (!Physics2D.Raycast(ray.origin, ray.direction, distance, soup))
+                {
+                    isLighted = true;
+                }
+            }
+        }
+        if (isLighted)
+        {
+            print("light");
+        }
+        if (!isLighted)
+        {
+            print("dark");
+        }
         //if is in ghost state
         updateGhostHighlight();
         switch (state)
@@ -242,7 +277,7 @@ public class InputHandler : MonoBehaviour {
     }
     IEnumerator dashToDasher()
     {
-        float smoothDelta = 0.0f;
+       // float smoothDelta = 0.0f;
         float oldSmoothPos = 0.0f;
         float smoothPos = 0.0f;
         int power = 4;
@@ -254,7 +289,7 @@ public class InputHandler : MonoBehaviour {
             smoothPos = pd * pd * (3 - 2 * pd);
             smoothPos = Mathf.Pow(smoothPos, power); //hype function
             // smoothPos = pd * pd;
-            smoothDelta = smoothPos - oldSmoothPos;
+           // smoothDelta = smoothPos - oldSmoothPos;
             oldSmoothPos = smoothPos;
             //transform.Translate(newVelocity.normalized * smoothDelta * dashRange);
             yield return 0;
