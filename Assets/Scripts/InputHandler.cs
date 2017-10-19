@@ -48,7 +48,7 @@ public class InputHandler : MonoBehaviour {
     public float dashTimer; //dashtime in seconds
     public float dashRange; //dashrange in unity units
     public Material dasherMaterial;
-    private Vector3 newVelocity;
+    private Vector2 newVelocity;
     private int state;
     private int ghostState;
     private float dt;
@@ -58,9 +58,15 @@ public class InputHandler : MonoBehaviour {
     private float flickerPos;
     private float flickerSize;
     private Inputs inputs;
-   // private int direction;
+    private Vector2 breakingPoint; //for where human/ghost enters dark/light
+    //private float timeAllowedOutside; //time in seconds for how long player can be in wrong zone
+    //private float timeSpentOutside; //how long in seconds player has been outside allowed zone
+    private float distanceAllowedOutside; //how far player can travelled from safe zone. better than time spent outside methinks.
+                                          //private float distanceFromBreakingPoint; //how far player has travelled from safe zone. better than time spent outside methinks.
+                                          // private int direction;
     private void Awake()
     {
+        
         flashLightChild = transform.GetChild(0).gameObject;
         ghostHighlightChild = transform.GetChild(1).gameObject;
         ghostHighlightChildComponent = ghostHighlightChild.GetComponent<Light>();
@@ -71,6 +77,8 @@ public class InputHandler : MonoBehaviour {
         inputs.right = false;
        // direction = (int)MOVE_DIRECTION.LEFT;
         ghostState = (int)GHOST_STATE.HUMAN;
+        breakingPoint = Vector2.zero; //TODO: can have repercussions once every blue moon
+        distanceAllowedOutside = 2.0f;
     }
 
     // Use this for initialization
@@ -329,9 +337,9 @@ public class InputHandler : MonoBehaviour {
         GameObject dasher = createDasher(dashSprite, dashLayer);
         yield return StartCoroutine(dashAway(dasher));
         bool dasherInDark = isPointInDark(dasher.transform.position);
-        if (dasherInDark == swapOnDarkRoom)
+        if (dasherInDark == swapOnDarkRoom) //Swap successful
         {
-            
+            breakingPoint = Vector2.zero;
             yield return StartCoroutine(dashToDasher());
             switch (ghostState)
             {
@@ -380,8 +388,8 @@ public class InputHandler : MonoBehaviour {
         }
         if (state != (int)HERO_STATE.DASHING)
         {
-            newVelocity = new Vector3(0, 0, 0);
-            float speed = 200 * Time.fixedDeltaTime;
+            newVelocity = new Vector2(0, 0);
+            float speed = 4;
             if (inputs.up)
             {
                 newVelocity.y += 1;
@@ -402,7 +410,20 @@ public class InputHandler : MonoBehaviour {
                 (int)HERO_STATE.IDLE :
                 (int)HERO_STATE.MOVING;
             newVelocity = newVelocity.normalized * speed;
-            gameObject.GetComponent<Rigidbody2D>().velocity = newVelocity;
+            bool nextPosInDark = isPointInDark(transform.position+new Vector3(newVelocity.x, newVelocity.y,0)*Time.fixedDeltaTime);
+            
+            switch(ghostState)
+            {
+                case (int)GHOST_STATE.GHOST: //TODO: refactor
+                    handleVelocity(nextPosInDark);
+                    break;
+                case (int)GHOST_STATE.HUMAN:
+                    handleVelocity(!nextPosInDark);
+                    break;
+                default:
+                    break;
+            }
+            //gameObject.GetComponent<Rigidbody2D>().velocity = newVelocity;
             //gameObject.transform.Translate(newVelocity);
 
             // float maxSpeed = 4;
@@ -428,4 +449,29 @@ public class InputHandler : MonoBehaviour {
             //}
         }
     }
+    private void handleVelocity(bool moveNextFrame) //should only be called from fixedUpdate
+    {
+        gameObject.GetComponent<Rigidbody2D>().velocity = newVelocity;
+        float distanceFromBreakingPoint = (transform.position - new Vector3(breakingPoint.x, breakingPoint.y, 0)).magnitude;
+        print(distanceFromBreakingPoint);
+        if (moveNextFrame)
+        {
+            breakingPoint = Vector2.zero;
+        }
+        else if (breakingPoint == Vector2.zero)
+        {
+            breakingPoint = transform.position;
+        }
+        else if (distanceFromBreakingPoint > distanceAllowedOutside)
+        {
+            transform.position = breakingPoint;
+        }
+        else
+        {
+            //print((distanceAllowedOutside - distanceFromBreakingPoint) / distanceFromBreakingPoint);
+
+            gameObject.GetComponent<Rigidbody2D>().velocity *= ((distanceAllowedOutside*1.1f) - distanceFromBreakingPoint) / (distanceAllowedOutside * 1.1f);
+        }
+    }
+                        
 }
