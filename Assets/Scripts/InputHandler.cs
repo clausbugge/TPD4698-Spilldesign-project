@@ -37,7 +37,7 @@ struct Inputs
 }
 
 public class InputHandler : MonoBehaviour {
-    public LayerMask soup;
+   // public LayerMask soup;
     public int moveSpeed = 1;
     public Sprite humanIdleDashingSprite; //idle hero sprite when he is dashing
     public Sprite ghostIdleDashingSprite; //idle ghost sprite when he is dashing
@@ -86,36 +86,39 @@ public class InputHandler : MonoBehaviour {
         return flipped ? ~layerMask : layerMask;
     }
 
+    bool isPointInDark(Vector3 point) //TODO: Will be converted to vec2 in function. maybe rewrite whole game to use 3d physics (some weakness with 2d)
+    {
+        Light[] lights = GameObject.FindObjectsOfType<Light>();
+     //   LayerMask lightStopperMask = findMask(new string[] { "default" });
+        foreach (Light light in lights)
+        {
+            if(light.name=="Ghost Highlight") //TODO: slightly hacky. would be better with proper handler for light(low-prio)
+            {
+                continue;
+            }
+            if (light.isActiveAndEnabled)
+            {
+                float distance = ((Vector2)light.transform.position - (Vector2)point).magnitude;
+                Ray2D ray = new Ray2D();
+                ray.origin = point;
+                ray.direction = (light.transform.position - point).normalized;
+                if (!Physics2D.Raycast(ray.origin, ray.direction, distance))//, soup))
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     // Update is called once per frame
     void Update()
     {
         dt = Time.deltaTime;
         checkInput();
-        Light[] lights =GameObject.FindObjectsOfType<Light>();
-        LayerMask lightStopperMask = findMask(new string[] { "default" });
-        bool isLighted = false;
-        foreach (Light light in lights)
+        if (isPointInDark(transform.position))
         {
-            if (light.isActiveAndEnabled)
-            {
-                float distance = ((Vector2)light.transform.position - (Vector2)transform.position).magnitude;
-                Ray2D ray = new Ray2D();
-                ray.origin = transform.position;
-                ray.direction = (light.transform.position - transform.position).normalized;
-                if (!Physics2D.Raycast(ray.origin, ray.direction, distance, soup))
-                {
-                    isLighted = true;
-                }
-            }
-        }
-        if (isLighted)
-        {
-            print("light");
-        }
-        if (!isLighted)
-        {
-            print("dark");
+            //move away from light/dark, depending on ghost state
         }
         //if is in ghost state
         updateGhostHighlight();
@@ -299,16 +302,16 @@ public class InputHandler : MonoBehaviour {
 
     private GameObject createDasher(Sprite dashSprite, int dashLayer)
     {
-        GameObject dasher = new GameObject("dasher", typeof(SpriteRenderer), typeof(BoxCollider2D), typeof(Rigidbody2D), typeof(DashScript));
+        GameObject dasher = new GameObject("dasher", typeof(SpriteRenderer));//, typeof(BoxCollider2D), typeof(Rigidbody2D), typeof(DashScript));
         dasher.transform.parent = this.transform;
         Camera.main.GetComponent<CameraScript>().target = dasher;
         dasher.transform.Translate(new Vector3(0, 0, 0.2f));
-        dasher.GetComponent<BoxCollider2D>().size = new Vector2(1.0f, 1.0f);
+        //dasher.GetComponent<BoxCollider2D>().size = new Vector2(1.0f, 1.0f);
         dasher.transform.transform.localPosition = new Vector3(0, 0, 0);
         dasher.GetComponent<SpriteRenderer>().sprite = dashSprite;
         dasher.GetComponent<SpriteRenderer>().sortingOrder = 1;
-        dasher.GetComponent<BoxCollider2D>().isTrigger = true;
-        dasher.layer = dashLayer;
+        //dasher.GetComponent<BoxCollider2D>().isTrigger = true;
+        //dasher.layer = dashLayer;
         return dasher;
     }
 
@@ -317,17 +320,20 @@ public class InputHandler : MonoBehaviour {
         state = (int)HERO_STATE.DASHING;
         Sprite dashSprite = null;
         int dashLayer = 0;
+        bool swapOnDarkRoom = true;
         switch (ghostState)
         {
             case (int)GHOST_STATE.HUMAN:
                 gameObject.GetComponent<SpriteRenderer>().sprite = humanIdleDashingSprite;
                 dashSprite = humanDashingSprite;
                 dashLayer = LayerMask.NameToLayer("Human Dasher");
+                swapOnDarkRoom = true;
                 break;
             case (int)GHOST_STATE.GHOST:
                 gameObject.GetComponent<SpriteRenderer>().sprite = ghostIdleDashingSprite;
                 dashSprite = ghostDashingSprite;
                 dashLayer = LayerMask.NameToLayer("Ghost Dasher");
+                swapOnDarkRoom = false;
                 break;
             default:
                 print("SOMETHING BROKE! invalid ghost state(and game will probably break because of it..."); 
@@ -335,8 +341,9 @@ public class InputHandler : MonoBehaviour {
         }
         GameObject dasher = createDasher(dashSprite, dashLayer);
         yield return StartCoroutine(dashAway(dasher));
-        if (dasher.GetComponent<DashScript>().isInNewFloor())
+        if (isPointInDark(dasher.transform.position) == swapOnDarkRoom)
         {
+            
             yield return StartCoroutine(dashToDasher());
             switch (ghostState)
             {
@@ -355,7 +362,7 @@ public class InputHandler : MonoBehaviour {
                     break;
             }
         }
-        if (!dasher.GetComponent<DashScript>().isInNewFloor())
+        if (isPointInDark(dasher.transform.position) != swapOnDarkRoom)
         {
             yield return StartCoroutine(dashToStart(dasher));
             switch (ghostState)

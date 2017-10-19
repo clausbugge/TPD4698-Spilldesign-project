@@ -10,18 +10,28 @@ public class door : MonoBehaviour {
     {
         moving = true;
         Vector3 startRot = transform.localRotation.eulerAngles;
-        float angle = 0;
+        float oldAngle = 0;
+        float newAngle = 0;
         float deltaAngle = 0;
         float anglePrSec = 45;
         float desiredAngles = 90;
+        float duration = desiredAngles / anglePrSec;
         Vector3 around = transform.TransformPoint(new Vector3(.5f, -.5f, 0));
-        while (angle < desiredAngles)
+        for (float i = 0; i < duration; i+=Time.deltaTime)
         {
-            deltaAngle = anglePrSec * Time.deltaTime;
-            angle += deltaAngle;
+            float v = i / duration;
+            //v = v * v * (3 - 2 * v); //smoothify
+            v = v * v * v;
+            oldAngle = newAngle;
+            newAngle = (desiredAngles * v) + (0 * (1 - v));
+            deltaAngle = newAngle -oldAngle;
+            //angle += deltaAngle;
             transform.RotateAround(around, direction, deltaAngle);
+            
             yield return null;
         }
+
+        transform.RotateAround(around, direction, desiredAngles - newAngle); //make sure we have correct angle (error margin based on fps)
         moving = false;
     }
 
