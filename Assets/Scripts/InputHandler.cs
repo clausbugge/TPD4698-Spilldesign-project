@@ -55,6 +55,8 @@ public class InputHandler : MonoBehaviour {
     private GameObject flashLightChild;
     private GameObject ghostHighlightChild;
     private Light ghostHighlightChildComponent;
+    private float flickerPos;
+    private float flickerSize;
     private Inputs inputs;
    // private int direction;
     private void Awake()
@@ -174,38 +176,13 @@ public class InputHandler : MonoBehaviour {
             inputs.space = true;
         }
     }
-    bool increase = true;
-    float yo = 0;
-    float yoey = 0;
     private void updateGhostHighlight()
     {
-        //ghostHighlightChild.GetComponent<Light>().intensity += increase ? 0.35f*dt : -0.35f*dt;
-        //Random.Range(0.005f, 0.04f) : 1
-        //-Random.Range(0.005f, 0.04f);
-        float posRange = 0.04f;
-        float flickerSpeed = 0.4f * Time.deltaTime;
-        Vector3 curPos = ghostHighlightChild.transform.localPosition;
-        float peace = (curPos.x + posRange) / (posRange * 2);
-        //ghostHighlightChild.transform.localPosition = new Vector3(Random.Range(-0.04f, 0.04f), Random.Range(-0.04f, 0.04f), -1.0f); //experimental..
-        //Vector2 flickerDirection = new Vector2(Random.Range(((curPos.x + posRange) / (posRange * 2.0f)), 1.0f-((curPos.x + posRange) / (posRange * 2.0f))), 0);
-        //print(flickerDirection.x);
-        //Random.Range(-flickerSpeed * (curPos.y / posRange), flickerSpeed * (curPos.y / posRange)), 0);
-        //ghostHighlightChild.transform.localPosition += new Vector3(flickerSpeed * flickerDirection.x, flickerSpeed * flickerDirection.x), 0, 0);
-        yo+= Time.deltaTime*Random.Range(-1,2);
-        ghostHighlightChild.transform.localPosition = new Vector3(Mathf.Sin(yo *3*Mathf.PI) * 0.08f, 
-                                                                  Mathf.Cos(yo * 3 * Mathf.PI) * 0.08f, -1.0f);
-        yoey+= Time.deltaTime*Random.Range(-1, 2);
-        ghostHighlightChild.GetComponent<Light>().intensity = (Mathf.Sin(yoey*2)+1)*0.4f+0.8f;
-        //if (ghostHighlightChild.GetComponent<Light>().intensity >= 1.2f)
-        //{
-        //    ghostHighlightChild.GetComponent<Light>().intensity = 1.19f;
-        //    increase = !increase;
-        //}
-        //if (ghostHighlightChild.GetComponent<Light>().intensity <= 0.8f)
-        //{
-        //    ghostHighlightChild.GetComponent<Light>().intensity = 0.81f;
-        //    increase = !increase;
-        //}
+        flickerPos+= Time.deltaTime*Random.Range(-1,2);
+        ghostHighlightChild.transform.localPosition = new Vector3(Mathf.Sin(flickerPos * 3 * Mathf.PI) * 0.08f,
+                                                                  Mathf.Cos(flickerPos * 3 * Mathf.PI) * 0.08f, -1.0f);
+        flickerSize+= Time.deltaTime*Random.Range(-1, 2);
+        ghostHighlightChild.GetComponent<Light>().intensity = (Mathf.Sin(flickerSize * 2) + 1) * 0.4f + 0.8f;
     }
     private void updateFlashlight()
     {
@@ -351,7 +328,8 @@ public class InputHandler : MonoBehaviour {
         }
         GameObject dasher = createDasher(dashSprite, dashLayer);
         yield return StartCoroutine(dashAway(dasher));
-        if (isPointInDark(dasher.transform.position) == swapOnDarkRoom)
+        bool dasherInDark = isPointInDark(dasher.transform.position);
+        if (dasherInDark == swapOnDarkRoom)
         {
             
             yield return StartCoroutine(dashToDasher());
@@ -372,7 +350,7 @@ public class InputHandler : MonoBehaviour {
                     break;
             }
         }
-        if (isPointInDark(dasher.transform.position) != swapOnDarkRoom)
+        if (dasherInDark != swapOnDarkRoom)
         {
             yield return StartCoroutine(dashToStart(dasher));
             switch (ghostState)
