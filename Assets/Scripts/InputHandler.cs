@@ -175,19 +175,37 @@ public class InputHandler : MonoBehaviour {
         }
     }
     bool increase = true;
-
+    float yo = 0;
+    float yoey = 0;
     private void updateGhostHighlight()
     {
-
-        ghostHighlightChild.GetComponent<Light>().intensity += increase ? 1.0f*dt : -1.0f*dt;
-            //Random.Range(0.005f, 0.04f) : 1
-            //-Random.Range(0.005f, 0.04f);
-        if (ghostHighlightChild.GetComponent<Light>().intensity >= 2.0f 
-            || ghostHighlightChild.GetComponent<Light>().intensity <= 1.0f
-            )
-        {
-            increase = !increase;
-        }
+        //ghostHighlightChild.GetComponent<Light>().intensity += increase ? 0.35f*dt : -0.35f*dt;
+        //Random.Range(0.005f, 0.04f) : 1
+        //-Random.Range(0.005f, 0.04f);
+        float posRange = 0.04f;
+        float flickerSpeed = 0.4f * Time.deltaTime;
+        Vector3 curPos = ghostHighlightChild.transform.localPosition;
+        float peace = (curPos.x + posRange) / (posRange * 2);
+        //ghostHighlightChild.transform.localPosition = new Vector3(Random.Range(-0.04f, 0.04f), Random.Range(-0.04f, 0.04f), -1.0f); //experimental..
+        //Vector2 flickerDirection = new Vector2(Random.Range(((curPos.x + posRange) / (posRange * 2.0f)), 1.0f-((curPos.x + posRange) / (posRange * 2.0f))), 0);
+        //print(flickerDirection.x);
+        //Random.Range(-flickerSpeed * (curPos.y / posRange), flickerSpeed * (curPos.y / posRange)), 0);
+        //ghostHighlightChild.transform.localPosition += new Vector3(flickerSpeed * flickerDirection.x, flickerSpeed * flickerDirection.x), 0, 0);
+        yo+= Time.deltaTime*Random.Range(-1,2);
+        ghostHighlightChild.transform.localPosition = new Vector3(Mathf.Sin(yo *3*Mathf.PI) * 0.08f, 
+                                                                  Mathf.Cos(yo * 3 * Mathf.PI) * 0.08f, -1.0f);
+        yoey+= Time.deltaTime*Random.Range(-1, 2);
+        ghostHighlightChild.GetComponent<Light>().intensity = (Mathf.Sin(yoey*2)+1)*0.4f+0.8f;
+        //if (ghostHighlightChild.GetComponent<Light>().intensity >= 1.2f)
+        //{
+        //    ghostHighlightChild.GetComponent<Light>().intensity = 1.19f;
+        //    increase = !increase;
+        //}
+        //if (ghostHighlightChild.GetComponent<Light>().intensity <= 0.8f)
+        //{
+        //    ghostHighlightChild.GetComponent<Light>().intensity = 0.81f;
+        //    increase = !increase;
+        //}
     }
     private void updateFlashlight()
     {
@@ -238,7 +256,6 @@ public class InputHandler : MonoBehaviour {
                                                         //smoothPos = pd * pd * (3 - 2 * pd);
                                                         //smoothPos = 1-(1 - (1 - pd) * (1 - pd));
             smoothPos = pd * pd * (3 - 2 * pd);
-            //smoothPos = 1 - (1 - pd * pd);
             smoothPos = Mathf.Pow(smoothPos, power); //hype function
             smoothDelta = smoothPos - oldSmoothPos;
             oldSmoothPos = smoothPos;
@@ -271,7 +288,6 @@ public class InputHandler : MonoBehaviour {
                                       //smoothPos = 1 - (1 - pd) * (1 - pd);
             smoothPos = pd * pd * (3 - 2 * pd);
             smoothPos = Mathf.Pow(smoothPos, power); //hype function
-            // smoothPos = pd * pd;
             smoothDelta = smoothPos - oldSmoothPos;
             oldSmoothPos = smoothPos;
             dasher.transform.Translate(-newVelocity.normalized * smoothDelta * dashRange);
@@ -291,10 +307,7 @@ public class InputHandler : MonoBehaviour {
                                       //smoothPos = 1 - (1 - pd) * (a 1 - pd);
             smoothPos = pd * pd * (3 - 2 * pd);
             smoothPos = Mathf.Pow(smoothPos, power); //hype function
-            // smoothPos = pd * pd;
-           // smoothDelta = smoothPos - oldSmoothPos;
             oldSmoothPos = smoothPos;
-            //transform.Translate(newVelocity.normalized * smoothDelta * dashRange);
             yield return 0;
         }
         transform.Translate(newVelocity.normalized * dashRange);
@@ -306,12 +319,9 @@ public class InputHandler : MonoBehaviour {
         dasher.transform.parent = this.transform;
         Camera.main.GetComponent<CameraScript>().target = dasher;
         dasher.transform.Translate(new Vector3(0, 0, 0.2f));
-        //dasher.GetComponent<BoxCollider2D>().size = new Vector2(1.0f, 1.0f);
         dasher.transform.transform.localPosition = new Vector3(0, 0, 0);
         dasher.GetComponent<SpriteRenderer>().sprite = dashSprite;
         dasher.GetComponent<SpriteRenderer>().sortingOrder = 1;
-        //dasher.GetComponent<BoxCollider2D>().isTrigger = true;
-        //dasher.layer = dashLayer;
         return dasher;
     }
 
