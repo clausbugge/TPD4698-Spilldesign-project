@@ -37,7 +37,6 @@ struct Inputs
 }
 
 public class InputHandler : MonoBehaviour {
-   // public LayerMask soup;
     public int moveSpeed = 1;
     public Sprite humanIdleDashingSprite; //idle hero sprite when he is dashing
     public Sprite ghostIdleDashingSprite; //idle ghost sprite when he is dashing
@@ -54,13 +53,12 @@ public class InputHandler : MonoBehaviour {
     private float dt;
     private GameObject flashLightChild;
     private GameObject ghostHighlightChild;
+    private GameObject rubberBandParticlesChild;
     private Light ghostHighlightChildComponent;
     private float flickerPos;
     private float flickerSize;
     private Inputs inputs;
     private Vector2 breakingPoint; //for where human/ghost enters dark/light
-    //private float timeAllowedOutside; //time in seconds for how long player can be in wrong zone
-    //private float timeSpentOutside; //how long in seconds player has been outside allowed zone
     private float distanceAllowedOutside; //how far player can travelled from safe zone. better than time spent outside methinks.
                                           //private float distanceFromBreakingPoint; //how far player has travelled from safe zone. better than time spent outside methinks.
                                           // private int direction;
@@ -69,8 +67,10 @@ public class InputHandler : MonoBehaviour {
         
         flashLightChild = transform.GetChild(0).gameObject;
         ghostHighlightChild = transform.GetChild(1).gameObject;
+        rubberBandParticlesChild = transform.GetChild(2).gameObject;
         ghostHighlightChildComponent = ghostHighlightChild.GetComponent<Light>();
         ghostHighlightChildComponent.enabled = false;
+        rubberBandParticlesChild.SetActive(false);
         inputs.up = false;
         inputs.down = false;
         inputs.left = false;
@@ -78,7 +78,7 @@ public class InputHandler : MonoBehaviour {
        // direction = (int)MOVE_DIRECTION.LEFT;
         ghostState = (int)GHOST_STATE.HUMAN;
         breakingPoint = Vector2.zero; //TODO: can have repercussions once every blue moon
-        distanceAllowedOutside = 2.0f;
+        distanceAllowedOutside = 0.7f;
     }
 
     // Use this for initialization
@@ -99,7 +99,6 @@ public class InputHandler : MonoBehaviour {
     bool isPointInDark(Vector3 point) //TODO: Will be converted to vec2 in function. maybe rewrite whole game to use 3d physics (some weakness with 2d)
     {
         Light[] lights = GameObject.FindObjectsOfType<Light>();
-     //   LayerMask lightStopperMask = findMask(new string[] { "default" });
         foreach (Light light in lights)
         {
             if(light.name=="Ghost Highlight") //TODO: slightly hacky. would be better with proper handler for light(low-prio)
@@ -126,10 +125,7 @@ public class InputHandler : MonoBehaviour {
     {
         dt = Time.deltaTime;
         checkInput();
-        if (isPointInDark(transform.position))
-        {
-            //move away from light/dark, depending on ghost state
-        }
+
         //if is in ghost state
         updateGhostHighlight();
         switch (state)
@@ -281,7 +277,6 @@ public class InputHandler : MonoBehaviour {
     }
     IEnumerator dashToDasher()
     {
-       // float smoothDelta = 0.0f;
         float oldSmoothPos = 0.0f;
         float smoothPos = 0.0f;
         int power = 4;
@@ -453,14 +448,15 @@ public class InputHandler : MonoBehaviour {
     {
         gameObject.GetComponent<Rigidbody2D>().velocity = newVelocity;
         float distanceFromBreakingPoint = (transform.position - new Vector3(breakingPoint.x, breakingPoint.y, 0)).magnitude;
-        print(distanceFromBreakingPoint);
         if (moveNextFrame)
         {
             breakingPoint = Vector2.zero;
+            rubberBandParticlesChild.SetActive(false);
         }
         else if (breakingPoint == Vector2.zero)
         {
             breakingPoint = transform.position;
+            
         }
         else if (distanceFromBreakingPoint > distanceAllowedOutside)
         {
@@ -468,10 +464,20 @@ public class InputHandler : MonoBehaviour {
         }
         else
         {
-            //print((distanceAllowedOutside - distanceFromBreakingPoint) / distanceFromBreakingPoint);
-
-            gameObject.GetComponent<Rigidbody2D>().velocity *= ((distanceAllowedOutside*1.1f) - distanceFromBreakingPoint) / (distanceAllowedOutside * 1.1f);
+            gameObject.GetComponent<Rigidbody2D>().velocity *= Mathf.Pow((((distanceAllowedOutside*1.35f) - distanceFromBreakingPoint) / (distanceAllowedOutside * 1.35f)),2);
+            Vector2 distanceNormalized = new Vector2(transform.position.x - breakingPoint.x, transform.position.y - breakingPoint.y).normalized;
+            Vector3 newRot = rubberBandParticlesChild.transform.rotation.eulerAngles;
+            if (transform.position.y - breakingPoint.y > 0)
+            {
+                newRot.z = 90.0f + Mathf.Acos(distanceNormalized.x) * Mathf.Rad2Deg;
+            }
+            if (transform.position.y - breakingPoint.y <= 0)
+            {
+                newRot.z = 90.0f - Mathf.Acos(distanceNormalized.x) * Mathf.Rad2Deg;
+            }
+            rubberBandParticlesChild.transform.rotation = Quaternion.Euler(newRot);
+            rubberBandParticlesChild.SetActive(true);
+            
         }
     }
-                        
 }
