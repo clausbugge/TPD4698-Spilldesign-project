@@ -78,7 +78,7 @@ public class InputHandler : MonoBehaviour {
        // direction = (int)MOVE_DIRECTION.LEFT;
         ghostState = (int)GHOST_STATE.HUMAN;
         breakingPoint = Vector2.zero; //TODO: can have repercussions once every blue moon
-        distanceAllowedOutside = 0.7f;
+        distanceAllowedOutside = 1.5f;
     }
 
     // Use this for initialization
@@ -188,6 +188,7 @@ public class InputHandler : MonoBehaviour {
         flickerSize+= Time.deltaTime*Random.Range(-1, 2);
         ghostHighlightChild.GetComponent<Light>().intensity = (Mathf.Sin(flickerSize * 2) + 1) * 0.4f + 0.8f;
     }
+
     private void updateFlashlight()
     {
         int inputsHeld = 0;
@@ -221,85 +222,61 @@ public class InputHandler : MonoBehaviour {
                 flashLightChild.transform.localRotation = Quaternion.Euler(newXRot, 90.0f, 0.0f);
             }
         }
+    }
+
+    enum INTERPOLATION_TYPE
+    {
+        LERP,
+        SMOOTH
+    }
+
+    private float lerp(float pd) //pd = percentage done. just for testing.
+    {
+        return pd;
+    }
+
+    private float smoothInterpolation(float pd) //pd = percentage done
+    {
+        return pd * pd * (3 - 2 * pd);
+    }
+
+    IEnumerator moveObject(GameObject go, Vector3 direction, float duration, float distance, INTERPOLATION_TYPE type = INTERPOLATION_TYPE.SMOOTH, int power = 1) //direction normalized
+    {
+        System.Func<float, float> interpolationFunc = smoothInterpolation;
+        float delta = 0.0f;
+        float oldPos = 0.0f;
+        float newPos = 0.0f;
+
+        switch (type)
+        {
+            case INTERPOLATION_TYPE.LERP:
+                interpolationFunc = lerp;
+                break;
+            case INTERPOLATION_TYPE.SMOOTH:
+                interpolationFunc = smoothInterpolation;
+                break;
+            default:
+                print("invalid interpolation type. default= smooth interpolation");
+                break;
+        }
         
-    }
-
-    IEnumerator dashAway(GameObject dasher)
-    {
-        float smoothDelta = 0.0f;
-
-        float oldSmoothPos = 0.0f;
-        float smoothPos = 0.0f;
-        int power = 4;
         for (float i = 0; i < dashTimer; i += dt)
         {
-            float pd = 0.25f + (i * 0.75f / dashTimer); //pd =percent done
-                                                        //smoothPos = pd * pd * (3 - 2 * pd);
-                                                        //smoothPos = 1-(1 - (1 - pd) * (1 - pd));
-            smoothPos = pd * pd * (3 - 2 * pd);
-            smoothPos = Mathf.Pow(smoothPos, power); //hype function
-            smoothDelta = smoothPos - oldSmoothPos;
-            oldSmoothPos = smoothPos;
-            dasher.transform.Translate(newVelocity.normalized * smoothDelta * dashRange);
+            float pd = 0.25f + (i * 0.75f / dashTimer);
+            newPos = interpolationFunc(pd);
+            newPos = Mathf.Pow(newPos, power); 
+            delta = newPos - oldPos;
+            oldPos = newPos;
+            go.transform.Translate(direction * delta * distance);
             yield return 0;
         }
-    }
-
-    IEnumerator dashToStart(GameObject dasher)
-    {
-        float smoothDelta = 0.0f;
-        float oldSmoothPos = 0.0f;
-        float smoothPos = 0.0f;
-        int power = 4;
-        float failTimer = 0.07f; //never question this variable
-        float rotateAngle = 10.0f;
-        float randomNumber = 6.0f; //while you're at it, don't question this one either
-
-        for (float i = 0; i < failTimer * randomNumber; i += dt)
-        {
-            float phase = Mathf.Sin(i / failTimer);
-            dasher.transform.rotation = Quaternion.Euler(new Vector3(0, 0, phase * rotateAngle));
-            yield return 0;
-        }
-        dasher.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));//make sure we are straight!
-        for (float i = 0; i < dashTimer; i += dt)
-        {
-            float pd = i / dashTimer; //pd =percent done
-                                      //smoothPos = pd * pd * (3 - 2 * pd);
-                                      //smoothPos = 1 - (1 - pd) * (1 - pd);
-            smoothPos = pd * pd * (3 - 2 * pd);
-            smoothPos = Mathf.Pow(smoothPos, power); //hype function
-            smoothDelta = smoothPos - oldSmoothPos;
-            oldSmoothPos = smoothPos;
-            dasher.transform.Translate(-newVelocity.normalized * smoothDelta * dashRange);
-            yield return 0;
-        }
-    }
-    IEnumerator dashToDasher()
-    {
-        float oldSmoothPos = 0.0f;
-        float smoothPos = 0.0f;
-        int power = 4;
-        for (float i = 0; i < dashTimer; i += dt)
-        {
-            float pd = i / dashTimer; //pd =percent done
-                                      //smoothPos = pd * pd * (3 - 2 * pd);
-                                      //smoothPos = 1 - (1 - pd) * (a 1 - pd);
-            smoothPos = pd * pd * (3 - 2 * pd);
-            smoothPos = Mathf.Pow(smoothPos, power); //hype function
-            oldSmoothPos = smoothPos;
-            yield return 0;
-        }
-        transform.Translate(newVelocity.normalized * dashRange);
     }
 
     private GameObject createDasher(Sprite dashSprite, int dashLayer)
     {
         GameObject dasher = new GameObject("dasher", typeof(SpriteRenderer));//, typeof(BoxCollider2D), typeof(Rigidbody2D), typeof(DashScript));
-        dasher.transform.parent = this.transform;
+        dasher.transform.position = transform.position;
         Camera.main.GetComponent<CameraScript>().target = dasher;
-        dasher.transform.Translate(new Vector3(0, 0, 0.2f));
-        dasher.transform.transform.localPosition = new Vector3(0, 0, 0);
         dasher.GetComponent<SpriteRenderer>().sprite = dashSprite;
         dasher.GetComponent<SpriteRenderer>().sortingOrder = 1;
         return dasher;
@@ -330,12 +307,17 @@ public class InputHandler : MonoBehaviour {
                 break;
         }
         GameObject dasher = createDasher(dashSprite, dashLayer);
-        yield return StartCoroutine(dashAway(dasher));
+        Vector3 newVelNormal = newVelocity.normalized;
+        newVelNormal.z = 0.0f;
+        yield return StartCoroutine(moveObject(dasher, newVelNormal, 4.0f,dashRange)); //dash away
         bool dasherInDark = isPointInDark(dasher.transform.position);
         if (dasherInDark == swapOnDarkRoom) //Swap successful
         {
             breakingPoint = Vector2.zero;
-            yield return StartCoroutine(dashToDasher());
+            gameObject.GetComponent<BoxCollider2D>().enabled = false;
+
+            yield return StartCoroutine(moveObject(gameObject, newVelNormal, 4.0f, dashRange));
+            gameObject.GetComponent<BoxCollider2D>().enabled = true;
             switch (ghostState)
             {
                 case (int)GHOST_STATE.HUMAN:
@@ -353,9 +335,21 @@ public class InputHandler : MonoBehaviour {
                     break;
             }
         }
-        if (dasherInDark != swapOnDarkRoom)
+        if (dasherInDark != swapOnDarkRoom) //swap failed
         {
-            yield return StartCoroutine(dashToStart(dasher));
+            float failTimer = 0.07f; //never question this variable
+            float rotateAngle = 10.0f;
+            float randomNumber = 6.0f; //while you're at it, don't question this one either
+
+            for (float i = 0; i < failTimer * randomNumber; i += dt)
+            {
+                float phase = Mathf.Sin(i / failTimer);
+                dasher.transform.rotation = Quaternion.Euler(new Vector3(0, 0, phase * rotateAngle));
+                yield return 0;
+            }
+            dasher.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));//make sure we are straight!
+            yield return StartCoroutine(moveObject(dasher, -newVelNormal, 4.0f, dashRange));
+            
             switch (ghostState)
             {
                 case (int)GHOST_STATE.HUMAN:
@@ -455,16 +449,17 @@ public class InputHandler : MonoBehaviour {
         }
         else if (breakingPoint == Vector2.zero)
         {
+            state = (int)HERO_STATE.DASHING;
             breakingPoint = transform.position;
-            
         }
         else if (distanceFromBreakingPoint > distanceAllowedOutside)
         {
+
             transform.position = breakingPoint;
         }
         else
         {
-            gameObject.GetComponent<Rigidbody2D>().velocity *= Mathf.Pow((((distanceAllowedOutside*1.35f) - distanceFromBreakingPoint) / (distanceAllowedOutside * 1.35f)),2);
+            gameObject.GetComponent<Rigidbody2D>().velocity *= Mathf.Pow((((distanceAllowedOutside* 1.5f) - distanceFromBreakingPoint) / (distanceAllowedOutside * 1.5f)),3);
             Vector2 distanceNormalized = new Vector2(transform.position.x - breakingPoint.x, transform.position.y - breakingPoint.y).normalized;
             Vector3 newRot = rubberBandParticlesChild.transform.rotation.eulerAngles;
             if (transform.position.y - breakingPoint.y > 0)
