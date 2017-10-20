@@ -458,6 +458,8 @@ public class InputHandler : MonoBehaviour {
         }
         else
         {
+            ParticleSystem.MainModule psm= rubberBandParticlesChild.GetComponent<ParticleSystem>().main;
+            psm.startSpeed = distanceFromBreakingPoint;// *0.4f;
             gameObject.GetComponent<Rigidbody2D>().velocity *= Mathf.Pow((((distanceAllowedOutside* 1.5f) - distanceFromBreakingPoint) / (distanceAllowedOutside * 1.5f)),3);
             Vector2 distanceNormalized = new Vector2(transform.position.x - breakingPoint.x, transform.position.y - breakingPoint.y).normalized;
             Vector3 newRot = rubberBandParticlesChild.transform.rotation.eulerAngles;
@@ -478,8 +480,8 @@ public class InputHandler : MonoBehaviour {
     {
         state = (int)HERO_STATE.DASHING;
         Vector2 direction = new Vector2(transform.position.x - breakingPoint.x, transform.position.y - breakingPoint.y).normalized;
-        yield return StartCoroutine(moveObject(gameObject, -direction, 0.2f, distanceFromBreakingPoint));
-        transform.position = breakingPoint;
+        yield return StartCoroutine(moveObject(gameObject, -direction, 0.2f, distanceFromBreakingPoint*1.3f));
+        transform.position = breakingPoint-direction*0.3f;
         state = (int)HERO_STATE.IDLE;
     }
 }
