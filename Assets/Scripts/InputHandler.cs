@@ -260,9 +260,9 @@ public class InputHandler : MonoBehaviour {
                 break;
         }
         
-        for (float i = 0; i < dashTimer; i += dt)
+        for (float i = 0; i < duration; i += dt)
         {
-            float pd = 0.25f + (i * 0.75f / dashTimer);
+            float pd = 0.25f + (i * 0.75f / duration);
             newPos = interpolationFunc(pd);
             newPos = Mathf.Pow(newPos, power); 
             delta = newPos - oldPos;
@@ -309,14 +309,14 @@ public class InputHandler : MonoBehaviour {
         GameObject dasher = createDasher(dashSprite, dashLayer);
         Vector3 newVelNormal = newVelocity.normalized;
         newVelNormal.z = 0.0f;
-        yield return StartCoroutine(moveObject(dasher, newVelNormal, 4.0f,dashRange)); //dash away
+        yield return StartCoroutine(moveObject(dasher, newVelNormal, dashTimer,dashRange)); //dash away
         bool dasherInDark = isPointInDark(dasher.transform.position);
         if (dasherInDark == swapOnDarkRoom) //Swap successful
         {
             breakingPoint = Vector2.zero;
             gameObject.GetComponent<BoxCollider2D>().enabled = false;
 
-            yield return StartCoroutine(moveObject(gameObject, newVelNormal, 4.0f, dashRange));
+            yield return StartCoroutine(moveObject(gameObject, newVelNormal, dashTimer, dashRange));
             gameObject.GetComponent<BoxCollider2D>().enabled = true;
             switch (ghostState)
             {
@@ -348,7 +348,7 @@ public class InputHandler : MonoBehaviour {
                 yield return 0;
             }
             dasher.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));//make sure we are straight!
-            yield return StartCoroutine(moveObject(dasher, -newVelNormal, 4.0f, dashRange));
+            yield return StartCoroutine(moveObject(dasher, -newVelNormal, dashTimer, dashRange));
             
             switch (ghostState)
             {
@@ -438,6 +438,7 @@ public class InputHandler : MonoBehaviour {
             //}
         }
     }
+    
     private void handleVelocity(bool moveNextFrame) //should only be called from fixedUpdate
     {
         gameObject.GetComponent<Rigidbody2D>().velocity = newVelocity;
@@ -449,13 +450,11 @@ public class InputHandler : MonoBehaviour {
         }
         else if (breakingPoint == Vector2.zero)
         {
-            state = (int)HERO_STATE.DASHING;
             breakingPoint = transform.position;
         }
         else if (distanceFromBreakingPoint > distanceAllowedOutside)
         {
-
-            transform.position = breakingPoint;
+            StartCoroutine(dashToBreakingPoint(distanceFromBreakingPoint));
         }
         else
         {
@@ -474,5 +473,13 @@ public class InputHandler : MonoBehaviour {
             rubberBandParticlesChild.SetActive(true);
             
         }
+    }
+    IEnumerator dashToBreakingPoint(float distanceFromBreakingPoint)
+    {
+        state = (int)HERO_STATE.DASHING;
+        Vector2 direction = new Vector2(transform.position.x - breakingPoint.x, transform.position.y - breakingPoint.y).normalized;
+        yield return StartCoroutine(moveObject(gameObject, -direction, 0.2f, distanceFromBreakingPoint));
+        transform.position = breakingPoint;
+        state = (int)HERO_STATE.IDLE;
     }
 }
