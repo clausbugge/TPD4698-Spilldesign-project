@@ -492,20 +492,19 @@ public class InputHandler : MonoBehaviour {
             {
                 borderRubberBandParticlesChild.SetActive(false);
                 StartCoroutine(dashToDarknessPoint(distanceFromBreakingPoint));
-                
             }
             else
             {
                 ParticleSystem.MainModule psm = borderRubberBandParticlesChild.GetComponent<ParticleSystem>().main;
                 psm.startSpeed = distanceFromBreakingPoint;// *0.4f;
                 gameObject.GetComponent<Rigidbody2D>().velocity *= Mathf.Pow((((distanceAllowedOutsideDarkness * 1.5f) - distanceFromBreakingPoint) / (distanceAllowedOutsideDarkness * 1.5f)), 3);
-                Vector2 distanceNormalized = new Vector2(transform.position.x - breakingPoint.x, transform.position.y - breakingPoint.y).normalized;
+                Vector2 distanceNormalized = new Vector2(transform.position.x - darknessBreakingPoint.x, transform.position.y - darknessBreakingPoint.y).normalized;
                 Vector3 newRot = borderRubberBandParticlesChild.transform.rotation.eulerAngles;
-                if (transform.position.y - breakingPoint.y > 0)
+                if (transform.position.y - darknessBreakingPoint.y > 0)
                 {
                     newRot.z = 90.0f + Mathf.Acos(distanceNormalized.x) * Mathf.Rad2Deg;
                 }
-                if (transform.position.y - breakingPoint.y <= 0)
+                if (transform.position.y - darknessBreakingPoint.y <= 0)
                 {
                     newRot.z = 90.0f - Mathf.Acos(distanceNormalized.x) * Mathf.Rad2Deg;
                 }
