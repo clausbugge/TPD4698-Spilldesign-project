@@ -12,7 +12,8 @@ enum HERO_STATE
 enum GHOST_STATE
 {
     HUMAN,
-    GHOST
+    GHOST,
+    NO_OF_STATES
 }
 
 enum MOVE_DIRECTION
@@ -44,41 +45,57 @@ public class InputHandler : MonoBehaviour {
     public Sprite ghostDashingSprite; //Sprite for actual dash object
     public Sprite humanSprite;
     public Sprite ghostSprite;
+
     public float dashTimer; //dashtime in seconds
     public float dashRange; //dashrange in unity units
+    private Vector2 dashOrigin;
+    GameObject dasher; //dasher/placeholder for original
     public Material dasherMaterial;
+
     private Vector2 newVelocity;
-    private int state;
-    private int ghostState;
+    private HERO_STATE state;
+    private GHOST_STATE ghostState;
     private float dt;
     private GameObject flashLightChild;
     private GameObject ghostHighlightChild;
     private GameObject rubberBandParticlesChild;
+    private GameObject borderParticlesChild;
+    private GameObject borderRubberBandParticlesChild;
     private Light ghostHighlightChildComponent;
     private float flickerPos;
     private float flickerSize;
     private Inputs inputs;
     private Vector2 breakingPoint; //for where human/ghost enters dark/light
+    private Vector2 darknessBreakingPoint; //for where ghost leaves legal radius
     private float distanceAllowedOutside; //how far player can travelled from safe zone. better than time spent outside methinks.
-                                          //private float distanceFromBreakingPoint; //how far player has travelled from safe zone. better than time spent outside methinks.
-                                          // private int direction;
+    private float distanceAllowedInDarkness; //bad name. how far player can travell from 
+    private float distanceAllowedOutsideDarkness; 
+    private Vector2 lastDirection;
     private void Awake()
     {
-        
+        dashOrigin = Vector2.zero;
         flashLightChild = transform.GetChild(0).gameObject;
         ghostHighlightChild = transform.GetChild(1).gameObject;
         rubberBandParticlesChild = transform.GetChild(2).gameObject;
+        borderParticlesChild = transform.GetChild(3).gameObject;
+        borderRubberBandParticlesChild = transform.GetChild(4).gameObject;
         ghostHighlightChildComponent = ghostHighlightChild.GetComponent<Light>();
         ghostHighlightChildComponent.enabled = false;
         rubberBandParticlesChild.SetActive(false);
+        borderRubberBandParticlesChild.SetActive(false);
         inputs.up = false;
         inputs.down = false;
         inputs.left = false;
         inputs.right = false;
+        lastDirection = Vector2.right;
        // direction = (int)MOVE_DIRECTION.LEFT;
-        ghostState = (int)GHOST_STATE.HUMAN;
+        ghostState = GHOST_STATE.HUMAN;
         breakingPoint = Vector2.zero; //TODO: can have repercussions once every blue moon
         distanceAllowedOutside = 1.5f;
+        distanceAllowedInDarkness = 8.0f;
+        ParticleSystem.ShapeModule bps = borderParticlesChild.GetComponent<ParticleSystem>().shape;
+        bps.radius = distanceAllowedInDarkness;
+        distanceAllowedOutsideDarkness = 4.0f;
     }
 
     // Use this for initialization
@@ -130,17 +147,20 @@ public class InputHandler : MonoBehaviour {
         updateGhostHighlight();
         switch (state)
         {
-            case (int)HERO_STATE.IDLE:
-                break;
-            case (int)HERO_STATE.DASHING:
-                break;
-            case (int)HERO_STATE.MOVING:
-                updateFlashlight();
-                
-                updateCamera();
-                if (inputs.space) //can't dash unless you're moving(aka:holding a direction, can change l8r if we want OBVIOUSLY!)
+            case HERO_STATE.IDLE:
+                if (inputs.space) //turns out he can dash without moving after all!
                 {
-                    StartCoroutine(ghostDash());
+                    StartCoroutine(startDash());
+                }
+                break;
+            case HERO_STATE.DASHING:
+                break;
+            case HERO_STATE.MOVING:
+                updateFlashlight();
+                updateCamera();
+                if (inputs.space) //turns out he can dash without moving after all!
+                {
+                    StartCoroutine(startDash());
                 }
                 break;
             default:
@@ -169,7 +189,7 @@ public class InputHandler : MonoBehaviour {
         }
         if (Input.GetKey(KeyCode.A) || Input.GetKeyDown(KeyCode.A))
         {
-           inputs.left = true;
+            inputs.left = true;
         }
         if (Input.GetKey(KeyCode.D) || Input.GetKeyDown(KeyCode.D))
         {
@@ -242,6 +262,7 @@ public class InputHandler : MonoBehaviour {
 
     IEnumerator moveObject(GameObject go, Vector3 direction, float duration, float distance, INTERPOLATION_TYPE type = INTERPOLATION_TYPE.SMOOTH, int power = 1) //direction normalized
     {
+        Vector3 startPos = go.transform.position;
         System.Func<float, float> interpolationFunc = smoothInterpolation;
         float delta = 0.0f;
         float oldPos = 0.0f;
@@ -270,72 +291,96 @@ public class InputHandler : MonoBehaviour {
             go.transform.Translate(direction * delta * distance);
             yield return 0;
         }
+        float so = 1.0f;
+        go.transform.position = startPos + (direction * distance);
     }
 
-    private GameObject createDasher(Sprite dashSprite, int dashLayer)
+    private GameObject createDasher()//Sprite dashSprite)//, int dashLayer)
     {
         GameObject dasher = new GameObject("dasher", typeof(SpriteRenderer));//, typeof(BoxCollider2D), typeof(Rigidbody2D), typeof(DashScript));
         dasher.transform.position = transform.position;
         Camera.main.GetComponent<CameraScript>().target = dasher;
-        dasher.GetComponent<SpriteRenderer>().sprite = dashSprite;
+        dasher.GetComponent<SpriteRenderer>().sprite = humanDashingSprite;
         dasher.GetComponent<SpriteRenderer>().sortingOrder = 1;
         return dasher;
     }
-
-    IEnumerator ghostDash()
+    IEnumerator dashToOrigin()
     {
-        state = (int)HERO_STATE.DASHING;
-        Sprite dashSprite = null;
-        int dashLayer = 0;
-        bool swapOnDarkRoom = true;
-        switch (ghostState)
+        float distance = (dasher.transform.position - transform.position).magnitude;
+        Vector2 direction = (dasher.transform.position - transform.position).normalized;
+        GetComponent<BoxCollider2D>().enabled = false;
+        Camera.main.GetComponent<CameraScript>().target = dasher;
+        yield return StartCoroutine(moveObject(gameObject, direction, dashTimer, distance)); //dash away
+        Camera.main.GetComponent<CameraScript>().target = this.gameObject;
+        GetComponent<BoxCollider2D>().enabled = true;
+        changeGhostState(GHOST_STATE.HUMAN);
+        borderParticlesChild.transform.SetParent(transform);
+        borderParticlesChild.transform.localPosition = Vector3.zero;
+        Destroy(dasher);
+        yield return null;
+    }
+
+    private void changeGhostState(GHOST_STATE newState)
+    {
+        ghostState = newState;
+        switch (newState)
         {
-            case (int)GHOST_STATE.HUMAN:
-                gameObject.GetComponent<SpriteRenderer>().sprite = humanIdleDashingSprite;
-                dashSprite = humanDashingSprite;
-                dashLayer = LayerMask.NameToLayer("Human Dasher");
-                swapOnDarkRoom = true;
+            case GHOST_STATE.GHOST:
+                gameObject.GetComponent<SpriteRenderer>().sprite = ghostSprite;
+                ghostHighlightChildComponent.enabled = true;
                 break;
-            case (int)GHOST_STATE.GHOST:
-                gameObject.GetComponent<SpriteRenderer>().sprite = ghostIdleDashingSprite;
-                dashSprite = ghostDashingSprite;
-                dashLayer = LayerMask.NameToLayer("Ghost Dasher");
-                swapOnDarkRoom = false;
+            case GHOST_STATE.HUMAN:
+                gameObject.GetComponent<SpriteRenderer>().sprite = humanSprite;
+                ghostHighlightChildComponent.enabled = false;
                 break;
             default:
-                print("SOMETHING BROKE! invalid ghost state(and game will probably break because of it..."); 
                 break;
         }
-        GameObject dasher = createDasher(dashSprite, dashLayer);
-        Vector3 newVelNormal = newVelocity.normalized;
-        newVelNormal.z = 0.0f;
-        yield return StartCoroutine(moveObject(dasher, newVelNormal, dashTimer,dashRange)); //dash away
-        bool dasherInDark = isPointInDark(dasher.transform.position);
-        if (dasherInDark == swapOnDarkRoom) //Swap successful
+    }
+    private void changeHeroState(HERO_STATE newState)
+    {
+        state = newState;
+        switch (newState)
         {
-            breakingPoint = Vector2.zero;
-            gameObject.GetComponent<BoxCollider2D>().enabled = false;
-
-            yield return StartCoroutine(moveObject(gameObject, newVelNormal, dashTimer, dashRange));
-            gameObject.GetComponent<BoxCollider2D>().enabled = true;
-            switch (ghostState)
-            {
-                case (int)GHOST_STATE.HUMAN:
-                    gameObject.GetComponent<SpriteRenderer>().sprite = ghostSprite;
-                    ghostState = (int)GHOST_STATE.GHOST;
-                    ghostHighlightChildComponent.enabled = true;
-                    break;
-                case (int)GHOST_STATE.GHOST:
-                    gameObject.GetComponent<SpriteRenderer>().sprite = humanSprite;
-                    ghostState = (int)GHOST_STATE.HUMAN;
-                    ghostHighlightChildComponent.enabled = false;
-                    break;
-                default:
-                    print("SOMETHING BROKE! invalid ghost state(and game will probably break because of it...");
-                    break;
-            }
+            case HERO_STATE.MOVING:
+            case HERO_STATE.IDLE:
+                break;
+            case HERO_STATE.DASHING:
+                switch(ghostState)
+                {
+                    case GHOST_STATE.GHOST:
+                        gameObject.GetComponent<SpriteRenderer>().sprite = ghostIdleDashingSprite;
+                        break;
+                    case GHOST_STATE.HUMAN:
+                        gameObject.GetComponent<SpriteRenderer>().sprite = ghostIdleDashingSprite;
+                        break;
+                }
+                gameObject.GetComponent<SpriteRenderer>().sprite = humanIdleDashingSprite;
+                gameObject.GetComponent<SpriteRenderer>().sprite = humanSprite;
+                break;
+            default:
+                break;
         }
-        if (dasherInDark != swapOnDarkRoom) //swap failed
+    }
+
+    IEnumerator dashAway()
+    {
+        dasher = createDasher();
+        Vector3 newVelNormal = lastDirection;
+        newVelNormal.z = 0.0f;
+        yield return StartCoroutine(moveObject(dasher, newVelNormal, dashTimer, dashRange)); //dash away
+        bool isInDark = isPointInDark(dasher.transform.position);
+        if (isInDark) //Swap successful
+        {
+            dashOrigin = transform.position;
+            transform.position = dasher.transform.position;
+            dasher.transform.position = dashOrigin;//easy swap solution
+            breakingPoint = Vector2.zero;
+            changeGhostState(GHOST_STATE.GHOST);
+            borderParticlesChild.transform.SetParent(dasher.transform);
+            borderParticlesChild.transform.localPosition = Vector3.zero;
+        }
+        if (!isInDark) //swap failed
         {
             float failTimer = 0.07f; //never question this variable
             float rotateAngle = 10.0f;
@@ -349,33 +394,41 @@ public class InputHandler : MonoBehaviour {
             }
             dasher.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));//make sure we are straight!
             yield return StartCoroutine(moveObject(dasher, -newVelNormal, dashTimer, dashRange));
-            
-            switch (ghostState)
-            {
-                case (int)GHOST_STATE.HUMAN:
-                    gameObject.GetComponent<SpriteRenderer>().sprite = humanSprite;
-                    break;
-                case (int)GHOST_STATE.GHOST:
-                    gameObject.GetComponent<SpriteRenderer>().sprite = ghostSprite;
-                    break;
-                default:
-                    print("SOMETHING BROKE! invalid ghost state(and game will probably break because of it...");
-                    break;
-            }
+            Destroy(dasher);
         }
-        state = (int)HERO_STATE.IDLE;
-        
-        Camera.main.GetComponent<CameraScript>().target = this.gameObject;
-        GameObject.Destroy(dasher); //we erase our tracks
+    }
+
+    IEnumerator startDash()
+    {
+        changeHeroState(HERO_STATE.DASHING);
+        switch (ghostState)
+        {
+            case GHOST_STATE.HUMAN:
+                {
+                    yield return StartCoroutine(dashAway());
+                }
+                break;
+            case GHOST_STATE.GHOST:
+                {
+                    gameObject.GetComponent<SpriteRenderer>().sprite = ghostIdleDashingSprite;
+                    yield return StartCoroutine(dashToOrigin());
+                }
+                break;
+            default:
+                print("SOMETHING BROKE! invalid ghost state(and game will probably break because of it..."); 
+                break;
+        }
+        changeHeroState(HERO_STATE.IDLE);
+        Camera.main.GetComponent<CameraScript>().target = gameObject;
     }
 
     void FixedUpdate ()
     {
-        if (state == (int)HERO_STATE.DASHING)
+        if (state == HERO_STATE.DASHING)
         {
             gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
         }
-        if (state != (int)HERO_STATE.DASHING)
+        if (state != HERO_STATE.DASHING)
         {
             newVelocity = new Vector2(0, 0);
             float speed = 4;
@@ -395,55 +448,83 @@ public class InputHandler : MonoBehaviour {
             {
                 newVelocity.x += 1;
             }
-            state = newVelocity.x == 0 && newVelocity.y == 0 ?
-                (int)HERO_STATE.IDLE :
-                (int)HERO_STATE.MOVING;
+            changeHeroState((newVelocity.x == 0 && newVelocity.y == 0) ?
+                HERO_STATE.IDLE :
+                HERO_STATE.MOVING); //hurray for good code
+            if (!(Mathf.Approximately(newVelocity.x,0) && Mathf.Approximately(newVelocity.y, 0)))
+            {
+                lastDirection = newVelocity;
+            }           
             newVelocity = newVelocity.normalized * speed;
+            
             bool nextPosInDark = isPointInDark(transform.position+new Vector3(newVelocity.x, newVelocity.y,0)*Time.fixedDeltaTime);
             
             switch(ghostState)
             {
-                case (int)GHOST_STATE.GHOST: //TODO: refactor
+                case GHOST_STATE.GHOST: //TODO: refactor
                     handleVelocity(nextPosInDark);
+                    if (nextPosInDark)
+                    {
+                        handleDarknessBounce();
+                    }
                     break;
-                case (int)GHOST_STATE.HUMAN:
+                case GHOST_STATE.HUMAN:
                     handleVelocity(!nextPosInDark);
                     break;
                 default:
                     break;
             }
-            //gameObject.GetComponent<Rigidbody2D>().velocity = newVelocity;
-            //gameObject.transform.Translate(newVelocity);
-
-            // float maxSpeed = 4;
-            //gameObject.GetComponent<Rigidbody2D>().AddForce(newVelocity * 8);
-            //Vector2 oldVec = gameObject.GetComponent<Rigidbody2D>().velocity;
-            //if (oldVec.x >= maxSpeed)
-            //{
-            //    gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(maxSpeed, oldVec.y);
-            //}
-            //if (oldVec.x <= -maxSpeed)
-            //{
-            //    gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(-maxSpeed, oldVec.y);
-            //}
-
-            //if (oldVec.y >= maxSpeed)
-            //{
-            //    gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(oldVec.x, maxSpeed);
-            //}
-
-            //if (oldVec.y <= -maxSpeed)
-            //{
-            //    gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(oldVec.x, -maxSpeed);
-            //}
         }
     }
     
-    private void handleVelocity(bool moveNextFrame) //should only be called from fixedUpdate
+    private void handleDarknessBounce()
+    {
+        float distanceFromHero = (transform.position - dasher.transform.position).magnitude;
+        float distanceFromBreakingPoint = distanceFromHero - distanceAllowedInDarkness;
+        print(distanceFromBreakingPoint);
+        if (distanceFromHero > distanceAllowedInDarkness)
+        {
+            if (darknessBreakingPoint == Vector2.zero)
+            {
+                darknessBreakingPoint = transform.position;
+            }
+            else if (distanceFromHero > distanceAllowedOutsideDarkness+distanceAllowedInDarkness)
+            {
+                borderRubberBandParticlesChild.SetActive(false);
+                StartCoroutine(dashToDarknessPoint(distanceFromBreakingPoint));
+                
+            }
+            else
+            {
+                ParticleSystem.MainModule psm = borderRubberBandParticlesChild.GetComponent<ParticleSystem>().main;
+                psm.startSpeed = distanceFromBreakingPoint;// *0.4f;
+                gameObject.GetComponent<Rigidbody2D>().velocity *= Mathf.Pow((((distanceAllowedOutsideDarkness * 1.5f) - distanceFromBreakingPoint) / (distanceAllowedOutsideDarkness * 1.5f)), 3);
+                Vector2 distanceNormalized = new Vector2(transform.position.x - breakingPoint.x, transform.position.y - breakingPoint.y).normalized;
+                Vector3 newRot = borderRubberBandParticlesChild.transform.rotation.eulerAngles;
+                if (transform.position.y - breakingPoint.y > 0)
+                {
+                    newRot.z = 90.0f + Mathf.Acos(distanceNormalized.x) * Mathf.Rad2Deg;
+                }
+                if (transform.position.y - breakingPoint.y <= 0)
+                {
+                    newRot.z = 90.0f - Mathf.Acos(distanceNormalized.x) * Mathf.Rad2Deg;
+                }
+                borderRubberBandParticlesChild.transform.rotation = Quaternion.Euler(newRot);
+                borderRubberBandParticlesChild.SetActive(true);
+            }
+        }
+        else
+        {
+           borderRubberBandParticlesChild.SetActive(false);
+        }
+
+    }
+
+    private void handleVelocity(bool inLegalZoneNextFrame) //should only be called from fixedUpdate
     {
         gameObject.GetComponent<Rigidbody2D>().velocity = newVelocity;
         float distanceFromBreakingPoint = (transform.position - new Vector3(breakingPoint.x, breakingPoint.y, 0)).magnitude;
-        if (moveNextFrame)
+        if (inLegalZoneNextFrame)
         {
             breakingPoint = Vector2.zero;
             rubberBandParticlesChild.SetActive(false);
@@ -472,16 +553,28 @@ public class InputHandler : MonoBehaviour {
                 newRot.z = 90.0f - Mathf.Acos(distanceNormalized.x) * Mathf.Rad2Deg;
             }
             rubberBandParticlesChild.transform.rotation = Quaternion.Euler(newRot);
-            rubberBandParticlesChild.SetActive(true);
-            
+            rubberBandParticlesChild.SetActive(true); 
         }
     }
+
     IEnumerator dashToBreakingPoint(float distanceFromBreakingPoint)
     {
-        state = (int)HERO_STATE.DASHING;
+        changeHeroState(HERO_STATE.DASHING);
         Vector2 direction = new Vector2(transform.position.x - breakingPoint.x, transform.position.y - breakingPoint.y).normalized;
         yield return StartCoroutine(moveObject(gameObject, -direction, 0.2f, distanceFromBreakingPoint*1.3f));
         transform.position = breakingPoint-direction*0.3f;
-        state = (int)HERO_STATE.IDLE;
+        changeHeroState(HERO_STATE.IDLE);
+    }
+
+    IEnumerator dashToDarknessPoint(float distanceFromdarknessPoint)
+    {
+        changeHeroState(HERO_STATE.DASHING);
+        Vector2 direction = new Vector2(transform.position.x - dasher.transform.position.x, transform.position.y - dasher.transform.position.y).normalized;
+        float distance = (transform.position - dasher.transform.position).magnitude;
+        yield return StartCoroutine(moveObject(gameObject, -direction, 0.3f, distance,INTERPOLATION_TYPE.LERP,4));
+        borderParticlesChild.transform.SetParent(gameObject.transform);
+        Destroy(dasher);
+        changeGhostState(GHOST_STATE.HUMAN);
+        changeHeroState(HERO_STATE.IDLE);     
     }
 }
