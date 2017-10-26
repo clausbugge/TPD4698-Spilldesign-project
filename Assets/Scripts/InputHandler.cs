@@ -124,12 +124,15 @@ public class InputHandler : MonoBehaviour {
             if (light.isActiveAndEnabled)
             {
                 float distance = ((Vector2)light.transform.position - (Vector2)point).magnitude;
-                Ray2D ray = new Ray2D();
-                ray.origin = point;
-                ray.direction = (light.transform.position - point).normalized;
-                if (!Physics2D.Raycast(ray.origin, ray.direction, distance))//, soup))
+                if (distance < light.range)
                 {
-                    return false;
+                    Ray2D ray = new Ray2D();
+                    ray.origin = point;
+                    ray.direction = (light.transform.position - point).normalized;
+                    if (!Physics2D.Raycast(ray.origin, ray.direction, distance))//, soup))
+                    {
+                        return false;
+                    }
                 }
             }
         }

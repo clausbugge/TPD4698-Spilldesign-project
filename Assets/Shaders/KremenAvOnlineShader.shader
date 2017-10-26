@@ -1,29 +1,4 @@
-﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-
-// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
- //Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-Shader "Kremen"
+﻿Shader "Kremen"
 {
 	Properties
 	{
@@ -33,9 +8,7 @@ Shader "Kremen"
 	{
 		Pass
 		{
-			Tags{ "LightMode" = "ForwardBase" "RenderType" = "Opaque" } // pass for 
-													// 4 vertex lights, ambient light & first pixel light
-			//Blend One One
+			Tags{ "LightMode" = "ForwardBase" "RenderType" = "Opaque" }
 			CGPROGRAM
 			#pragma multi_compile_fwdbase 
 			#pragma vertex vert
@@ -43,9 +16,6 @@ Shader "Kremen"
 
 			#include "UnityCG.cginc" 
 			uniform float4 _LightColor0;
-			// color of light source (from "Lighting.cginc")
-
-			// User-specified properties
 
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
@@ -53,7 +23,6 @@ Shader "Kremen"
 			struct vertexInput {
 				float4 vertex : POSITION;
 				float4 uv : TEXCOORD0;
-				float3 normal : NORMAL;
 			};
 			struct v2f {
 				float4 pos : SV_POSITION;
@@ -69,7 +38,6 @@ Shader "Kremen"
 				float4x4 modelMatrixInverse = unity_WorldToObject;
 
 				o.worldPos = mul(modelMatrix, v.vertex);
-				//o.normalDir = normalize(mul(float4(v.normal, 0.0), modelMatrixInverse).xyz);
 				o.pos = UnityObjectToClipPos(v.vertex);
 				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 				return o;
@@ -88,7 +56,6 @@ Shader "Kremen"
 		Pass{
 
 			Tags{ "LightMode" = "ForwardAdd"}
-			// pass for additional light sources
 			Blend One One // additive blending 
 
 			CGPROGRAM
@@ -101,14 +68,14 @@ Shader "Kremen"
 
 			// compile shader into multiple variants, with and without shadows
 			// (we don't care about any lightmaps yet, so skip these variants)
-			#pragma multi_compile_fwdadd_fullshadows //nolightmap nodirlightmap nodynlightmap novertexlight
+			#pragma multi_compile_fwdadd_fullshadows nolightmap nodirlightmap nodynlightmap novertexlight //dunno what these other do. dunno if they improve performance
 			// shadow helper functions and macros
 			#include "UnityPBSLighting.cginc"
 			#include "AutoLight.cginc"
-
+			//#include "UnityShaderVariables.cginc"
 			//uniform float4 _LightColor0; //included in Lighting.cginc
 			sampler2D _MainTex;
-			
+			//float4 _LightPositionRange;
 			struct vertexInput {
 				float4 vertex : POSITION;
 			};
@@ -126,7 +93,7 @@ Shader "Kremen"
 
 				o.pos = UnityObjectToClipPos(v.vertex);
 				o.worldPos = mul(UNITY_MATRIX_M, v.vertex);
-
+				
 				TRANSFER_SHADOW(o);
 
 				return o;
@@ -136,12 +103,26 @@ Shader "Kremen"
 			{
 				float3 vertexToLightSource = _WorldSpaceLightPos0.xyz - i.worldPos.xyz;
 				float distanceToLight = length(vertexToLightSource);
-				if (distanceToLight > 5)
-				{
-					return (0, 0, 0, 0);
-				}
+				float lightRange = 1 / _LightPositionRange.w;
+
+				//SMOOTH OUTWARD ATTENUATION
+				float attenuation = 1-(distanceToLight / lightRange);
+				/*attenuation *= 100;
+				int rest = attenuation % 20;
+				attenuation -= rest;
+				attenuation /= 100;*/
+				
+				float3 pixelAttenuation = float3(attenuation, attenuation, attenuation);
+				pixelAttenuation *= 100;
+				int3 pixelRest = pixelAttenuation % 15;
+				pixelAttenuation.x -= pixelRest.x;
+				pixelAttenuation.y -= pixelRest.y;
+				pixelAttenuation.z -= pixelRest.z;
+				pixelAttenuation /= 100;
+
 				float shadow = SHADOW_ATTENUATION(i);
-				float3 color = tex2D(_MainTex, i.pos).rgb*_LightColor0*shadow;
+				//float attenuation = 1.0 / distanceToLight*shadow;
+				float3 color = mul(tex2D(_MainTex, i.pos).rgb, pixelAttenuation)*_LightColor0*shadow;//*attenuation;
 				return float4(color, 1.0);
 			}
 			ENDCG
