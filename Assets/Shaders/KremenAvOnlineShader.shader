@@ -25,19 +25,17 @@
 				float4 uv : TEXCOORD0;
 			};
 			struct v2f {
-				float4 pos : SV_POSITION;
+				float4 pos : SV_POSITION; //this shit does stuff, even when not used explicitly in fragment shader
 				float2 uv : TEXCOORD0;
-				float4 worldPos : TEXCOORD1;
+				//float4 worldPos : TEXCOORD1;
 			};
 
 			v2f vert(vertexInput v)
 			{
 				v2f o;
-
 				float4x4 modelMatrix = unity_ObjectToWorld;
 				float4x4 modelMatrixInverse = unity_WorldToObject;
-
-				o.worldPos = mul(modelMatrix, v.vertex);
+				//o.worldPos = mul(modelMatrix, v.vertex);
 				o.pos = UnityObjectToClipPos(v.vertex);
 				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 				return o;
@@ -72,12 +70,13 @@
 			// shadow helper functions and macros
 			#include "UnityPBSLighting.cginc"
 			#include "AutoLight.cginc"
-			//#include "UnityShaderVariables.cginc"
+			//#include "UnityShaderVariables.cginc" //included in autolight.cginc I think
 			//uniform float4 _LightColor0; //included in Lighting.cginc
 			sampler2D _MainTex;
-			//float4 _LightPositionRange;
+			float4 _MainTex_ST;
 			struct vertexInput {
 				float4 vertex : POSITION;
+				float4 uv : TEXCOORD2;
 			};
 
 			struct v2f
@@ -85,6 +84,7 @@
 				float4 pos : SV_POSITION;
 				float4 worldPos : TEXCOORD0;
 				SHADOW_COORDS(1)
+				float2 uv : TEXCOORD2;
 			};
 
 			v2f vert(vertexInput v)
@@ -93,7 +93,7 @@
 
 				o.pos = UnityObjectToClipPos(v.vertex);
 				o.worldPos = mul(UNITY_MATRIX_M, v.vertex);
-				
+				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 				TRANSFER_SHADOW(o);
 
 				return o;
@@ -122,7 +122,7 @@
 
 				float shadow = SHADOW_ATTENUATION(i);
 				//float attenuation = 1.0 / distanceToLight*shadow;
-				float3 color = mul(tex2D(_MainTex, i.pos).rgb, pixelAttenuation)*_LightColor0*shadow;//*attenuation;
+				float3 color = mul(tex2D(_MainTex, i.pos).rgb, pixelAttenuation)*_LightColor0*shadow; //***use pos instead of uv to highlight light colors more***
 				return float4(color, 1.0);
 			}
 			ENDCG
