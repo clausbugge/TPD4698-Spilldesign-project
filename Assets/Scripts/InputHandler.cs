@@ -62,8 +62,7 @@ public class InputHandler : MonoBehaviour {
     private GameObject borderParticlesChild;
     private GameObject borderRubberBandParticlesChild;
     private Light ghostHighlightChildComponent;
-    private float flickerPos;
-    private float flickerSize;
+
     private Inputs inputs;
     private Vector2 breakingPoint; //for where human/ghost enters dark/light
     private Vector2 darknessBreakingPoint; //for where ghost leaves legal radius
@@ -144,7 +143,7 @@ public class InputHandler : MonoBehaviour {
         checkInput();
 
         //if is in ghost state
-        updateGhostHighlight();
+        //updateGhostHighlight();
         switch (state)
         {
             case HERO_STATE.IDLE:
@@ -200,14 +199,7 @@ public class InputHandler : MonoBehaviour {
             inputs.space = true;
         }
     }
-    private void updateGhostHighlight()
-    {
-        flickerPos+= Time.deltaTime*Random.Range(-1,2);
-        ghostHighlightChild.transform.localPosition = new Vector3(Mathf.Sin(flickerPos * 3 * Mathf.PI) * 0.08f,
-                                                                  Mathf.Cos(flickerPos * 3 * Mathf.PI) * 0.08f, -1.0f);
-        flickerSize+= Time.deltaTime*Random.Range(-1, 2);
-        ghostHighlightChild.GetComponent<Light>().intensity = (Mathf.Sin(flickerSize * 2) + 1) * 0.4f + 0.8f;
-    }
+
 
     private void updateFlashlight()
     {
@@ -291,7 +283,6 @@ public class InputHandler : MonoBehaviour {
             go.transform.Translate(direction * delta * distance);
             yield return 0;
         }
-        float so = 1.0f;
         go.transform.position = startPos + (direction * distance);
     }
 
@@ -481,7 +472,6 @@ public class InputHandler : MonoBehaviour {
     {
         float distanceFromHero = (transform.position - dasher.transform.position).magnitude;
         float distanceFromBreakingPoint = distanceFromHero - distanceAllowedInDarkness;
-        print(distanceFromBreakingPoint);
         if (distanceFromHero > distanceAllowedInDarkness)
         {
             if (darknessBreakingPoint == Vector2.zero)
