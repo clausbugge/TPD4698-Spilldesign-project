@@ -104,25 +104,36 @@
 				float3 vertexToLightSource = _WorldSpaceLightPos0.xyz - i.worldPos.xyz;
 				float distanceToLight = length(vertexToLightSource);
 				float lightRange = 1 / _LightPositionRange.w;
-
+				float attenuation = 1 - (distanceToLight / lightRange);
+				
 				//SMOOTH OUTWARD ATTENUATION
-				float attenuation = 1-(distanceToLight / lightRange);
 				/*attenuation *= 100;
 				int rest = attenuation % 20;
 				attenuation -= rest;
 				attenuation /= 100;*/
 				
-				float3 pixelAttenuation = float3(attenuation, attenuation, attenuation);
-				pixelAttenuation *= 100;
-				int3 pixelRest = pixelAttenuation % 15;
-				pixelAttenuation.x -= pixelRest.x;
-				pixelAttenuation.y -= pixelRest.y;
-				pixelAttenuation.z -= pixelRest.z;
-				pixelAttenuation /= 100;
+				//PIXEL LIGHT WITH/WITHOUT SMOOTH ATTENUATION
+				float3 pixelAttenuation = float3(1.0-length(vertexToLightSource.x/lightRange), 1.0 - length(vertexToLightSource.y / lightRange), 1.0 - length(vertexToLightSource.z / lightRange));
+				pixelAttenuation*= 1000; //multiply by 1000 to get better mod possibilities
+				int modValue = 400/(lightRange); //this gives approx 5-6 pixels per light range
+				int3 pixelRemainder = int3(pixelAttenuation.x % modValue, pixelAttenuation.y % modValue, pixelAttenuation.z % modValue);
+				pixelAttenuation.x -= pixelRemainder.x - (modValue);
+				pixelAttenuation.y -= pixelRemainder.y - (modValue);
+				pixelAttenuation.z -= pixelRemainder.z - (modValue);
+				pixelAttenuation /= 1000;
+				//WITH ATTENUATION
+				attenuation *= pixelAttenuation.x*pixelAttenuation.y*pixelAttenuation.z*3;
+				//WITHOUT ATTENUATION
+				//attenuation = pixelAttenuation.x*pixelAttenuation.y*pixelAttenuation.z;
+				//need discard if no attenuation, not 100% sure why. maybe floating point error
+				//NO DISCARD with attenuation
+				if (attenuation < 0.1)
+				{
+					//discard;
+				}
 
 				float shadow = SHADOW_ATTENUATION(i);
-				//float attenuation = 1.0 / distanceToLight*shadow;
-				float3 color = mul(tex2D(_MainTex, i.pos).rgb, pixelAttenuation)*_LightColor0*shadow; //***use pos instead of uv to highlight light colors more***
+				float3 color = tex2D(_MainTex, i.uv).rgb*_LightColor0*shadow*attenuation; //***use pos instead of uv to highlight light colors more***
 				return float4(color, 1.0);
 			}
 			ENDCG
