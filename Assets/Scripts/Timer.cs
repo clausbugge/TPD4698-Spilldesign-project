@@ -29,13 +29,13 @@ public class Timer {
         started = false;
     }
 
-    //public void restart()
-    //{
-    //    paused = false;
-    //    pauseDuration = System.TimeSpan.FromSeconds(0.0);
-    //    started = true;
-    //    startTime = System.DateTime.Now;
-    //}
+    public void restart()
+    {
+        paused = false;
+        pauseDuration = System.TimeSpan.FromSeconds(0.0);
+        started = true;
+        startTime = System.DateTime.Now;
+    }
 
     //PAUSE IS NOT TESTED!!! plz remember this when you need it
     //public void pause()
@@ -45,9 +45,9 @@ public class Timer {
     //        paused = true;
     //        timeOfPause = System.DateTime.Now;
     //    }
-        
+
     //}
-    
+
     //public void unpause()
     //{
     //    if (started && paused)

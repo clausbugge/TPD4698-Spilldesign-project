@@ -8,14 +8,12 @@ public class ObjectSounds : MonoBehaviour
     private Rigidbody2D r2d;
     public float moveSoundDelay;
     public float pitchRange;
-    private float elapsedTimeSinceLastSound;
     private SoundCaller sc;
     private Timer soundTimer;
     // Use this for initialization
     void Start ()
     {
         soundTimer = new Timer(moveSoundDelay);
-        elapsedTimeSinceLastSound = 0;
         r2d = GetComponent<Rigidbody2D>();
         sc = GetComponent<SoundCaller>();
     }
