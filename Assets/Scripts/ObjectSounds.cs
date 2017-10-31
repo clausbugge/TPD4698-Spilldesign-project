@@ -25,14 +25,9 @@ public class ObjectSounds : MonoBehaviour
         {            
             if (r2d != null && (!Mathf.Approximately(r2d.velocity.x, 0) || !Mathf.Approximately(r2d.velocity.y, 0)))
             {
-                AudioSource mySource = sc.findFreeAudioSource();
-                if (mySource != default(AudioSource))
+                if (sc.attemptSound(sounds[Random.Range(0, sounds.Length)], pitchRange))
                 {
                     soundTimer.restart();
-                    mySource.pitch = Random.Range(1 - pitchRange, 1 + 1 + pitchRange);
-                    mySource.clip = sounds[Random.Range(0, sounds.Length)];
-                    mySource.Play();
-                    
                 }
             }
         }

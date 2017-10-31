@@ -63,4 +63,18 @@ public class SoundCaller : MonoBehaviour
         //no free audiosource
         return default(AudioSource);
     }
+
+    //returns true if sound was played
+    public bool attemptSound(AudioClip clip, float pitchRange = 0.0f)
+    {
+        AudioSource source = findFreeAudioSource();
+        if (source != default(AudioSource)) //found available source
+        {
+            source.pitch = Random.Range(1 - pitchRange, 1 + 1 + pitchRange);
+            source.clip = clip;
+            source.Play();
+            return true;
+        }
+        return false;
+    }
 }

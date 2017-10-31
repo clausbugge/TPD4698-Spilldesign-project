@@ -35,7 +35,7 @@ public class InputHandler : MonoBehaviour {
     public Sprite ghostDashingSprite; //Sprite for actual dash object
     public Sprite humanSprite;
     public Sprite ghostSprite;
-
+    public AudioClip[] dashSounds;
     public float dashTimer; //dashtime in seconds
     public float dashRange; //dashrange in unity units
     private Vector2 dashOrigin;
@@ -51,6 +51,7 @@ public class InputHandler : MonoBehaviour {
     private GameObject borderParticlesChild;
     private GameObject borderRubberBandParticlesChild;
     private Light ghostHighlightChildComponent;
+    private SoundCaller sc;
 
     private Vector2 breakingPoint; //for where human/ghost enters dark/light
     private Vector2 darknessBreakingPoint; //for where ghost leaves legal radius
@@ -63,6 +64,7 @@ public class InputHandler : MonoBehaviour {
     private Vector2 lastDirection;
     private void Awake()
     {
+        sc = GetComponent<SoundCaller>();
         dashOrigin = Vector2.zero;
         ghostHighlightChild = transform.GetChild(1).gameObject;
         rubberBandParticlesChild = transform.GetChild(2).gameObject;
@@ -217,6 +219,7 @@ public class InputHandler : MonoBehaviour {
         dasher = createDasher();
         Vector3 newVelNormal = lastDirection.normalized;
         newVelNormal.z = 0.0f;
+        sc.attemptSound(dashSounds[Random.Range(0, dashSounds.Length)]);
         yield return StartCoroutine(Tools.moveObject(dasher, newVelNormal, dashTimer, dashRange)); //dash away
         bool isInDark = isPointInDark(dasher.transform.position);
         if (isInDark) //Swap successful
