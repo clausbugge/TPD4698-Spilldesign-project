@@ -46,7 +46,6 @@ public class InputHandler : MonoBehaviour {
     private HERO_STATE state;
     private GHOST_STATE ghostState;
     private float dt;
-    private GameObject flashLightChild;
     private GameObject ghostHighlightChild;
     private GameObject rubberBandParticlesChild;
     private GameObject borderParticlesChild;
@@ -65,7 +64,6 @@ public class InputHandler : MonoBehaviour {
     private void Awake()
     {
         dashOrigin = Vector2.zero;
-        flashLightChild = transform.GetChild(0).gameObject;
         ghostHighlightChild = transform.GetChild(1).gameObject;
         rubberBandParticlesChild = transform.GetChild(2).gameObject;
         borderParticlesChild = transform.GetChild(3).gameObject;
