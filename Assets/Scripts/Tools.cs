@@ -21,7 +21,7 @@ public static class Tools{
 
     public static IEnumerator moveObject(GameObject go, Vector3 direction, float duration, float distance, INTERPOLATION_TYPE type = INTERPOLATION_TYPE.SMOOTH, int power = 1) //direction normalized
     {
-        Vector3 startPos = go.transform.position;
+        Vector3 startPos = go.transform.localPosition;
         System.Func<float, float> interpolationFunc = smoothInterpolation;
         float delta = 0.0f;
         float oldPos = 0.0f;
@@ -47,10 +47,10 @@ public static class Tools{
             newPos = Mathf.Pow(newPos, power);
             delta = newPos - oldPos;
             oldPos = newPos;
-            go.transform.Translate(direction * delta * distance);
+            go.transform.localPosition+=(direction * delta * distance);
             yield return 0;
         }
-        go.transform.position = startPos + (direction * distance);
+        go.transform.localPosition = startPos + (direction * distance);
     }
 
     public static int findMask(string[] layers, bool flipped = false)
