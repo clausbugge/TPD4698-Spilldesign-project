@@ -4,22 +4,60 @@ using UnityEngine;
 
 public class LeverScript : MonoBehaviour
 {
+    public enum LEVER_STATE
+    {
+        ON,
+        OFF
+    }
 
+    bool triggerButtonAlreadyDown = false;
 
-    //private bool Activated = true;
     public List<GameObject> triggerList;
     private bool playerOnTrigger = false;
+    public LEVER_STATE state;
+    public Sprite onSprite;
+    public Sprite offSprite;
     // Use this for initialization
     void Start()
     {
+        switch (state) //just checking what is set in inspector
+        {
+            case LEVER_STATE.ON:
+                GetComponent<SpriteRenderer>().sprite = onSprite;
+                break;
+            case LEVER_STATE.OFF:
+                GetComponent<SpriteRenderer>().sprite = offSprite;
+                break;
+            default:
+                break;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (playerOnTrigger && Input.GetKeyDown(KeyCode.F))
+        if (playerOnTrigger && Input.GetAxis("Interact") == 1 && !triggerButtonAlreadyDown)
         {
+            triggerButtonAlreadyDown = true;
+            switch(state)
+            {
+                case LEVER_STATE.ON:
+                    
+                    GetComponent<SpriteRenderer>().sprite = offSprite;
+                    state = LEVER_STATE.OFF;
+                    break;
+                case LEVER_STATE.OFF:
+                    GetComponent<SpriteRenderer>().sprite = onSprite;
+                    state = LEVER_STATE.ON;
+                    break;
+                default:
+                    break;
+            }
             onTrigger();
+        }
+        if (Input.GetAxis("Interact") == 0)
+        {
+            triggerButtonAlreadyDown = false;
         }
     }
 

@@ -122,7 +122,7 @@ public class InputHandler : MonoBehaviour {
         switch (state)
         {
             case HERO_STATE.IDLE:
-                if (Input.GetAxis("Fire1") == 1) //turns out he can dash without moving after all!
+                if (Input.GetAxis("Dash") == 1) //turns out he can dash without moving after all!
                 {
                     StartCoroutine(startDash());
                 }
@@ -131,7 +131,7 @@ public class InputHandler : MonoBehaviour {
                 break;
             case HERO_STATE.MOVING:
                 updateCamera();
-                if (Input.GetAxis("Fire1") == 1) //turns out he can dash without moving after all!
+                if (Input.GetAxis("Dash") == 1) //turns out he can dash without moving after all!
                 {
                     StartCoroutine(startDash());
                 }
