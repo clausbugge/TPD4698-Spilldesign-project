@@ -36,6 +36,7 @@ public class InputHandler : MonoBehaviour {
     public Sprite humanSprite;
     public Sprite ghostSprite;
     public AudioClip[] dashSounds;
+    public AudioClip[] barrierBreakSounds;
     public float dashTimer; //dashtime in seconds
     public float dashRange; //dashrange in unity units
     private Vector2 dashOrigin;
@@ -324,6 +325,8 @@ public class InputHandler : MonoBehaviour {
             if (darknessBreakingPoint == Vector2.zero)
             {
                 darknessBreakingPoint = transform.position;
+                sc.attemptSound(barrierBreakSounds[Random.Range(0, barrierBreakSounds.Length)]);
+
             }
             else if (distanceFromHero > distanceAllowedOutsideDarkness+distanceAllowedInDarkness)
             {
@@ -352,6 +355,7 @@ public class InputHandler : MonoBehaviour {
         else
         {
            borderRubberBandParticlesChild.SetActive(false);
+            darknessBreakingPoint = Vector2.zero;
         }
 
     }
@@ -368,6 +372,8 @@ public class InputHandler : MonoBehaviour {
         else if (breakingPoint == Vector2.zero)
         {
             breakingPoint = transform.position;
+            sc.attemptSound(barrierBreakSounds[Random.Range(0, barrierBreakSounds.Length)]);
+
         }
         else if (distanceFromBreakingPoint > distanceAllowedOutside)
         {
