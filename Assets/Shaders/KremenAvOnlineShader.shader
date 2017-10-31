@@ -3,6 +3,13 @@
 	Properties
 	{
 		_MainTex("Texture", 2D) = "white" {}
+		[Toggle]_IsPixelated("Pixelated", Float) = 0
+		[Toggle]_HardAttenuation("HardAttenuation", Float) = 0
+		_HardAttenuationThreshold("HardAttenuationThreshold", Range(5,30)) = 15
+		//[Toggle]_SoftAttenuation("SoftAttenuation", Float) = 0
+		[Toggle]_SolidColor("SolidColor", Float) = 0
+		
+
 	}
 		SubShader
 	{
@@ -74,6 +81,11 @@
 			//uniform float4 _LightColor0; //included in Lighting.cginc
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
+			float _IsPixelated;
+			float _HardAttenuation;
+			int _HardAttenuationThreshold;
+			int _SolidColor;
+
 			struct vertexInput {
 				float4 vertex : POSITION;
 				float4 uv : TEXCOORD2;
@@ -101,40 +113,56 @@
 
 			fixed4 frag(v2f i) : COLOR
 			{
+				float shadow = SHADOW_ATTENUATION(i);
 				float3 vertexToLightSource = _WorldSpaceLightPos0.xyz - i.worldPos.xyz;
 				float distanceToLight = length(vertexToLightSource);
 				float lightRange = 1 / _LightPositionRange.w;
 				float attenuation = 1 - (distanceToLight / lightRange);
 				
-				//SMOOTH OUTWARD ATTENUATION
-				/*attenuation *= 100;
-				int rest = attenuation % 20;
-				attenuation -= rest;
-				attenuation /= 100;*/
-				
-				//PIXEL LIGHT WITH/WITHOUT SMOOTH ATTENUATION
-				float3 pixelAttenuation = float3(1.0-length(vertexToLightSource.x/lightRange), 1.0 - length(vertexToLightSource.y / lightRange), 1.0 - length(vertexToLightSource.z / lightRange));
-				pixelAttenuation*= 1000; //multiply by 1000 to get better mod possibilities
-				int modValue = 400/(lightRange); //this gives approx 5-6 pixels per light range
-				int3 pixelRemainder = int3(pixelAttenuation.x % modValue, pixelAttenuation.y % modValue, pixelAttenuation.z % modValue);
-				pixelAttenuation.x -= pixelRemainder.x - (modValue);
-				pixelAttenuation.y -= pixelRemainder.y - (modValue);
-				pixelAttenuation.z -= pixelRemainder.z - (modValue);
-				pixelAttenuation /= 1000;
-				//WITH ATTENUATION
-				attenuation *= pixelAttenuation.x*pixelAttenuation.y*pixelAttenuation.z*3;
-				//WITHOUT ATTENUATION
-				//attenuation = pixelAttenuation.x*pixelAttenuation.y*pixelAttenuation.z;
-				//need discard if no attenuation, not 100% sure why. maybe floating point error
-				//NO DISCARD with attenuation
-				if (attenuation < 0.1)
+				if (_HardAttenuation == 1.0f)
 				{
-					//discard;
+					//SMOOTH OUTWARD ATTENUATION
+					attenuation *= 1000;
+					attenuation += _HardAttenuationThreshold * 10;
+					int remainder = attenuation % (_HardAttenuationThreshold*10);
+					attenuation -= remainder;
+					//attenuation += (remainder / 2);
+					//attenuation += _HardAttenuationThreshold * 5;
+					attenuation /= 1000;
+					//color = tex2D(_MainTex, i.uv).rgb*_LightColor0*shadow*attenuation; //***use pos instead of uv to highlight light colors more***
+				 	return float4(tex2D(_MainTex, i.pos).rgb*_LightColor0*shadow*attenuation, 1.0);
 				}
-
-				float shadow = SHADOW_ATTENUATION(i);
-				float3 color = tex2D(_MainTex, i.uv).rgb*_LightColor0*shadow*attenuation; //***use pos instead of uv to highlight light colors more***
-				return float4(color, 1.0);
+				if (_SolidColor == 1.0f && distanceToLight < lightRange)
+				{
+					//SMOOTH OUTWARD ATTENUATION
+					return float4(tex2D(_MainTex, i.pos).rgb*_LightColor0*shadow, 1.0);
+				}
+				
+				if (_IsPixelated == 1.0f)
+				{
+					//PIXEL LIGHT WITH/WITHOUT SMOOTH ATTENUATION
+					float3 pixelAttenuation = float3(1.0 - length(vertexToLightSource.x / lightRange), 1.0 - length(vertexToLightSource.y / lightRange), 1.0 - length(vertexToLightSource.z / lightRange));
+					pixelAttenuation *= 1000; //multiply by 1000 to get better mod possibilities
+					int modValue = 400 / (lightRange); //this gives approx 5-6 pixels per light range
+					int3 pixelRemainder = int3(pixelAttenuation.x % modValue, pixelAttenuation.y % modValue, pixelAttenuation.z % modValue);
+					pixelAttenuation.x -= pixelRemainder.x - (modValue);
+					pixelAttenuation.y -= pixelRemainder.y - (modValue);
+					pixelAttenuation.z -= pixelRemainder.z - (modValue);
+					pixelAttenuation /= 1000;
+					//WITH ATTENUATION
+					attenuation *= pixelAttenuation.x*pixelAttenuation.y*pixelAttenuation.z * 3;
+					//WITHOUT ATTENUATION
+					//attenuation = pixelAttenuation.x*pixelAttenuation.y*pixelAttenuation.z;
+					//need discard if no attenuation, not 100% sure why. maybe floating point error
+					//NO DISCARD with attenuation
+					//if (attenuation < 0.1)
+					//{
+						//discard;
+					//}
+					return float4(tex2D(_MainTex, i.pos).rgb*_LightColor0*shadow*attenuation, 1.0); //***use pos instead of uv to highlight light colors more***
+				}
+				return float4(tex2D(_MainTex, i.pos).rgb*_LightColor0*shadow*attenuation, 1.0);
+				
 			}
 			ENDCG
 		}

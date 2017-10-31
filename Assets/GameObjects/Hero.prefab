@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4408759612576886}
   - component: {fileID: 108230368895611304}
+  - component: {fileID: 114174702757557672}
   m_Layer: 0
   m_Name: Ghost Highlight
   m_TagString: Untagged
@@ -53,6 +54,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4230381543735178}
   - component: {fileID: 108083018768614908}
+  - component: {fileID: 114323197547170436}
   m_Layer: 0
   m_Name: Flashlight
   m_TagString: Untagged
@@ -89,7 +91,8 @@ GameObject:
   - component: {fileID: 50028208778097846}
   - component: {fileID: 114331145588502232}
   - component: {fileID: 212327258907555126}
-  m_Layer: 0
+  - component: {fileID: 114387146704173538}
+  m_Layer: 2
   m_Name: Hero
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -133,7 +136,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1183441382646384}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4619214151796382}
@@ -159,7 +162,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1827641440283114}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.5, z: 0}
+  m_LocalPosition: {x: -8.93, y: 2.67, z: -0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4230381543735178}
@@ -287,12 +290,12 @@ Light:
   serializedVersion: 8
   m_Type: 2
   m_Color: {r: 0.51157004, g: 0.67602915, b: 0.83823526, a: 1}
-  m_Intensity: 0.9
-  m_Range: 5
+  m_Intensity: 0.5
+  m_Range: 1.5
   m_SpotAngle: 66
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 1
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -313,6 +316,36 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &114174702757557672
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1183441382646384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29cfa8f63291fdb4ea7ac8310f062702, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flickerRadius: 0
+  flickerDeltaRange: 0
+  intensityRange: 0
+  intensityDeltaRange: 0
+--- !u!114 &114323197547170436
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1722195148938494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29cfa8f63291fdb4ea7ac8310f062702, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flickerRadius: 0
+  flickerDeltaRange: 0
+  intensityRange: 0
+  intensityDeltaRange: 0
 --- !u!114 &114331145588502232
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -336,6 +369,34 @@ MonoBehaviour:
   dashTimer: 0.6
   dashRange: 2.4
   dasherMaterial: {fileID: 2100000, guid: 720e7640c542e1344b98edf8bbe5a4c5, type: 2}
+  distanceAllowedOutside: 1
+  distanceAllowedInDarkness: 8
+  distanceAllowedOutsideDarkness: 0.5
+--- !u!114 &114387146704173538
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1827641440283114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8027ec3b8511d7542afac095651d8926, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  amountOfSpritesPerDirection: 2
+  leftAnimationIndexStart: 4
+  rightAnimationIndexStart: 6
+  upAnimationIndexStart: 2
+  downAnimationIndexStart: 0
+  sprites:
+  - {fileID: 21300000, guid: 196add32c50e13f488302f1aea1c331c, type: 3}
+  - {fileID: 21300002, guid: 196add32c50e13f488302f1aea1c331c, type: 3}
+  - {fileID: 21300004, guid: 196add32c50e13f488302f1aea1c331c, type: 3}
+  - {fileID: 21300006, guid: 196add32c50e13f488302f1aea1c331c, type: 3}
+  - {fileID: 21300008, guid: 196add32c50e13f488302f1aea1c331c, type: 3}
+  - {fileID: 21300010, guid: 196add32c50e13f488302f1aea1c331c, type: 3}
+  - {fileID: 21300012, guid: 196add32c50e13f488302f1aea1c331c, type: 3}
+  - {fileID: 21300014, guid: 196add32c50e13f488302f1aea1c331c, type: 3}
 --- !u!198 &198359991580050246
 ParticleSystem:
   m_ObjectHideFlags: 1

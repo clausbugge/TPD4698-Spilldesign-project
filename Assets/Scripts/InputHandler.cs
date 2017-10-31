@@ -1,43 +1,33 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-enum HERO_STATE
-{
-    IDLE,
-    MOVING,
-    DASHING,
-    NO_OF_STATES
-}
-
-enum GHOST_STATE
-{
-    HUMAN,
-    GHOST,
-    NO_OF_STATES
-}
-
-enum MOVE_DIRECTION
-{
-    UP = 1,
-    DOWN = 2,
-    LEFT = 4,
-    RIGHT = 8,
-    UPLEFT = UP+LEFT,
-    UPRIGHT = UP + RIGHT,
-    DOWNLEFT = DOWN + LEFT,
-    DOWNRIGHT = DOWN + RIGHT
-}
-
-struct Inputs
-{
-    public bool up;
-    public bool down;
-    public bool left;
-    public bool right;
-    public bool space;
-}
-
 public class InputHandler : MonoBehaviour {
+    enum HERO_STATE
+    {
+        IDLE,
+        MOVING,
+        DASHING,
+        NO_OF_STATES
+    }
+
+    enum GHOST_STATE
+    {
+        HUMAN,
+        GHOST,
+        NO_OF_STATES
+    }
+
+    enum MOVE_DIRECTION
+    {
+        UP = 1,
+        DOWN = 2,
+        LEFT = 4,
+        RIGHT = 8,
+        UPLEFT = UP + LEFT,
+        UPRIGHT = UP + RIGHT,
+        DOWNLEFT = DOWN + LEFT,
+        DOWNRIGHT = DOWN + RIGHT
+    }
     public int moveSpeed = 1;
     public Sprite humanIdleDashingSprite; //idle hero sprite when he is dashing
     public Sprite ghostIdleDashingSprite; //idle ghost sprite when he is dashing
@@ -63,12 +53,14 @@ public class InputHandler : MonoBehaviour {
     private GameObject borderRubberBandParticlesChild;
     private Light ghostHighlightChildComponent;
 
-    private Inputs inputs;
     private Vector2 breakingPoint; //for where human/ghost enters dark/light
     private Vector2 darknessBreakingPoint; //for where ghost leaves legal radius
-    private float distanceAllowedOutside; //how far player can travelled from safe zone. better than time spent outside methinks.
-    private float distanceAllowedInDarkness; //bad name. how far player can travell from 
-    private float distanceAllowedOutsideDarkness; 
+    [Tooltip("Distance player can move in darkness/light(in humanState/ghostState).")]
+    public float distanceAllowedOutside; //how far player can travel from safe zone. better than time spent outside methinks.
+    [Tooltip("Distance ghost state can move from human state.")]
+    public float distanceAllowedInDarkness; 
+    [Tooltip("Distance ghost can move outside alloted distance in distanceAllowedInDarkness.")]
+    public float distanceAllowedOutsideDarkness; 
     private Vector2 lastDirection;
     private void Awake()
     {
@@ -82,19 +74,11 @@ public class InputHandler : MonoBehaviour {
         ghostHighlightChildComponent.enabled = false;
         rubberBandParticlesChild.SetActive(false);
         borderRubberBandParticlesChild.SetActive(false);
-        inputs.up = false;
-        inputs.down = false;
-        inputs.left = false;
-        inputs.right = false;
         lastDirection = Vector2.right;
-       // direction = (int)MOVE_DIRECTION.LEFT;
         ghostState = GHOST_STATE.HUMAN;
         breakingPoint = Vector2.zero; //TODO: can have repercussions once every blue moon
-        distanceAllowedOutside = 1.5f;
-        distanceAllowedInDarkness = 8.0f;
         ParticleSystem.ShapeModule bps = borderParticlesChild.GetComponent<ParticleSystem>().shape;
         bps.radius = distanceAllowedInDarkness;
-        distanceAllowedOutsideDarkness = 4.0f;
     }
 
     // Use this for initialization
@@ -102,15 +86,6 @@ public class InputHandler : MonoBehaviour {
         state = (int)HERO_STATE.IDLE;
 	}
 
-    int findMask(string[] layers, bool flipped = false)
-    {
-        int layerMask = 0;
-        foreach (var layer in layers)
-        {
-            layerMask += 1 << LayerMask.NameToLayer(layer);
-        }
-        return flipped ? ~layerMask : layerMask;
-    }
 
     bool isPointInDark(Vector3 point) //TODO: Will be converted to vec2 in function. maybe rewrite whole game to use 3d physics (some weakness with 2d)
     {
@@ -143,14 +118,11 @@ public class InputHandler : MonoBehaviour {
     void Update()
     {
         dt = Time.deltaTime;
-        checkInput();
 
-        //if is in ghost state
-        //updateGhostHighlight();
         switch (state)
         {
             case HERO_STATE.IDLE:
-                if (inputs.space) //turns out he can dash without moving after all!
+                if (Input.GetAxis("Fire1") == 1) //turns out he can dash without moving after all!
                 {
                     StartCoroutine(startDash());
                 }
@@ -158,9 +130,8 @@ public class InputHandler : MonoBehaviour {
             case HERO_STATE.DASHING:
                 break;
             case HERO_STATE.MOVING:
-                updateFlashlight();
                 updateCamera();
-                if (inputs.space) //turns out he can dash without moving after all!
+                if (Input.GetAxis("Fire1") == 1) //turns out he can dash without moving after all!
                 {
                     StartCoroutine(startDash());
                 }
@@ -169,129 +140,15 @@ public class InputHandler : MonoBehaviour {
                 break;
         }
     }
+
     private void updateCamera()
     {
         Camera.main.GetComponent<CameraScript>().targetOffset = newVelocity.normalized*1.2f;
     }
-    private void checkInput()
+
+    private GameObject createDasher()
     {
-        inputs.up = false;
-        inputs.down = false;
-        inputs.left = false;
-        inputs.right = false;
-        inputs.space = false;
-
-        if (Input.GetKey(KeyCode.W) || Input.GetKeyDown(KeyCode.W))
-        {
-            inputs.up = true;
-        }
-        if (Input.GetKey(KeyCode.S) || Input.GetKeyDown(KeyCode.S))
-        {
-            inputs.down = true;
-        }
-        if (Input.GetKey(KeyCode.A) || Input.GetKeyDown(KeyCode.A))
-        {
-            inputs.left = true;
-        }
-        if (Input.GetKey(KeyCode.D) || Input.GetKeyDown(KeyCode.D))
-        {
-            inputs.right = true;
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            inputs.space = true;
-        }
-    }
-
-
-    private void updateFlashlight()
-    {
-        int inputsHeld = 0;
-        float newXRot = 0;
-        if (inputs.up)
-        {
-            newXRot += 270.0f;
-            inputsHeld++;
-        }
-        if (inputs.down)
-        {
-            newXRot += 90.0f;
-            inputsHeld++;
-        }
-        if (inputs.left)
-        {
-            newXRot += 180.0f;
-            inputsHeld++;
-        }
-        if (inputs.right)
-        {
-            newXRot += 360.0f;
-            inputsHeld++;
-        }
-        if (inputsHeld != 0)
-        {
-            //newXRot %= 360;
-            newXRot /= inputsHeld;
-            if (!Mathf.Approximately(flashLightChild.transform.localRotation.x, newXRot)) //don't do it if flashlight already facing correct location
-            {
-                flashLightChild.transform.localRotation = Quaternion.Euler(newXRot, 90.0f, 0.0f);
-            }
-        }
-    }
-
-    enum INTERPOLATION_TYPE
-    {
-        LERP,
-        SMOOTH
-    }
-
-    private float lerp(float pd) //pd = percentage done. just for testing.
-    {
-        return pd;
-    }
-
-    private float smoothInterpolation(float pd) //pd = percentage done
-    {
-        return pd * pd * (3 - 2 * pd);
-    }
-
-    IEnumerator moveObject(GameObject go, Vector3 direction, float duration, float distance, INTERPOLATION_TYPE type = INTERPOLATION_TYPE.SMOOTH, int power = 1) //direction normalized
-    {
-        Vector3 startPos = go.transform.position;
-        System.Func<float, float> interpolationFunc = smoothInterpolation;
-        float delta = 0.0f;
-        float oldPos = 0.0f;
-        float newPos = 0.0f;
-
-        switch (type)
-        {
-            case INTERPOLATION_TYPE.LERP:
-                interpolationFunc = lerp;
-                break;
-            case INTERPOLATION_TYPE.SMOOTH:
-                interpolationFunc = smoothInterpolation;
-                break;
-            default:
-                print("invalid interpolation type. default= smooth interpolation");
-                break;
-        }
-        
-        for (float i = 0; i < duration; i += dt)
-        {
-            float pd = 0.25f + (i * 0.75f / duration);
-            newPos = interpolationFunc(pd);
-            newPos = Mathf.Pow(newPos, power); 
-            delta = newPos - oldPos;
-            oldPos = newPos;
-            go.transform.Translate(direction * delta * distance);
-            yield return 0;
-        }
-        go.transform.position = startPos + (direction * distance);
-    }
-
-    private GameObject createDasher()//Sprite dashSprite)//, int dashLayer)
-    {
-        GameObject dasher = new GameObject("dasher", typeof(SpriteRenderer));//, typeof(BoxCollider2D), typeof(Rigidbody2D), typeof(DashScript));
+        GameObject dasher = new GameObject("dasher", typeof(SpriteRenderer));
         dasher.transform.position = transform.position;
         Camera.main.GetComponent<CameraScript>().target = dasher;
         dasher.GetComponent<SpriteRenderer>().sprite = humanDashingSprite;
@@ -304,7 +161,7 @@ public class InputHandler : MonoBehaviour {
         Vector2 direction = (dasher.transform.position - transform.position).normalized;
         GetComponent<BoxCollider2D>().enabled = false;
         Camera.main.GetComponent<CameraScript>().target = dasher;
-        yield return StartCoroutine(moveObject(gameObject, direction, dashTimer, distance)); //dash away
+        yield return StartCoroutine(Tools.moveObject(gameObject, direction, dashTimer, distance)); //dash away
         Camera.main.GetComponent<CameraScript>().target = this.gameObject;
         GetComponent<BoxCollider2D>().enabled = true;
         changeGhostState(GHOST_STATE.HUMAN);
@@ -360,9 +217,9 @@ public class InputHandler : MonoBehaviour {
     IEnumerator dashAway()
     {
         dasher = createDasher();
-        Vector3 newVelNormal = lastDirection;
+        Vector3 newVelNormal = lastDirection.normalized;
         newVelNormal.z = 0.0f;
-        yield return StartCoroutine(moveObject(dasher, newVelNormal, dashTimer, dashRange)); //dash away
+        yield return StartCoroutine(Tools.moveObject(dasher, newVelNormal, dashTimer, dashRange)); //dash away
         bool isInDark = isPointInDark(dasher.transform.position);
         if (isInDark) //Swap successful
         {
@@ -387,7 +244,7 @@ public class InputHandler : MonoBehaviour {
                 yield return 0;
             }
             dasher.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));//make sure we are straight!
-            yield return StartCoroutine(moveObject(dasher, -newVelNormal, dashTimer, dashRange));
+            yield return StartCoroutine(Tools.moveObject(dasher, -newVelNormal, dashTimer, dashRange));
             Destroy(dasher);
         }
     }
@@ -424,24 +281,10 @@ public class InputHandler : MonoBehaviour {
         }
         if (state != HERO_STATE.DASHING)
         {
-            newVelocity = new Vector2(0, 0);
+            newVelocity = Vector2.zero;
             float speed = 4;
-            if (inputs.up)
-            {
-                newVelocity.y += 1;
-            }
-            if (inputs.down)
-            {
-                newVelocity.y -= 1;
-            }
-            if (inputs.left)
-            {
-                newVelocity.x -= 1;
-            }
-            if (inputs.right)
-            {
-                newVelocity.x += 1;
-            }
+            newVelocity.y = Input.GetAxis("Vertical");
+            newVelocity.x = Input.GetAxis("Horizontal");
             changeHeroState((newVelocity.x == 0 && newVelocity.y == 0) ?
                 HERO_STATE.IDLE :
                 HERO_STATE.MOVING); //hurray for good code
@@ -553,7 +396,7 @@ public class InputHandler : MonoBehaviour {
     {
         changeHeroState(HERO_STATE.DASHING);
         Vector2 direction = new Vector2(transform.position.x - breakingPoint.x, transform.position.y - breakingPoint.y).normalized;
-        yield return StartCoroutine(moveObject(gameObject, -direction, 0.2f, distanceFromBreakingPoint*1.3f));
+        yield return StartCoroutine(Tools.moveObject(gameObject, -direction, 0.2f, distanceFromBreakingPoint*1.3f));
         transform.position = breakingPoint-direction*0.3f;
         changeHeroState(HERO_STATE.IDLE);
     }
@@ -563,7 +406,7 @@ public class InputHandler : MonoBehaviour {
         changeHeroState(HERO_STATE.DASHING);
         Vector2 direction = new Vector2(transform.position.x - dasher.transform.position.x, transform.position.y - dasher.transform.position.y).normalized;
         float distance = (transform.position - dasher.transform.position).magnitude;
-        yield return StartCoroutine(moveObject(gameObject, -direction, 0.3f, distance,INTERPOLATION_TYPE.LERP,4));
+        yield return StartCoroutine(Tools.moveObject(gameObject, -direction, 0.3f, distance, Tools.INTERPOLATION_TYPE.LERP,4));
         borderParticlesChild.transform.SetParent(gameObject.transform);
         Destroy(dasher);
         changeGhostState(GHOST_STATE.HUMAN);
