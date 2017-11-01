@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class Tools{
+public static class Tools
+{
     public enum INTERPOLATION_TYPE
     {
         LERP,
@@ -54,8 +55,6 @@ public static class Tools{
         go.transform.localPosition = startPos + (direction * distance);
     }
 
-
-
     public static IEnumerator rotateObject(GameObject go, Vector3 eulerAngles, float duration, INTERPOLATION_TYPE type = INTERPOLATION_TYPE.SMOOTH, int power = 1)
     {
         Vector3 startAngles = go.transform.eulerAngles;
@@ -67,10 +66,12 @@ public static class Tools{
             float pd = i / duration;
             newValue = interpolationFunc(pd);
             newValue = Mathf.Pow(newValue, power);
+            //Debug.Log(newValue);
+            Debug.Log(startAngles +(eulerAngles * newValue));
             go.transform.eulerAngles = startAngles+(eulerAngles * newValue);
             yield return 0;
         }
-        go.transform.eulerAngles = startAngles + (eulerAngles);
+      //  go.transform.eulerAngles = startAngles + (eulerAngles);
     }
 
     //TODO: NOT TESTED AT ALL:

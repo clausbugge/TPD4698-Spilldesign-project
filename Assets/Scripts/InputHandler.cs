@@ -17,6 +17,7 @@ public class InputHandler : MonoBehaviour {
         GHOST,
         NO_OF_STATES
     }
+    
 
     enum MOVE_DIRECTION
     {
