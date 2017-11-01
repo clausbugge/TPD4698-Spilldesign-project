@@ -9,7 +9,7 @@ public static class Tools{
         SMOOTH
     }
 
-    public static float lerp(float pd) //pd = percentage done. just for testing.
+    public static float lerp(float pd) //pd = percentage done
     {
         return pd;
     }
@@ -19,39 +19,80 @@ public static class Tools{
         return pd * pd * (3 - 2 * pd);
     }
 
-    public static IEnumerator moveObject(GameObject go, Vector3 direction, float duration, float distance, INTERPOLATION_TYPE type = INTERPOLATION_TYPE.SMOOTH, int power = 1) //direction normalized
+    private static System.Func<float, float> getInterpolationFunc(INTERPOLATION_TYPE type)
     {
-        Vector3 startPos = go.transform.localPosition;
-        System.Func<float, float> interpolationFunc = smoothInterpolation;
-        float delta = 0.0f;
-        float oldPos = 0.0f;
-        float newPos = 0.0f;
-
         switch (type)
         {
             case INTERPOLATION_TYPE.LERP:
-                interpolationFunc = lerp;
-                break;
+                return lerp;
             case INTERPOLATION_TYPE.SMOOTH:
-                interpolationFunc = smoothInterpolation;
-                break;
+                return smoothInterpolation;
             default:
-                Debug.Log("invalid interpolation type. default= smooth interpolation");
-                break;
+                return smoothInterpolation;
         }
+    }
+
+    public static IEnumerator moveObject(GameObject go, Vector3 direction, float duration, float distance, INTERPOLATION_TYPE type = INTERPOLATION_TYPE.SMOOTH, int power = 1) //direction normalized
+    {
+        Vector3 startPos = go.transform.localPosition;
+        System.Func<float, float> interpolationFunc = getInterpolationFunc(type);
+        //float delta = 0.0f;
+        //float oldPos = 0.0f;
+        float newPos = 0.0f;
 
         for (float i = 0; i < duration; i += Time.deltaTime)
         {
-            float pd = 0.25f + (i * 0.75f / duration);
+            float pd = 0.25f + (i * 0.75f / duration); //TODO: make this line better mebbe
             newPos = interpolationFunc(pd);
             newPos = Mathf.Pow(newPos, power);
-            delta = newPos - oldPos;
-            oldPos = newPos;
-            go.transform.localPosition+=(direction * delta * distance);
+            //delta = newPos - oldPos;
+            //oldPos = newPos;
+            go.transform.localPosition=startPos+(direction * newPos * distance);
             yield return 0;
         }
         go.transform.localPosition = startPos + (direction * distance);
     }
+
+
+
+    public static IEnumerator rotateObject(GameObject go, Vector3 eulerAngles, float duration, INTERPOLATION_TYPE type = INTERPOLATION_TYPE.SMOOTH, int power = 1)
+    {
+        Vector3 startAngles = go.transform.eulerAngles;
+        System.Func<float, float> interpolationFunc = getInterpolationFunc(type);
+        float newValue = 0.0f;
+
+        for (float i = 0; i < duration; i += Time.deltaTime) //might be buggy. not tested super much
+        {
+            float pd = i / duration;
+            newValue = interpolationFunc(pd);
+            newValue = Mathf.Pow(newValue, power);
+            go.transform.eulerAngles = startAngles+(eulerAngles * newValue);
+            yield return 0;
+        }
+        go.transform.eulerAngles = startAngles + (eulerAngles);
+    }
+
+    //TODO: NOT TESTED AT ALL:
+    //public static IEnumerator rotateObjectAround(GameObject go, Vector3 eulerAngles, Vector3 axis, Vector3 direction,float duration, INTERPOLATION_TYPE type = INTERPOLATION_TYPE.SMOOTH, int power = 1)
+    //{
+    //    Vector3 startAngles = go.transform.eulerAngles;
+    //    System.Func<float, float> interpolationFunc = getInterpolationFunc(type);
+    //    float newAngle = 0.0f;
+    //    float oldAngle = 0.0f;
+    //    float deltaAngle = 0.0f;
+    //    for (float i = 0; i < duration; i += Time.deltaTime) //might be buggy. not tested super much
+    //    {
+    //        float pd = i / duration;
+    //        newAngle = interpolationFunc(pd);
+    //        newAngle = Mathf.Pow(newAngle, power);
+    //        deltaAngle = newAngle - oldAngle;
+    //        oldAngle = newAngle;
+    //        go.transform.RotateAround(axis, direction, deltaAngle);
+    //        //go.transform.eulerAngles = startAngles + (eulerAngles * newValue);
+    //        yield return 0;
+    //    }
+    //    //go.transform.eulerAngles = startAngles + (eulerAngles); //TOOD: not sure how to code this to make sure it's precise at the end.
+    //}
 
     public static int findMask(string[] layers, bool flipped = false)
     {

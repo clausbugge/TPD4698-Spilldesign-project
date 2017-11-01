@@ -7,18 +7,28 @@ public class ElevatorDoor : MonoBehaviour {
     private bool triggered = false;
     private GameObject leftDoor;
     private GameObject rightDoor;
+    private GameObject redCarpet;
     void Start()
     {
-        leftDoor = GetComponentsInChildren<BoxCollider2D>()[0].gameObject;
-        rightDoor = GetComponentsInChildren<BoxCollider2D>()[1].gameObject;
+        leftDoor = transform.GetChild(0).gameObject;
+        rightDoor = transform.GetChild(1).gameObject;
+        redCarpet = transform.GetChild(2).gameObject;
+
     }
     public void trigger()
     {
         if (!triggered && !moving)
         {
-            StartCoroutine(Tools.moveObject(leftDoor, Vector3.left, 1, 2));
-            StartCoroutine(Tools.moveObject(rightDoor, Vector3.right, 1, 2));
-            triggered = !triggered;
+            StartCoroutine(finishLevel());
         }
+    }
+
+    IEnumerator finishLevel()
+    {
+        triggered = !triggered;
+        StartCoroutine(Tools.moveObject(leftDoor, Vector3.left, 2, 1.027125f));
+        yield return StartCoroutine(Tools.moveObject(rightDoor, Vector3.right, 2, 1.027125f));
+        
+        redCarpet.GetComponent<Triggerable>().startTrigger();
     }
 }
