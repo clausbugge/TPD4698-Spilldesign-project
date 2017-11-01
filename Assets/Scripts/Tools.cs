@@ -42,7 +42,8 @@ public static class Tools{
 
         for (float i = 0; i < duration; i += Time.deltaTime)
         {
-            float pd = 0.25f + (i * 0.75f / duration); //TODO: make this line better mebbe
+            //float pd = 0.25f + (i * 0.75f / duration); //TODO: make this line better mebbe
+            float pd = i / duration; //TODO: ???
             newPos = interpolationFunc(pd);
             newPos = Mathf.Pow(newPos, power);
             //delta = newPos - oldPos;

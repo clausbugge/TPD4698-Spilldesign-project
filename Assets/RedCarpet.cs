@@ -7,6 +7,7 @@ public class RedCarpet : MonoBehaviour
     public int carpetLength;
     public Material carpetMat;
     public GameObject carpetPiece;
+    public float openDuration;
     private GameObject[] carpetSegments;
     [Range(15, 45)]
     public float anglePerPiece; //some strange behaviour with this variable... seem to encounter issues when anglePerPiece*carpetLength > ~450. probably imprecision with time and floats
@@ -33,7 +34,6 @@ public class RedCarpet : MonoBehaviour
 
     IEnumerator openCarpet()
     {
-        float openDuration = 2.0f;
         Vector3 newPos = Vector3.zero;
         Vector3 deltaPos = Vector3.zero;
         Vector3 oldPos = Vector3.zero;
@@ -46,10 +46,14 @@ public class RedCarpet : MonoBehaviour
                 carpetSegments[i].transform.position = (trans.position- trans.forward * 0.1f * 0.5f) + (-carpetSegments[i].transform.forward*0.1f*0.5f);
                 //I am not sure why we divide by 2 here, but think it's because we have to consider the angle movement already made by previous piece,
                 //otherwise increasing exponentially. but if that's the case, why do we have to divide by two for first rotating piece also??
-                carpetSegments[i].transform.RotateAround(trans.position - trans.forward * 0.1f * 0.5f, Vector3.left, anglePerPiece * (i/2.0f)*Time.deltaTime); 
+                carpetSegments[i].transform.RotateAround(trans.position - trans.forward * 0.1f * 0.5f, Vector3.left, anglePerPiece * (i/openDuration)*Time.deltaTime); 
             }
             yield return null;
         }
+        GameObject hero = GameObject.Find("Hero");
+        Vector3 moveDir = (-hero.transform.position + transform.position).normalized;
+        moveDir.z = 0.0f;
+        StartCoroutine(Tools.moveObject(hero, moveDir, 2, (-hero.transform.position + transform.position).magnitude, Tools.INTERPOLATION_TYPE.LERP));
     }
 
     public void trigger()

@@ -26,9 +26,10 @@ public class ElevatorDoor : MonoBehaviour {
     IEnumerator finishLevel()
     {
         triggered = !triggered;
+        GameObject.Find("Hero").GetComponent<InputHandler>().changeHeroState(InputHandler.HERO_STATE.DISABLED);
         StartCoroutine(Tools.moveObject(leftDoor, Vector3.left, 2, 1.027125f));
         yield return StartCoroutine(Tools.moveObject(rightDoor, Vector3.right, 2, 1.027125f));
-        
         redCarpet.GetComponent<Triggerable>().startTrigger();
+        
     }
 }

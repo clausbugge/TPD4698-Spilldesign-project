@@ -1661,7 +1661,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1827641440283114, guid: 15eacf81588af1f43a34e71943ded612, type: 2}
       propertyPath: m_Name
-      value: Hero (1)
+      value: Hero
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 15eacf81588af1f43a34e71943ded612, type: 2}
@@ -1889,11 +1889,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4982913593368426, guid: 2d2784e88429c704a8f9abdf60295e6e, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -5
+      value: -4.35
       objectReference: {fileID: 0}
     - target: {fileID: 4982913593368426, guid: 2d2784e88429c704a8f9abdf60295e6e, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -2.5
+      value: -1.45
       objectReference: {fileID: 0}
     - target: {fileID: 4982913593368426, guid: 2d2784e88429c704a8f9abdf60295e6e, type: 2}
       propertyPath: m_LocalPosition.z
@@ -2753,6 +2753,16 @@ Prefab:
     - target: {fileID: 4787202288870264, guid: 75fba0060e1000d4ba8e48a22a480866, type: 2}
       propertyPath: m_LocalPosition.y
       value: -1.027125
+      objectReference: {fileID: 0}
+    - target: {fileID: 114152118845260534, guid: 75fba0060e1000d4ba8e48a22a480866,
+        type: 2}
+      propertyPath: layCarpetDelay
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114152118845260534, guid: 75fba0060e1000d4ba8e48a22a480866,
+        type: 2}
+      propertyPath: openDuration
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 75fba0060e1000d4ba8e48a22a480866, type: 2}

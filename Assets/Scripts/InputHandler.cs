@@ -2,11 +2,12 @@
 using UnityEngine;
 
 public class InputHandler : MonoBehaviour {
-    enum HERO_STATE
+    public enum HERO_STATE
     {
         IDLE,
         MOVING,
         DASHING,
+        DISABLED,
         NO_OF_STATES
     }
 
@@ -87,10 +88,9 @@ public class InputHandler : MonoBehaviour {
         state = (int)HERO_STATE.IDLE;
 	}
 
-
     bool isPointInDark(Vector3 point) //TODO: Will be converted to vec2 in function. maybe rewrite whole game to use 3d physics (some weakness with 2d)
     {
-        Light[] lights = GameObject.FindObjectsOfType<Light>();
+        Light[] lights = FindObjectsOfType<Light>();
         foreach (Light light in lights)
         {
             if(light.name=="Ghost Highlight") //TODO: slightly hacky. would be better with proper handler for light(low-prio)
@@ -122,6 +122,8 @@ public class InputHandler : MonoBehaviour {
 
         switch (state)
         {
+            case HERO_STATE.DISABLED:
+                break;
             case HERO_STATE.IDLE:
                 if (Input.GetAxis("Dash") == 1) //turns out he can dash without moving after all!
                 {
@@ -189,12 +191,15 @@ public class InputHandler : MonoBehaviour {
                 break;
         }
     }
-    private void changeHeroState(HERO_STATE newState)
+    public void changeHeroState(HERO_STATE newState)
     {
         state = newState;
         switch (newState)
         {
             case HERO_STATE.MOVING:
+                break;
+            case HERO_STATE.DISABLED:
+                break;
             case HERO_STATE.IDLE:
                 break;
             case HERO_STATE.DASHING:
@@ -281,7 +286,7 @@ public class InputHandler : MonoBehaviour {
         {
             gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
         }
-        if (state != HERO_STATE.DASHING)
+        if (state != HERO_STATE.DASHING && state != HERO_STATE.DISABLED)
         {
             newVelocity = Vector2.zero;
             float speed = 4;
