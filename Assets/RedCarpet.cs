@@ -38,7 +38,7 @@ public class RedCarpet : MonoBehaviour
         Vector3 deltaPos = Vector3.zero;
         Vector3 oldPos = Vector3.zero;
         GameObject hero = GameObject.Find("Hero");
-        Camera.main.GetComponent<CameraScript>().target = hero.transform.position;
+        //Camera.main.GetComponent<CameraScript>().target = gameObject;
         //Camera.main.GetComponent<CameraScript>().targetOffset = Vector2.zero;
         StartCoroutine(Camera.main.GetComponent<CameraScript>().rotateWhileLookAt(Vector3.left*90,gameObject,4));
         for (float t = 0; t < openDuration; t+= Time.deltaTime)
@@ -54,7 +54,6 @@ public class RedCarpet : MonoBehaviour
             }
             yield return null;
         }
-        
         Vector3 moveDir = (-hero.transform.position + transform.position).normalized;
         moveDir.z = 0.0f;
         float moveTime = 2.0f;
