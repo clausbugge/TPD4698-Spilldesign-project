@@ -86,7 +86,7 @@ public class InputHandler : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        state = (int)HERO_STATE.IDLE;
+    //    state = (int)HERO_STATE.IDLE;
 	}
 
     bool isPointInDark(Vector3 point) //TODO: Will be converted to vec2 in function. maybe rewrite whole game to use 3d physics (some weakness with 2d)
@@ -200,6 +200,7 @@ public class InputHandler : MonoBehaviour {
             case HERO_STATE.MOVING:
                 break;
             case HERO_STATE.DISABLED:
+                gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
                 break;
             case HERO_STATE.IDLE:
                 break;

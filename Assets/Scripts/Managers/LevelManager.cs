@@ -28,6 +28,17 @@ public class LevelManager : MonoBehaviour
     public void nextLevel()
     {
         currentLevel++;
-        SceneManager.LoadScene("level" + currentLevel.ToString());
+        string nextLvlName = "Scenes/level" + currentLevel.ToString(); //important: all scenes have to be in Scenes folder
+        //if (!SceneManager.GetSceneByName(nextLvlName).IsValid()) //TODO: can't get this to work for now. cba to fix
+        {
+
+            //print(nextLvlName + " not found. end of available levels reached"); //TOOD: add victory screen or whatever
+          //  return;
+        }
+        //else
+        {
+            SceneManager.LoadScene(nextLvlName);
+        }
+        
     }
 }

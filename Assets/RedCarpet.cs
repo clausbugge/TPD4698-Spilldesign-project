@@ -32,15 +32,14 @@ public class RedCarpet : MonoBehaviour
         }
     }
 
-    IEnumerator openCarpet()
+    public IEnumerator openCarpet()
     {
         Vector3 newPos = Vector3.zero;
         Vector3 deltaPos = Vector3.zero;
         Vector3 oldPos = Vector3.zero;
-        GameObject hero = GameObject.Find("Hero");
+        
         //Camera.main.GetComponent<CameraScript>().target = gameObject;
         //Camera.main.GetComponent<CameraScript>().targetOffset = Vector2.zero;
-        StartCoroutine(Camera.main.GetComponent<CameraScript>().rotateWhileLookAt(Vector3.left*90,gameObject,4));
         for (float t = 0; t < openDuration; t+= Time.deltaTime)
         {
             deltaPos = Vector3.zero;
@@ -48,23 +47,10 @@ public class RedCarpet : MonoBehaviour
             {
                 Transform trans = carpetSegments[i - 1].transform;
                 carpetSegments[i].transform.position = (trans.position- trans.forward * 0.1f * 0.5f) + (-carpetSegments[i].transform.forward*0.1f*0.5f);
-                //I am not sure why we divide by 2 here, but think it's because we have to consider the angle movement already made by previous piece,
-                //otherwise increasing exponentially. but if that's the case, why do we have to divide by two for first rotating piece also??
                 carpetSegments[i].transform.RotateAround(trans.position - trans.forward * 0.1f * 0.5f, Vector3.left, anglePerPiece * (i/openDuration)*Time.deltaTime); 
             }
             yield return null;
         }
-        Vector3 moveDir = (-hero.transform.position + transform.position).normalized;
-        moveDir.z = 0.0f;
-        float moveTime = 2.0f;
-        StartCoroutine(Tools.moveObject(hero, moveDir, moveTime, (-hero.transform.position + transform.position).magnitude, Tools.INTERPOLATION_TYPE.LERP));
-        
-        yield return StartCoroutine(Camera.main.GetComponent<CameraScript>().fade(false, moveTime*1.5f));
-       // LevelManager.instance.nextLevel();
-    }
 
-    public void trigger()
-    {
-        StartCoroutine(openCarpet());
     }
 }

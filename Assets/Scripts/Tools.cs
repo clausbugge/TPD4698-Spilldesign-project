@@ -66,8 +66,6 @@ public static class Tools
             float pd = i / duration;
             newValue = interpolationFunc(pd);
             newValue = Mathf.Pow(newValue, power);
-            //Debug.Log(newValue);
-            Debug.Log(startAngles +(eulerAngles * newValue));
             go.transform.eulerAngles = startAngles+(eulerAngles * newValue);
             yield return 0;
         }
