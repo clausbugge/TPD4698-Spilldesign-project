@@ -17,6 +17,7 @@ public class LeverScript : MonoBehaviour
     public LEVER_STATE state;
     public Sprite onSprite;
     public Sprite offSprite;
+    public AudioClip[] flipSwitchSounds;
     // Use this for initialization
     void Start()
     {
@@ -67,6 +68,7 @@ public class LeverScript : MonoBehaviour
         {
             if (obj != null)
             {
+                GetComponent<SoundCaller>().attemptSound(flipSwitchSounds[Random.Range(0,flipSwitchSounds.Length)],5);
                 obj.GetComponent<Triggerable>().startTrigger();
             }
         }

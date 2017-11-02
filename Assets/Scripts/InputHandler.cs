@@ -42,7 +42,7 @@ public class InputHandler : MonoBehaviour {
     public AudioClip[] barrierBreakSounds;
     public float dashTimer; //dashtime in seconds
     public float dashRange; //dashrange in unity units
-    private Vector2 dashOrigin;
+    private Vector3 dashOrigin;
     GameObject dasher; //dasher/placeholder for original
     public Material dasherMaterial;
     private bool isRubberbanding;
@@ -244,7 +244,7 @@ public class InputHandler : MonoBehaviour {
         }
         if (!isInDark) //swap failed
         {
-            yield return StartCoroutine(Tools.shakeObject(dasher, Vector3.back, 45, 0.5f));
+            yield return StartCoroutine(Tools.shakeObject(dasher, Vector3.back, 20, 0.25f,2));
             yield return StartCoroutine(Tools.moveObject(dasher, -newVelNormal, dashTimer, dashRange));
             Destroy(dasher);
         }
@@ -300,8 +300,7 @@ public class InputHandler : MonoBehaviour {
                 lastDirection = newVelocity;
             }           
             newVelocity = newVelocity.normalized * speed;
-            
-            bool nextPosInDark = isPointInDark(transform.position+new Vector3(newVelocity.x, newVelocity.y,0)*Time.fixedDeltaTime);
+            bool nextPosInDark = isPointInDark(transform.position + new Vector3(newVelocity.x, newVelocity.y, 0) * Time.fixedDeltaTime);
             
             switch(ghostState)
             {
@@ -414,7 +413,6 @@ public class InputHandler : MonoBehaviour {
         changeHeroState(HERO_STATE.DASHING);
         Vector2 direction = new Vector2(transform.position.x - breakingPoint.x, transform.position.y - breakingPoint.y).normalized;
         yield return StartCoroutine(Tools.moveObject(gameObject, -direction, 0.2f, distanceFromBreakingPoint*1.3f));
-        transform.position = breakingPoint-direction*0.3f;
         changeHeroState(HERO_STATE.IDLE);
     }
 
