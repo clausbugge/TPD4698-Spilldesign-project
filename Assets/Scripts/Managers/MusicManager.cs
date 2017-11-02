@@ -30,7 +30,8 @@ public class MusicManager : MonoBehaviour
 
     void Start()
     {
-        audioSource.clip = songs[(int)songEnums.MAIN_THEME];
+        //audioSource.clip = songs[(int)songEnums.MAIN_THEME];
+        audioSource.clip = songs[Random.Range(0, songs.Length)];// (int)songEnums.MAIN_THEME];
         audioSource.loop = true;
         audioSource.volume = volume;
         audioSource.PlayDelayed(0.5f); //0.5 second delay

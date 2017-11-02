@@ -626,6 +626,10 @@ MonoBehaviour:
   dashSounds:
   - {fileID: 8300000, guid: a629fe08f1689044d8457375b3fe7dd0, type: 3}
   - {fileID: 8300000, guid: ed6bb76db33e0534488003e9da13e09c, type: 3}
+  dashErrorSounds:
+  - {fileID: 8300000, guid: 5f3b6cd0f6471054e8d6f59462ea7536, type: 3}
+  - {fileID: 8300000, guid: 3bd21b89ca0a181478c90a8992e6e975, type: 3}
+  - {fileID: 8300000, guid: 6de1d7d60979fdc4aa8959f83b573809, type: 3}
   barrierBreakSounds:
   - {fileID: 8300000, guid: 1f5b27cfb9f67a3459ab0fceed375b55, type: 3}
   dashTimer: 0.6

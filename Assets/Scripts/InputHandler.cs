@@ -38,13 +38,14 @@ public class InputHandler : MonoBehaviour {
     public Sprite humanSprite;
     public Sprite ghostSprite;
     public AudioClip[] dashSounds;
+    public AudioClip[] dashErrorSounds;
     public AudioClip[] barrierBreakSounds;
     public float dashTimer; //dashtime in seconds
     public float dashRange; //dashrange in unity units
     private Vector2 dashOrigin;
     GameObject dasher; //dasher/placeholder for original
     public Material dasherMaterial;
-
+    private bool isRubberbanding;
     private Vector2 newVelocity;
     private HERO_STATE state;
     private GHOST_STATE ghostState;
@@ -82,6 +83,7 @@ public class InputHandler : MonoBehaviour {
         breakingPoint = Vector2.zero; //TODO: can have repercussions once every blue moon
         ParticleSystem.ShapeModule bps = borderParticlesChild.GetComponent<ParticleSystem>().shape;
         bps.radius = distanceAllowedInDarkness;
+        isRubberbanding = false;
     }
 
     // Use this for initialization
@@ -242,17 +244,7 @@ public class InputHandler : MonoBehaviour {
         }
         if (!isInDark) //swap failed
         {
-            float failTimer = 0.07f; //never question this variable
-            float rotateAngle = 10.0f;
-            float randomNumber = 6.0f; //while you're at it, don't question this one either
-
-            for (float i = 0; i < failTimer * randomNumber; i += dt)
-            {
-                float phase = Mathf.Sin(i / failTimer);
-                dasher.transform.rotation = Quaternion.Euler(new Vector3(0, 0, phase * rotateAngle));
-                yield return 0;
-            }
-            dasher.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));//make sure we are straight!
+            yield return StartCoroutine(Tools.shakeObject(dasher, Vector3.back, 45, 0.5f));
             yield return StartCoroutine(Tools.moveObject(dasher, -newVelNormal, dashTimer, dashRange));
             Destroy(dasher);
         }
@@ -264,15 +256,21 @@ public class InputHandler : MonoBehaviour {
         switch (ghostState)
         {
             case GHOST_STATE.HUMAN:
+                if  (!isRubberbanding)
                 {
                     yield return StartCoroutine(dashAway());
                 }
+                else
+                {
+                    changeHeroState(HERO_STATE.DISABLED);
+                    yield return StartCoroutine(Tools.shakeObject(gameObject, Vector3.back, 10, 0.15f,3));
+                    changeHeroState(HERO_STATE.IDLE);
+                    sc.attemptSound(dashErrorSounds[Random.Range(0,dashErrorSounds.Length)], 5);
+                }
                 break;
             case GHOST_STATE.GHOST:
-                {
-                    gameObject.GetComponent<SpriteRenderer>().sprite = ghostIdleDashingSprite;
-                    yield return StartCoroutine(dashToOrigin());
-                }
+                gameObject.GetComponent<SpriteRenderer>().sprite = ghostIdleDashingSprite;
+                yield return StartCoroutine(dashToOrigin());
                 break;
             default:
                 print("SOMETHING BROKE! invalid ghost state(and game will probably break because of it..."); 
@@ -329,6 +327,7 @@ public class InputHandler : MonoBehaviour {
         float distanceFromBreakingPoint = distanceFromHero - distanceAllowedInDarkness;
         if (distanceFromHero > distanceAllowedInDarkness)
         {
+            isRubberbanding = true;
             if (darknessBreakingPoint == Vector2.zero)
             {
                 darknessBreakingPoint = transform.position;
@@ -337,6 +336,7 @@ public class InputHandler : MonoBehaviour {
             }
             else if (distanceFromHero > distanceAllowedOutsideDarkness+distanceAllowedInDarkness)
             {
+                isRubberbanding = false;
                 borderRubberBandParticlesChild.SetActive(false);
                 StartCoroutine(dashToDarknessPoint(distanceFromBreakingPoint));
             }
@@ -361,8 +361,9 @@ public class InputHandler : MonoBehaviour {
         }
         else
         {
-           borderRubberBandParticlesChild.SetActive(false);
+            borderRubberBandParticlesChild.SetActive(false);
             darknessBreakingPoint = Vector2.zero;
+            isRubberbanding = false;
         }
 
     }
@@ -374,11 +375,13 @@ public class InputHandler : MonoBehaviour {
         if (inLegalZoneNextFrame)
         {
             breakingPoint = Vector2.zero;
+            isRubberbanding = false;
             rubberBandParticlesChild.SetActive(false);
         }
         else if (breakingPoint == Vector2.zero)
         {
             breakingPoint = transform.position;
+            isRubberbanding = true;
             sc.attemptSound(barrierBreakSounds[Random.Range(0, barrierBreakSounds.Length)]);
 
         }

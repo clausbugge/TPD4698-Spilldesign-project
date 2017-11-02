@@ -50,9 +50,22 @@ public static class Tools
             //delta = newPos - oldPos;
             //oldPos = newPos;
             go.transform.localPosition=startPos+(direction * newPos * distance);
-            yield return 0;
+            yield return null;
         }
         go.transform.localPosition = startPos + (direction * distance);
+    }
+
+    //duration = duration for shake in 1 direction
+    public static IEnumerator shakeObject(GameObject go, Vector3 axis, float degrees, float duration, int loops = 1)
+    {
+        float sumOfLoopsDuration = duration * loops;
+        for (float j = 0; j < sumOfLoopsDuration; j += Time.deltaTime)
+        {
+            float phase = Mathf.Sin((j / duration) * 2 * Mathf.PI);
+            go.transform.rotation = Quaternion.Euler(phase * axis * degrees);
+            yield return null;
+        }    
+        go.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));//make sure we are straight!
     }
 
     public static IEnumerator rotateObject(GameObject go, Vector3 eulerAngles, float duration, INTERPOLATION_TYPE type = INTERPOLATION_TYPE.SMOOTH, int power = 1)
@@ -67,7 +80,7 @@ public static class Tools
             newValue = interpolationFunc(pd);
             newValue = Mathf.Pow(newValue, power);
             go.transform.eulerAngles = startAngles+(eulerAngles * newValue);
-            yield return 0;
+            yield return null;
         }
       //  go.transform.eulerAngles = startAngles + (eulerAngles);
     }
