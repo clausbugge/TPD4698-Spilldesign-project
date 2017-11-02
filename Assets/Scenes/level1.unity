@@ -1837,91 +1837,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2d2784e88429c704a8f9abdf60295e6e, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &1787143149 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1762779536081852, guid: 62b8dc27311e2b44788b3ce6395b2150,
-    type: 2}
-  m_PrefabInternal: {fileID: 2095776734}
---- !u!82 &1787143152
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1787143149}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
 --- !u!1 &1817971997
 GameObject:
   m_ObjectHideFlags: 0
@@ -2773,11 +2688,6 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 114207592823615200, guid: 62b8dc27311e2b44788b3ce6395b2150,
-        type: 2}
-      propertyPath: songs.Array.size
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 4530658287791796, guid: 62b8dc27311e2b44788b3ce6395b2150, type: 2}
       propertyPath: m_LocalPosition.x
       value: -9.957
@@ -2810,35 +2720,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114207592823615200, guid: 62b8dc27311e2b44788b3ce6395b2150,
-        type: 2}
-      propertyPath: songs.Array.data[0]
-      value: 
-      objectReference: {fileID: 8300000, guid: 6ba7d25f97368a948873d9791f39037d, type: 3}
-    - target: {fileID: 114207592823615200, guid: 62b8dc27311e2b44788b3ce6395b2150,
-        type: 2}
-      propertyPath: volume
-      value: 0.595
-      objectReference: {fileID: 0}
-    - target: {fileID: 1762779536081852, guid: 62b8dc27311e2b44788b3ce6395b2150, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114207592823615200, guid: 62b8dc27311e2b44788b3ce6395b2150,
-        type: 2}
-      propertyPath: songs.Array.data[1]
-      value: 
-      objectReference: {fileID: 8300000, guid: eab035379782e0547becbdcabcddf44c, type: 3}
-    - target: {fileID: 114207592823615200, guid: 62b8dc27311e2b44788b3ce6395b2150,
-        type: 2}
-      propertyPath: songs.Array.data[2]
-      value: 
-      objectReference: {fileID: 8300000, guid: 096216b6d38fbee4d920629d6de5d282, type: 3}
-    - target: {fileID: 114207592823615200, guid: 62b8dc27311e2b44788b3ce6395b2150,
-        type: 2}
-      propertyPath: songs.Array.data[3]
-      value: 
-      objectReference: {fileID: 8300000, guid: 6ba7d25f97368a948873d9791f39037d, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 62b8dc27311e2b44788b3ce6395b2150, type: 2}
   m_IsPrefabParent: 0

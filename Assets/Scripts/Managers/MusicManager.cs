@@ -7,11 +7,13 @@ public class MusicManager : MonoBehaviour
     public static MusicManager instance;
     AudioSource audioSource;
     public AudioClip[] songs;
+    public AudioClip[] fanfares;
     [Range(0, 1)]
     public float volume;
-    enum songEnums
+    public enum songEnums
     {
-        MAIN_THEME
+        MAIN_THEME,
+        FANFARE
     };
 
     void Awake()
@@ -22,19 +24,29 @@ public class MusicManager : MonoBehaviour
         }
         else if (instance != this)
         {
-            Destroy(this);
+            DestroyObject(gameObject);
+            //Destroy(this);
         }
         DontDestroyOnLoad(this);
         audioSource = GetComponent<AudioSource>();
     }
 
-    void Start()
+
+    public void playSong()
     {
         //audioSource.clip = songs[(int)songEnums.MAIN_THEME];
         audioSource.clip = songs[Random.Range(0, songs.Length)];// (int)songEnums.MAIN_THEME];
         audioSource.loop = true;
         audioSource.volume = volume;
         audioSource.PlayDelayed(0.5f); //0.5 second delay
+    }
+
+    public void playFanfare()
+    {
+        audioSource.clip = fanfares[Random.Range(0, fanfares.Length)];// (int)songEnums.MAIN_THEME];
+        audioSource.volume = volume;
+        audioSource.loop = false;
+        audioSource.Play();
     }
 
     void Update()

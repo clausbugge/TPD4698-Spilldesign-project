@@ -63,6 +63,7 @@ public class ElevatorDoor : MonoBehaviour {
     IEnumerator finishLevel()
     {
         triggered = !triggered;
+        MusicManager.instance.playFanfare();
         GameObject hero = GameObject.Find("Hero") != null ? GameObject.Find("Hero") : GameObject.Find("Hero(Clone)");
         hero.GetComponent<InputHandler>().changeHeroState(InputHandler.HERO_STATE.DISABLED);
         StartCoroutine(Tools.moveObject(leftDoor, Vector3.left, 2, 1f));
@@ -75,7 +76,6 @@ public class ElevatorDoor : MonoBehaviour {
         moveDir.z = 0.0f;
         float moveTime = 2.0f;
         StartCoroutine(Tools.moveObject(hero, moveDir, moveTime, 3, Tools.INTERPOLATION_TYPE.LERP));
-        yield return StartCoroutine(Camera.main.GetComponent<CameraScript>().fade(false, moveTime * 1.5f));
-        LevelManager.instance.nextLevel();
+        LevelManager.instance.initiateNextLevel();
     }
 }

@@ -6,7 +6,8 @@ public class LevelManager : MonoBehaviour
 {
 
     public static LevelManager instance;
-    private int currentLevel;
+    private static int currentLevel;
+    AsyncOperation asyncLoadLevel;
     void Awake()
     {
         if (instance == null)
@@ -23,10 +24,23 @@ public class LevelManager : MonoBehaviour
 
     void Start()
     {
-        nextLevel();
+        StartCoroutine(nextLevel());
     }
-    public void nextLevel()
+
+    public void initiateNextLevel()
     {
+        //has to be like this because THIS object has to know when loading is complete, and coroutines have to go in order
+        //TODO: probably don't HAVE to be.. but this is my solution for now
+        StartCoroutine(nextLevel()); 
+    }
+
+    public IEnumerator nextLevel()
+    {
+        if(currentLevel !=0)
+        {
+            yield return StartCoroutine(Camera.main.GetComponent<CameraScript>().fade(false, 4));
+        }
+        
         currentLevel++;
         string nextLvlName = "Scenes/level" + currentLevel.ToString(); //important: all scenes have to be in Scenes folder
         //if (!SceneManager.GetSceneByName(nextLvlName).IsValid()) //TODO: can't get this to work for now. cba to fix
@@ -37,8 +51,16 @@ public class LevelManager : MonoBehaviour
         }
         //else
         {
-            SceneManager.LoadScene(nextLvlName);
+            AsyncOperation asyncLoadLevel = SceneManager.LoadSceneAsync(nextLvlName);
+            int loadingFrames = 0;
+            while (!asyncLoadLevel.isDone)
+            {
+                //loading screen stuff. probably fine without loading screen x - D
+                loadingFrames++;
+                print("loading frames:" + loadingFrames);
+                yield return null;                
+            }
+            MusicManager.instance.playSong();
         }
-        
     }
 }
