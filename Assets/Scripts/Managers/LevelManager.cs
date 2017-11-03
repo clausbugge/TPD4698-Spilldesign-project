@@ -16,22 +16,41 @@ public class LevelManager : MonoBehaviour
         }
         else if (instance != this)
         {
-            Destroy(this);
+            DestroyObject(gameObject);
         }
         DontDestroyOnLoad(this);
-        currentLevel = 0;
+        
+        
     }
 
     void Start()
     {
-        StartCoroutine(nextLevel());
+        currentLevel = 0;
+        //DEBUG: this whole check if 100% for debugging so you can start scene from different levels but still hear music and transition to next level
+        //assumes all level start with L/l and 6th element is levelNumber
+        if (SceneManager.GetActiveScene().name[0] != 'L' && SceneManager.GetActiveScene().name[0] != 'l')
+        {
+            print("wakemeup");
+            StartCoroutine(nextLevel());
+        }
+        else
+        {
+
+            currentLevel = int.Parse(SceneManager.GetActiveScene().name[5].ToString());
+            print(currentLevel);
+            MusicManager.instance.playSong();
+        }
+
     }
 
     public void initiateNextLevel()
     {
         //has to be like this because THIS object has to know when loading is complete, and coroutines have to go in order
         //TODO: probably don't HAVE to be.. but this is my solution for now
-        StartCoroutine(nextLevel()); 
+        if (instance == this) 
+        {
+            StartCoroutine(nextLevel());
+        }
     }
 
     public IEnumerator nextLevel()
@@ -51,6 +70,7 @@ public class LevelManager : MonoBehaviour
         }
         //else
         {
+            print(nextLvlName);
             AsyncOperation asyncLoadLevel = SceneManager.LoadSceneAsync(nextLvlName);
             int loadingFrames = 0;
             while (!asyncLoadLevel.isDone)
