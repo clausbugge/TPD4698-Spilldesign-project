@@ -96,7 +96,7 @@ public class InputHandler : MonoBehaviour {
         Light[] lights = FindObjectsOfType<Light>();
         foreach (Light light in lights)
         {
-            if(light.name=="Ghost Highlight") //TODO: slightly hacky. would be better with proper handler for light(low-prio)
+            if (light.name == "Ghost Highlight") //TODO: slightly hacky. would be better with proper handler for light(low-prio)
             {
                 continue;
             }
@@ -106,11 +106,11 @@ public class InputHandler : MonoBehaviour {
                 float distance = (light.transform.position - point).magnitude;
                 if (distance < light.range)
                 {
-                    print("range");
+                    float distance2d = ((Vector2)light.transform.position - (Vector2)point).magnitude;
                     Ray2D ray = new Ray2D();
                     ray.origin = point;
-                    ray.direction = (light.transform.position - point).normalized;
-                    if (!Physics2D.Raycast(ray.origin, ray.direction, distance))//, soup))
+                    ray.direction = ((Vector2)light.transform.position - (Vector2)point).normalized;
+                    if (!Physics2D.Raycast(ray.origin, ray.direction, distance2d))//, soup))
                     {
                         return false;
                     }
