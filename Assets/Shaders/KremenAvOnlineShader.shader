@@ -159,6 +159,13 @@
 					//{
 						//discard;
 					//}
+					//STRONGER LIGHT HIGHLIGHT
+					if (attenuation > 0.01)
+					{
+						attenuation*= 0.96;
+						attenuation += 0.04;
+					}
+
 					return float4(tex2D(_MainTex, i.pos).rgb*_LightColor0*shadow*attenuation, 1.0); //***use pos instead of uv to highlight light colors more***
 				}
 				return float4(tex2D(_MainTex, i.pos).rgb*_LightColor0*shadow*attenuation, 1.0);
