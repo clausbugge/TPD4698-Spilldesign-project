@@ -16,9 +16,12 @@ public class SubMenu : MonoBehaviour {
     private GameObject[] menuObjects; //are identified by being texts. all need TextPulse script
     private int highlightedButton;
     private bool directionDown = false;
+    private SoundCaller sc;
+    public AudioClip[] changeMenuObject;
     // Use this for initialization
     public BUTTONS[] buttonIDs; //IMPORTANT! need to be as long as number of buttons
 	void Start () {
+        sc = gameObject.GetComponent<SoundCaller>();
         int i = 0;
         menuObjects = new GameObject[gameObject.GetComponentsInChildren<Text>().Length];
 		foreach (Text menuObject in gameObject.GetComponentsInChildren<Text>())
@@ -35,6 +38,7 @@ public class SubMenu : MonoBehaviour {
     {
         menuObjects[highlightedButton].GetComponent<TextPulse>().highlight(false);
         highlightedButton = newButton;
+        sc.attemptSound(changeMenuObject[Random.Range(0, changeMenuObject.Length-1)],0.02f);
         menuObjects[highlightedButton].GetComponent<TextPulse>().highlight();
     }
 
