@@ -7,7 +7,7 @@ public class LevelManager : MonoBehaviour
 
     public static LevelManager instance;
     private static int currentLevel;
-    AsyncOperation asyncLoadLevel;
+    bool gameLoadedOnce = false;
     void Awake()
     {
         if (instance == null)
@@ -30,15 +30,14 @@ public class LevelManager : MonoBehaviour
         //assumes all level start with L/l and 6th element is levelNumber
         if (SceneManager.GetActiveScene().name[0] != 'L' && SceneManager.GetActiveScene().name[0] != 'l')
         {
-            print("wakemeup");
-            StartCoroutine(nextLevel());
+         //   StartCoroutine(nextLevel());
         }
         else
         {
 
             currentLevel = int.Parse(SceneManager.GetActiveScene().name[5].ToString());
-            print(currentLevel);
-            MusicManager.instance.playSong();
+           // print(currentLevel);
+            //MusicManager.instance.playSong();
         }
 
     }
@@ -53,12 +52,24 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    public void loadLevel(int levelToLoad)
+    {
+        currentLevel = levelToLoad;
+        StartCoroutine(nextLevel());
+    }
+
     public IEnumerator nextLevel()
     {
-        if(currentLevel !=0)
+        if (gameLoadedOnce)
         {
             yield return StartCoroutine(Camera.main.GetComponent<CameraScript>().fade(false, 4));
         }
+        else
+        {
+            gameLoadedOnce = true;
+        }
+        
+        
         
         currentLevel++;
         string nextLvlName = "Scenes/level" + currentLevel.ToString(); //important: all scenes have to be in Scenes folder
