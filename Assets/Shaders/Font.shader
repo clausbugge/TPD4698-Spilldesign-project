@@ -43,7 +43,9 @@ Shader "KremenFont" {
 			{
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
-				o.vertex.y += +(((sin(v.vertex.x+_Time*100)) + 0.5)*0.005)+ cos(_Time*70)*0.0075*v.vertex.x*0.003; //magical
+				o.vertex.y += (((sin(v.vertex.x+_Time*100)) + 0.5)*0.405)+ cos(_Time*70)*0.0075*v.vertex.x*0.07; //magical
+				/*o.vertex.y = UnityObjectToClipPos(v.vertex).y;
+				o.vertex.y+=5;*/
 				o.color = v.color * _Color;
 				o.texcoord = TRANSFORM_TEX(v.texcoord,_MainTex);
 				return o;
