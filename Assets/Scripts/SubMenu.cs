@@ -36,10 +36,14 @@ public class SubMenu : MonoBehaviour {
 
     public void changeHighlightedButton(int newButton)
     {
-        menuObjects[highlightedButton].GetComponent<TextPulse>().highlight(false);
-        highlightedButton = newButton;
-        sc.attemptSound(changeMenuObject[Random.Range(0, changeMenuObject.Length-1)],0.02f);
-        menuObjects[highlightedButton].GetComponent<TextPulse>().highlight();
+        if (newButton != highlightedButton)
+        {
+            menuObjects[highlightedButton].GetComponent<TextPulse>().highlight(false);
+            highlightedButton = newButton;
+            sc.attemptSound(changeMenuObject[Random.Range(0, changeMenuObject.Length - 1)], 0.02f);
+            menuObjects[highlightedButton].GetComponent<TextPulse>().highlight();
+        }
+        
     }
 
 	// Update is called once per frame
