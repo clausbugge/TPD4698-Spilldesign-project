@@ -43,7 +43,7 @@ Shader "KremenFont" {
 			{
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
-				o.vertex.y += +(((sin(v.vertex.x+_Time*100)) + 0.5)*0.005)+ sin(_Time*70)*0.0075;
+				o.vertex.y += +(((sin(v.vertex.x+_Time*100)) + 0.5)*0.005)+ cos(_Time*70)*0.0075*v.vertex.x*0.003; //magical
 				o.color = v.color * _Color;
 				o.texcoord = TRANSFORM_TEX(v.texcoord,_MainTex);
 				return o;
@@ -51,7 +51,8 @@ Shader "KremenFont" {
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-				fixed4 col = tex2D(_MainTex, i.texcoord);
+				fixed4 col = i.color*_Color;
+				col.a*= tex2D(_MainTex, i.texcoord).a;
 				return col;
 			}
 			ENDCG
