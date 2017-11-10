@@ -5,6 +5,12 @@ using UnityEngine;
 public class door : MonoBehaviour {
     private bool moving = false;
     private bool triggered = false;
+    private SoundCaller sc;
+    public AudioClip[] doorOpeningSounds;
+    void Awake()
+    {
+        sc = GetComponent<SoundCaller>();
+    }
 
     IEnumerator rotateLeft(Vector3 direction)
     {
@@ -40,6 +46,7 @@ public class door : MonoBehaviour {
         if (!triggered && !moving)
         {
             StartCoroutine(rotateLeft(Vector3.back));
+            sc.attemptSound(doorOpeningSounds[Random.Range(0, doorOpeningSounds.Length)],0.02f);
             triggered = !triggered;
         }
         if (triggered && !moving)
