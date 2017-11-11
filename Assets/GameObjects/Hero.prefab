@@ -99,6 +99,7 @@ GameObject:
   - component: {fileID: 82200675149061792}
   - component: {fileID: 82868018719696818}
   - component: {fileID: 114360755618693994}
+  - component: {fileID: 114732901064832406}
   m_Layer: 2
   m_Name: Hero
   m_TagString: Player
@@ -249,7 +250,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.65, y: 1}
   m_EdgeRadius: 0
 --- !u!82 &82200675149061792
 AudioSource:
@@ -704,6 +705,19 @@ MonoBehaviour:
   - {fileID: 21300010, guid: 196add32c50e13f488302f1aea1c331c, type: 3}
   - {fileID: 21300012, guid: 196add32c50e13f488302f1aea1c331c, type: 3}
   - {fileID: 21300014, guid: 196add32c50e13f488302f1aea1c331c, type: 3}
+--- !u!114 &114732901064832406
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1827641440283114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dc47d80a8e24494fa726cc66b1afea2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speechBubblePrefab: {fileID: 1025556863947578, guid: c999d2906927cd641826eaacef5ef86d,
+    type: 2}
 --- !u!114 &114820296392753642
 MonoBehaviour:
   m_ObjectHideFlags: 1

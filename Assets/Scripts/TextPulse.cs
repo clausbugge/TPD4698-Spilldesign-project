@@ -7,11 +7,15 @@ using System;
 
 public class TextPulse : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    Text txt;
-    bool highlighted = false;
-    Vector3 startScale;
-    int buttonID;
-    int buttonType;
+    public GameObject heroOnMenu;
+    public GameObject mainCamera;
+    public Sprite heroLookingRightSprite;
+    private Text txt;
+    private bool highlighted = false;
+    private Vector3 startScale;
+    private int buttonID;
+    private int buttonType;
+    
     //keep comments in case they fall out. (don't think they can, but not sure)
     //public Color inactiveColor = new Color(0 / 255.0f, 150 / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f); //this is beautiful and you know it
     //public Color highlightedColor = new Color(0 / 255.0f, 0 / 255.0f, 255.0f / 255.0f, 255.0f);
@@ -86,7 +90,8 @@ public class TextPulse : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         switch(buttonType)
         {
             case (int)SubMenu.BUTTONS.NEW_GAME:
-                LevelManager.instance.loadLevel(0);
+                StartCoroutine(startNewGame());
+                
                 break;
             case (int)SubMenu.BUTTONS.LEVEL_SELECT:
                 transform.parent.parent.GetChild(1).gameObject.SetActive(true); //hacky-ish but works
@@ -106,5 +111,23 @@ public class TextPulse : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             default:
                 break;
         }
+    }
+    IEnumerator startNewGame()
+    {
+        foreach (Transform childTransform in transform.parent.GetComponentInChildren<Transform>())
+        {
+            if (childTransform.GetComponent<SpriteRenderer>()!=null)
+            {
+                childTransform.GetComponent<SpriteRenderer>().enabled = false;
+                childTransform.GetComponent<TextPulse>().enabled = false;
+            }
+            
+        }
+        StartCoroutine(Tools.moveObject(heroOnMenu, Vector3.left, 2.0f, 80.0f));
+        heroOnMenu.GetComponent<Image>().sprite = heroLookingRightSprite;
+        StartCoroutine(mainCamera.GetComponent<CameraScript>().fade(false,2.0f));
+        yield return MusicManager.instance.silenceMusic(2.0f);
+        yield return new WaitForSeconds(1.0f);
+        LevelManager.instance.loadLevel(0);
     }
 }

@@ -41,27 +41,51 @@ public class MusicManager : MonoBehaviour
         {
             case songEnums.TITLE_SCREEN:
                 audioSource.clip = titleSongs[Random.Range(0, titleSongs.Length)];
+                
                 break;
             case songEnums.MAIN_THEME:
-                audioSource.clip = songs[Random.Range(0, songs.Length)];
+                //audioSource.clip = songs[Random.Range(0, songs.Length)];
+                audioSource.clip = songs[3];
                 break;
             case songEnums.FANFARE:
                 audioSource.clip = fanfares[Random.Range(0, fanfares.Length)];
                 break;
         }
         audioSource.loop = true;
-        audioSource.volume = volume;
-        audioSource.PlayDelayed(0.5f); //0.5 second delay
+        
+        //yield return new WaitForSeconds(0.5f);
+        StartCoroutine(setVolume(volume));
+        audioSource.PlayDelayed(0.1f);
     }
 
-    public void playSong()
+    public IEnumerator silenceMusic(float setOver = 1.5f)
     {
-        //audioSource.clip = songs[(int)songEnums.MAIN_THEME];
-        audioSource.clip = songs[Random.Range(0, songs.Length)];// (int)songEnums.MAIN_THEME];
-        audioSource.loop = true;
-        audioSource.volume = volume;
-        audioSource.PlayDelayed(0.5f); //0.5 second delay
+        float curVol = volume;
+        for (float i = 0; i < setOver; i += Time.deltaTime)
+        {
+            audioSource.volume = curVol - curVol * (i / setOver);
+            yield return null;
+        }
+        audioSource.volume = 0;
     }
+    public IEnumerator setVolume(float newVolume, float setOver = 1.5f, bool fromZero = true)
+    {
+        float curVol = fromZero ? 0 : volume;
+        for (float i = 0; i < setOver; i += Time.deltaTime)
+        {
+            audioSource.volume = curVol + (newVolume-curVol) * (i / setOver);
+            yield return null;
+        }
+        audioSource.volume = newVolume;
+    }
+    //public void playSong()
+    //{
+    //    //audioSource.clip = songs[(int)songEnums.MAIN_THEME];
+    //    audioSource.clip = songs[Random.Range(0, songs.Length)];// (int)songEnums.MAIN_THEME];
+    //    audioSource.loop = true;
+    //    audioSource.volume = volume;
+    //    audioSource.PlayDelayed(0.5f); //0.5 second delay
+    //}
 
     public void playFanfare()
     {
@@ -73,6 +97,6 @@ public class MusicManager : MonoBehaviour
 
     void Update()
     {
-        audioSource.volume = volume;
+       // audioSource.volume = volume;
     }
 }

@@ -159,7 +159,7 @@ public class InputHandler : MonoBehaviour {
         {
             Vector3 newIndicatorPSRot = playerPosIndicatorParticleSystem.transform.rotation.eulerAngles;
             float angle = Vector2.Angle(dasher.transform.position - transform.position, new Vector3(1, 0, 0));
-            newIndicatorPSRot.z = angle;
+            newIndicatorPSRot.z = (dasher.transform.position.y - transform.position.y) > 0 ?angle : -angle ;
             playerPosIndicatorParticleSystem.transform.rotation = Quaternion.Euler(newIndicatorPSRot);
             ParticleSystem ps = playerPosIndicatorParticleSystem.GetComponent<ParticleSystem>();
             ParticleSystem.ShapeModule pss = ps.shape;

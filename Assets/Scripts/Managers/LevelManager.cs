@@ -71,13 +71,14 @@ public class LevelManager : MonoBehaviour
         
         
         
-        currentLevel++;
         string nextLvlName = "Scenes/level" + currentLevel.ToString(); //important: all scenes have to be in Scenes folder
+        currentLevel++;
+
         //if (!SceneManager.GetSceneByName(nextLvlName).IsValid()) //TODO: can't get this to work for now. cba to fix
         {
 
             //print(nextLvlName + " not found. end of available levels reached"); //TOOD: add victory screen or whatever
-          //  return;
+            //  return;
         }
         //else
         {
@@ -91,7 +92,7 @@ public class LevelManager : MonoBehaviour
                 print("loading frames:" + loadingFrames);
                 yield return null;                
             }
-            MusicManager.instance.playSong();
+            MusicManager.instance.playSong(MusicManager.songEnums.MAIN_THEME);
         }
     }
 }

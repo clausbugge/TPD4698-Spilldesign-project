@@ -52,7 +52,7 @@ public class HumanAnimation : MonoBehaviour {
             animationUpdateTimer += Time.deltaTime;
             if (velocity.SqrMagnitude() > 0)
             {
-                if (animationUpdateTimer > 0.2f)
+                if (animationUpdateTimer > 0.15f)
                 {
                     animationUpdateTimer = 0.0f;
                     spriteAnimationIndex++;
