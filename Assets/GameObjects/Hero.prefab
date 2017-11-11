@@ -169,7 +169,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1827641440283114}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8.34, y: -2.08, z: -0.52}
+  m_LocalPosition: {x: 9.29, y: -1.42, z: -0.52}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4230381543735178}
@@ -523,20 +523,6 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 0
-  m_FalloffTable:
-    m_Table[0]: 0
-    m_Table[1]: 0
-    m_Table[2]: 0
-    m_Table[3]: 0
-    m_Table[4]: 0
-    m_Table[5]: 0
-    m_Table[6]: 0
-    m_Table[7]: 0
-    m_Table[8]: 0
-    m_Table[9]: 0
-    m_Table[10]: 0
-    m_Table[11]: 0
-    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -573,20 +559,6 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 0
-  m_FalloffTable:
-    m_Table[0]: 0
-    m_Table[1]: 0
-    m_Table[2]: 0
-    m_Table[3]: 0
-    m_Table[4]: 0
-    m_Table[5]: 0
-    m_Table[6]: 0
-    m_Table[7]: 0
-    m_Table[8]: 0
-    m_Table[9]: 0
-    m_Table[10]: 0
-    m_Table[11]: 0
-    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -653,6 +625,10 @@ MonoBehaviour:
   ghostDashingSprite: {fileID: 21300000, guid: 3475859587a4607488e4b3963bf574ae, type: 3}
   humanSprite: {fileID: 21300000, guid: 8bf92ca1357901a4b83c8948cbf8cd7c, type: 3}
   ghostSprite: {fileID: 21300000, guid: c306b03ec1bdf7f449eed1746bc05c20, type: 3}
+  dashParticleSystem: {fileID: 1212154026376036, guid: a62ef9fade7a10147837b732a680face,
+    type: 2}
+  playerPosIndicatorParticleSystem: {fileID: 1269494497952838, guid: ce3904d07448eb74dac9596ed6b9dea7,
+    type: 2}
   dashSounds:
   - {fileID: 8300000, guid: a629fe08f1689044d8457375b3fe7dd0, type: 3}
   - {fileID: 8300000, guid: ed6bb76db33e0534488003e9da13e09c, type: 3}
@@ -662,7 +638,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 6de1d7d60979fdc4aa8959f83b573809, type: 3}
   barrierBreakSounds:
   - {fileID: 8300000, guid: 1f5b27cfb9f67a3459ab0fceed375b55, type: 3}
-  dashTimer: 0.6
+  dashTimer: 0.9
   dashRange: 2.4
   dasherMaterial: {fileID: 2100000, guid: 720e7640c542e1344b98edf8bbe5a4c5, type: 2}
   state: 0

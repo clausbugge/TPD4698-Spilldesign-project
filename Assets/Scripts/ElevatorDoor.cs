@@ -49,7 +49,7 @@ public class ElevatorDoor : MonoBehaviour {
 
         StartCoroutine(Tools.moveObject(leftDoor, Vector3.left, 2, 1f));
         yield return StartCoroutine(Tools.moveObject(rightDoor, Vector3.right, 2, 1f));
-        StartCoroutine(Camera.main.GetComponent<CameraScript>().levelTransitionZoom2(gameObject, 4,-5));
+        StartCoroutine(Camera.main.GetComponent<CameraScript>().levelTransitionZoom2(gameObject, 4,Camera.main.GetComponent<CameraScript>().getStartDistance()));
         yield return StartCoroutine(redCarpet.GetComponent<RedCarpet>().openCarpet());
 
         Vector3 moveDir = Vector3.down;

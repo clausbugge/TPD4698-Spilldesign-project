@@ -10,14 +10,23 @@ public class CameraScript : MonoBehaviour
     public Color fadeColor;
     private Texture2D fadeTexture;
     public float defaultFadeTime;
-
-	// Use this for initialization
-	void Start () {
+    private float startDistance;
+    private int cameraCinematicDistance = 3;
+    private void Awake()
+    {
+        startDistance = transform.position.z;
+    }
+    void Start () {
         targetOffset = new Vector3(0, 0, 0);
         fadeTexture = new Texture2D(1, 1,TextureFormat.ARGB32,false);
         fadeTexture.SetPixel(0, 0, fadeColor);
         fadeTexture.Apply();
         StartCoroutine(fade(true, defaultFadeTime));
+    }
+    public float getStartDistance()
+    {
+        
+        return startDistance;
     }
 
     public IEnumerator levelTransitionZoom(GameObject elevator, float duration, float newZ)
@@ -30,7 +39,7 @@ public class CameraScript : MonoBehaviour
         float startZ = transform.localPosition.z;
         float deltaZ = startZ;
         Vector3 endPos = elevator.transform.position;
-        endPos.y -= 3;
+        endPos.y -= cameraCinematicDistance;
         endPos.z -= 1;
         Vector3 lookatPos = camOrigin;
         Vector3 directionVector = (endPos- transform.position).normalized;
@@ -54,11 +63,11 @@ public class CameraScript : MonoBehaviour
         float startZ = transform.localPosition.z;
         float deltaZ = startZ;
         Vector3 endPos = elevator.transform.position;
-        endPos.y -= 3;
-        endPos.z = -5;
+        endPos.y -= cameraCinematicDistance;
+        endPos.z = newZ;
         camOrigin = transform.position;
         Vector3 endView = camOrigin;
-        endView.y -= 3;
+        endView.y -= cameraCinematicDistance;
         endView.z = -1;
         
         //camOrigin.z = -1;

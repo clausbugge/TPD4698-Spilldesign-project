@@ -37,6 +37,9 @@ public class InputHandler : MonoBehaviour {
     public Sprite ghostDashingSprite; //Sprite for actual dash object
     public Sprite humanSprite;
     public Sprite ghostSprite;
+
+    public GameObject dashParticleSystem;
+    public GameObject playerPosIndicatorParticleSystem;
     public AudioClip[] dashSounds;
     public AudioClip[] dashErrorSounds;
     public AudioClip[] barrierBreakSounds;
@@ -54,6 +57,7 @@ public class InputHandler : MonoBehaviour {
     private GameObject rubberBandParticlesChild;
     private GameObject borderParticlesChild;
     private GameObject borderRubberBandParticlesChild;
+    
     private Light ghostHighlightChildComponent;
     private SoundCaller sc;
 
@@ -88,8 +92,12 @@ public class InputHandler : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        playerPosIndicatorParticleSystem = Instantiate(playerPosIndicatorParticleSystem); //not sure if this is considered a good idea
+        playerPosIndicatorParticleSystem.SetActive(false);
+        playerPosIndicatorParticleSystem.transform.parent = this.transform;
+        playerPosIndicatorParticleSystem.transform.localPosition = Vector3.zero;
     //    state = (int)HERO_STATE.IDLE;
-	}
+    }
 
     bool isPointInDark(Vector3 point) //TODO: Will be converted to vec2 in function. maybe rewrite whole game to use 3d physics (some weakness with 2d)
     {
@@ -147,6 +155,22 @@ public class InputHandler : MonoBehaviour {
             default:
                 break;
         }
+        if (ghostState == GHOST_STATE.GHOST)
+        {
+            Vector3 newIndicatorPSRot = playerPosIndicatorParticleSystem.transform.rotation.eulerAngles;
+            float angle = Vector2.Angle(dasher.transform.position - transform.position, new Vector3(1, 0, 0));
+            newIndicatorPSRot.z = angle;
+            playerPosIndicatorParticleSystem.transform.rotation = Quaternion.Euler(newIndicatorPSRot);
+            ParticleSystem ps = playerPosIndicatorParticleSystem.GetComponent<ParticleSystem>();
+            ParticleSystem.ShapeModule pss = ps.shape;
+            pss.radius = (dasher.transform.position - transform.position).magnitude / 2.0f;
+            Vector3 newPssPos = pss.position;
+            newPssPos.x = pss.radius; //(dasher.transform.position - transform.position).magnitude;
+            pss.position = newPssPos;
+            
+            ParticleSystem.EmissionModule pse = ps.emission;
+            pse.rateOverTime = (transform.position - dasher.transform.position).magnitude*500.0f;
+        }
     }
 
     private void updateCamera()
@@ -156,11 +180,11 @@ public class InputHandler : MonoBehaviour {
 
     private GameObject createDasher()
     {
-        GameObject dasher = new GameObject("dasher", typeof(SpriteRenderer));
+        GameObject dasher = Instantiate(dashParticleSystem);// new GameObject("dasher", typeof(SpriteRenderer));
         dasher.transform.position = transform.position;
         Camera.main.GetComponent<CameraScript>().target = dasher;
-        dasher.GetComponent<SpriteRenderer>().sprite = humanDashingSprite;
-        dasher.GetComponent<SpriteRenderer>().sortingOrder = 1;
+        //dasher.GetComponent<SpriteRenderer>().sprite = humanDashingSprite;
+        //dasher.GetComponent<SpriteRenderer>().sortingOrder = 1;
         return dasher;
     }
     IEnumerator dashToOrigin()
@@ -187,10 +211,16 @@ public class InputHandler : MonoBehaviour {
             case GHOST_STATE.GHOST:
                 gameObject.GetComponent<SpriteRenderer>().sprite = ghostSprite;
                 ghostHighlightChildComponent.enabled = true;
+                playerPosIndicatorParticleSystem.SetActive(true);
+                Vector3 newIndicatorPSRot = playerPosIndicatorParticleSystem.transform.rotation.eulerAngles;
+                float angle= Vector2.Angle(dasher.transform.position - transform.position, new Vector3(1,0,0));
+                newIndicatorPSRot.z = angle;
+                playerPosIndicatorParticleSystem.transform.rotation = Quaternion.Euler(newIndicatorPSRot);
                 break;
             case GHOST_STATE.HUMAN:
                 gameObject.GetComponent<SpriteRenderer>().sprite = humanSprite;
                 ghostHighlightChildComponent.enabled = false;
+                playerPosIndicatorParticleSystem.SetActive(false);
                 break;
             default:
                 break;

@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class displayOnTrigger : MonoBehaviour {
+public class toggleDisplayOnTrigger : MonoBehaviour {
 
-    public bool startVisible = false;
-    public bool canBeDisabled = false;
+    public bool startVisible;
+    public bool canBeDisabled;
+    public bool canBeEnabled;
     private bool isVisible;
-
+    [Range(1.0f,5.0f)]
+    public float fadeTime;
 	// Use this for initialization
 	void Start () {
         isVisible = startVisible ? true : false;
@@ -21,12 +23,8 @@ public class displayOnTrigger : MonoBehaviour {
 	
     public void trigger()
     {
-        if (!GetComponent<Renderer>().enabled)
-        {
-            StopCoroutine(changeVisibility()); //doesn't seem to do jack shit
-            StartCoroutine(changeVisibility());
-        }
-        else if (canBeDisabled)
+        if ((!isVisible && canBeEnabled)
+            || isVisible && canBeDisabled)
         {
             StopCoroutine(changeVisibility()); //doesn't seem to do jack shit
             StartCoroutine(changeVisibility());
@@ -37,7 +35,6 @@ public class displayOnTrigger : MonoBehaviour {
     {
         float start = isVisible ? 1 : 0;
         float goal = isVisible ? 0 : 1;
-        float fadeTime = 1.5f;
         Color newColor = GetComponent<SpriteRenderer>().color;
         for (float i = 0; i < fadeTime; i+=Time.deltaTime)
         {
