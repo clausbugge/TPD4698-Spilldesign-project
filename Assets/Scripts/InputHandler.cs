@@ -11,7 +11,7 @@ public class InputHandler : MonoBehaviour {
         NO_OF_STATES
     }
 
-    enum GHOST_STATE
+    public enum GHOST_STATE
     {
         HUMAN,
         GHOST,
@@ -47,8 +47,8 @@ public class InputHandler : MonoBehaviour {
     public Material dasherMaterial;
     private bool isRubberbanding;
     private Vector2 newVelocity;
-    private HERO_STATE state;
-    private GHOST_STATE ghostState;
+    public HERO_STATE state;
+    public GHOST_STATE ghostState;
     private float dt;
     private GameObject ghostHighlightChild;
     private GameObject rubberBandParticlesChild;
