@@ -91,7 +91,6 @@ public class TextPulse : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         {
             case (int)SubMenu.BUTTONS.NEW_GAME:
                 StartCoroutine(startNewGame());
-                
                 break;
             case (int)SubMenu.BUTTONS.LEVEL_SELECT:
                 transform.parent.parent.GetChild(1).gameObject.SetActive(true); //hacky-ish but works
@@ -123,11 +122,11 @@ public class TextPulse : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             }
             
         }
-        StartCoroutine(Tools.moveObject(heroOnMenu, Vector3.left, 2.0f, 80.0f));
+        StartCoroutine(Tools.moveObject(heroOnMenu, Vector3.left, 1.6f, 80.0f));
         heroOnMenu.GetComponent<Image>().sprite = heroLookingRightSprite;
-        StartCoroutine(mainCamera.GetComponent<CameraScript>().fade(false,2.0f));
-        yield return MusicManager.instance.silenceMusic(2.0f);
-        yield return new WaitForSeconds(1.0f);
+        StartCoroutine(mainCamera.GetComponent<CameraScript>().fade(false,1.75f));
+        yield return MusicManager.instance.silenceMusic(1.75f);
+        yield return new WaitForSeconds(0.8f);
         LevelManager.instance.loadLevel(0);
     }
 }
