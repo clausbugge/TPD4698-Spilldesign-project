@@ -36,7 +36,7 @@ public class toggleDisplayOnTrigger : MonoBehaviour {
         float start = isVisible ? 1 : 0;
         float goal = isVisible ? 0 : 1;
         Color newColor = GetComponent<SpriteRenderer>().color;
-        for (float i = 0; i < fadeTime; i+=Time.deltaTime)
+        for (float i = 0; i < fadeTime; i+= TimeManager.instance.gameDeltaTime)
         {
             newColor.a = (goal * (i / fadeTime)) + start*(1-(i/fadeTime));// curAlpha;
             GetComponent<SpriteRenderer>().color = newColor;

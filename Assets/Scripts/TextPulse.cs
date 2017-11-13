@@ -107,8 +107,23 @@ public class TextPulse : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
                 transform.parent.parent.GetChild(0).gameObject.SetActive(true);
                 transform.parent.parent.GetChild(1).gameObject.SetActive(false);
                 break;
+            case (int)SubMenu.BUTTONS.RESUME_GAME:
+                TimeManager.instance.resumeGameTime();
+                transform.parent.gameObject.SetActive(false);
+                break;
+            case (int)SubMenu.BUTTONS.RESTART_LEVEL:
+                TimeManager.instance.resumeGameTime();
+                LevelManager.instance.restartLevel();
+                transform.parent.gameObject.SetActive(false);
+                break;
+            case (int)SubMenu.BUTTONS.TO_MAIN_MENU:
+                TimeManager.instance.resumeGameTime();
+                LevelManager.instance.loadMainMenu();
+                transform.parent.gameObject.SetActive(false);
+                break;
             default:
                 break;
+
         }
     }
     IEnumerator startNewGame()

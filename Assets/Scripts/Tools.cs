@@ -41,7 +41,7 @@ public static class Tools
         //float oldPos = 0.0f;
         float newPos = 0.0f;
 
-        for (float i = 0; i < duration; i += Time.deltaTime)
+        for (float i = 0; i < duration; i += TimeManager.instance.gameDeltaTime)
         {
             //float pd = 0.25f + (i * 0.75f / duration); //TODO: make this line better mebbe
             float pd = i / duration; //TODO: ???
@@ -59,7 +59,7 @@ public static class Tools
     public static IEnumerator shakeObject(GameObject go, Vector3 axis, float degrees, float duration, int loops = 1)
     {
         float sumOfLoopsDuration = duration * loops;
-        for (float j = 0; j < sumOfLoopsDuration; j += Time.deltaTime)
+        for (float j = 0; j < sumOfLoopsDuration; j += TimeManager.instance.gameDeltaTime)
         {
             float phase = Mathf.Sin((j / duration) * 2 * Mathf.PI);
             go.transform.rotation = Quaternion.Euler(phase * axis * degrees);
@@ -74,7 +74,7 @@ public static class Tools
         System.Func<float, float> interpolationFunc = getInterpolationFunc(type);
         float newValue = 0.0f;
 
-        for (float i = 0; i < duration; i += Time.deltaTime) //might be buggy. not tested super much
+        for (float i = 0; i < duration; i += TimeManager.instance.gameDeltaTime) //might be buggy. not tested super much
         {
             float pd = i / duration;
             newValue = interpolationFunc(pd);

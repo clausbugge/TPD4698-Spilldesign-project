@@ -20,7 +20,7 @@ public class SpeechBubbleSpawner : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        timeSinceTextSpawn += Time.deltaTime;
+        timeSinceTextSpawn += TimeManager.instance.gameDeltaTime;
         //removes text bubble
         if(timeSinceTextSpawn > textDuration)
         {
