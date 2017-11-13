@@ -49,7 +49,7 @@ public class HumanAnimation : MonoBehaviour {
             {
                 spriteDirectionIndex = downAnimationIndexStart;
             }
-            animationUpdateTimer += Time.deltaTime;
+            animationUpdateTimer += TimeManager.instance.gameDeltaTime;
             if (velocity.SqrMagnitude() > 0)
             {
                 if (animationUpdateTimer > 0.15f)

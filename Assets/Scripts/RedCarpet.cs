@@ -40,14 +40,14 @@ public class RedCarpet : MonoBehaviour
         
         //Camera.main.GetComponent<CameraScript>().target = gameObject;
         //Camera.main.GetComponent<CameraScript>().targetOffset = Vector2.zero;
-        for (float t = 0; t < openDuration; t+= Time.deltaTime)
+        for (float t = 0; t < openDuration; t+= TimeManager.instance.gameDeltaTime)
         {
             deltaPos = Vector3.zero;
             for (int i = 1; i < carpetLength; i++)
             {
                 Transform trans = carpetSegments[i - 1].transform;
                 carpetSegments[i].transform.position = (trans.position- trans.forward * 0.1f * 0.5f) + (-carpetSegments[i].transform.forward*0.1f*0.5f);
-                carpetSegments[i].transform.RotateAround(trans.position - trans.forward * 0.1f * 0.5f, Vector3.left, anglePerPiece * (i/openDuration)*Time.deltaTime); 
+                carpetSegments[i].transform.RotateAround(trans.position - trans.forward * 0.1f * 0.5f, Vector3.left, anglePerPiece * (i/openDuration)* TimeManager.instance.gameDeltaTime); 
             }
             yield return null;
         }

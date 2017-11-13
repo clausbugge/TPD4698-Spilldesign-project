@@ -38,8 +38,9 @@ public class InputHandler : MonoBehaviour {
     public Sprite humanSprite;
     public Sprite ghostSprite;
 
-    public GameObject dashParticleSystem;
+    public GameObject dasherPrefab;
     public GameObject playerPosIndicatorParticleSystem;
+    public GameObject swapSplashParticleSystem;
     public AudioClip[] dashSounds;
     public AudioClip[] dashErrorSounds;
     public AudioClip[] barrierBreakSounds;
@@ -53,6 +54,7 @@ public class InputHandler : MonoBehaviour {
     public HERO_STATE state;
     public GHOST_STATE ghostState;
     private float dt;
+    private float fixedDt;
     private GameObject ghostHighlightChild;
     private GameObject rubberBandParticlesChild;
     private GameObject borderParticlesChild;
@@ -131,7 +133,7 @@ public class InputHandler : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        dt = Time.deltaTime;
+        dt = TimeManager.instance.gameDeltaTime;
 
         switch (state)
         {
@@ -163,13 +165,13 @@ public class InputHandler : MonoBehaviour {
             playerPosIndicatorParticleSystem.transform.rotation = Quaternion.Euler(newIndicatorPSRot);
             ParticleSystem ps = playerPosIndicatorParticleSystem.GetComponent<ParticleSystem>();
             ParticleSystem.ShapeModule pss = ps.shape;
-            pss.radius = (dasher.transform.position - transform.position).magnitude / 2.0f;
-            Vector3 newPssPos = pss.position;
-            newPssPos.x = pss.radius; //(dasher.transform.position - transform.position).magnitude;
-            pss.position = newPssPos;
+            //pss.radius = (dasher.transform.position - transform.position).magnitude / 2.0f;
+            //Vector3 newPssPos = pss.position;
+            //newPssPos.x = pss.radius; //(dasher.transform.position - transform.position).magnitude;
+           // pss.position = newPssPos;
             
-            ParticleSystem.EmissionModule pse = ps.emission;
-            pse.rateOverTime = (transform.position - dasher.transform.position).magnitude*500.0f;
+            //ParticleSystem.EmissionModule pse = ps.emission;
+            //pse.rateOverTime = (transform.position - dasher.transform.position).magnitude*500.0f;
         }
     }
 
@@ -180,7 +182,7 @@ public class InputHandler : MonoBehaviour {
 
     private GameObject createDasher()
     {
-        GameObject dasher = Instantiate(dashParticleSystem);// new GameObject("dasher", typeof(SpriteRenderer));
+        GameObject dasher = Instantiate(dasherPrefab);// new GameObject("dasher", typeof(SpriteRenderer));
         dasher.transform.position = transform.position;
         Camera.main.GetComponent<CameraScript>().target = dasher;
         //dasher.GetComponent<SpriteRenderer>().sprite = humanDashingSprite;
@@ -189,6 +191,7 @@ public class InputHandler : MonoBehaviour {
     }
     IEnumerator dashToOrigin()
     {
+        playerPosIndicatorParticleSystem.SetActive(false);
         float distance = (dasher.transform.position - transform.position).magnitude;
         Vector2 direction = (dasher.transform.position - transform.position).normalized;
         GetComponent<BoxCollider2D>().enabled = false;
@@ -209,7 +212,7 @@ public class InputHandler : MonoBehaviour {
         switch (newState)
         {
             case GHOST_STATE.GHOST:
-                gameObject.GetComponent<SpriteRenderer>().sprite = ghostSprite;
+                //gameObject.GetComponent<SpriteRenderer>().sprite = ghostSprite;
                 ghostHighlightChildComponent.enabled = true;
                 playerPosIndicatorParticleSystem.SetActive(true);
                 Vector3 newIndicatorPSRot = playerPosIndicatorParticleSystem.transform.rotation.eulerAngles;
@@ -273,6 +276,7 @@ public class InputHandler : MonoBehaviour {
             changeGhostState(GHOST_STATE.GHOST);
             borderParticlesChild.transform.SetParent(dasher.transform);
             borderParticlesChild.transform.localPosition = Vector3.zero;
+            Destroy(Instantiate(swapSplashParticleSystem, transform.position, Quaternion.Euler(Vector3.zero)), 0.9f); //create and destroy splash effect. hardcoded duration. cba to fix
         }
         if (!isInDark) //swap failed
         {
@@ -314,6 +318,7 @@ public class InputHandler : MonoBehaviour {
 
     void FixedUpdate ()
     {
+        fixedDt = TimeManager.instance.fixedGameDeltaTime;
         if (state == HERO_STATE.DASHING)
         {
             gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
@@ -321,7 +326,7 @@ public class InputHandler : MonoBehaviour {
         if (state != HERO_STATE.DASHING && state != HERO_STATE.DISABLED)
         {
             newVelocity = Vector2.zero;
-            float speed = 4;
+            float speed = 4 * TimeManager.instance.gameTimeMultiplier;
             newVelocity.y = Input.GetAxis("Vertical");
             newVelocity.x = Input.GetAxis("Horizontal");
             changeHeroState((newVelocity.x == 0 && newVelocity.y == 0) ?
@@ -332,7 +337,7 @@ public class InputHandler : MonoBehaviour {
                 lastDirection = newVelocity;
             }           
             newVelocity = newVelocity.normalized * speed;
-            bool nextPosInDark = isPointInDark(transform.position + new Vector3(newVelocity.x, newVelocity.y, 0) * Time.fixedDeltaTime);
+            bool nextPosInDark = isPointInDark(transform.position + new Vector3(newVelocity.x, newVelocity.y, 0) * fixedDt);
             
             switch(ghostState)
             {
@@ -446,6 +451,13 @@ public class InputHandler : MonoBehaviour {
         Vector2 direction = new Vector2(transform.position.x - breakingPoint.x, transform.position.y - breakingPoint.y).normalized;
         yield return StartCoroutine(Tools.moveObject(gameObject, -direction, 0.2f, distanceFromBreakingPoint*1.3f));
         changeHeroState(HERO_STATE.IDLE);
+
+        if (isPointInDark(breakingPoint))
+        {
+            changeHeroState(HERO_STATE.DISABLED);
+            yield return StartCoroutine(deathAnimation());
+            LevelManager.instance.triggerGameOver();
+        }
     }
 
     IEnumerator dashToDarknessPoint(float distanceFromdarknessPoint)
@@ -458,5 +470,29 @@ public class InputHandler : MonoBehaviour {
         Destroy(dasher);
         changeGhostState(GHOST_STATE.HUMAN);
         changeHeroState(HERO_STATE.IDLE);     
+    }
+
+    IEnumerator deathAnimation()
+    {
+        rubberBandParticlesChild.SetActive(false);
+        float deathTime = 3.0f;
+        StartCoroutine(Camera.main.GetComponent<CameraScript>().gameOverZoom(deathTime));
+        Vector3 newRot = transform.rotation.eulerAngles;
+        Vector3 startScale = transform.localScale;
+        Vector3 newScale = startScale;
+        float pd;
+        for (float i = 0; i < deathTime; i+=TimeManager.instance.gameDeltaTime)
+        {
+            pd = i / deathTime;
+            newScale = new Vector2(startScale.x * (1.0f - pd) , startScale.y * (1.0f - pd));
+            //newScale.x = startScale.x * (0.85f - pd)+0.15f;
+            //newScale.x = startScale.y * (0.85f - pd) + 0.15f;
+            newRot.z = i*720.0f;
+            transform.rotation = Quaternion.Euler(newRot);
+            transform.localScale = newScale;
+            yield return null;
+        }
+
+        yield return null;
     }
 }

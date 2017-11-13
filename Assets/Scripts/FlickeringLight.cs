@@ -32,12 +32,12 @@ public class FlickeringLight : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        flickerOffset.x += Time.deltaTime * Random.Range(-flickerDeltaRange, flickerDeltaRange);
-        flickerOffset.y += Time.deltaTime * Random.Range(-flickerDeltaRange, flickerDeltaRange);
+        flickerOffset.x += TimeManager.instance.gameDeltaTime * Random.Range(-flickerDeltaRange, flickerDeltaRange);
+        flickerOffset.y += TimeManager.instance.gameDeltaTime * Random.Range(-flickerDeltaRange, flickerDeltaRange);
         transform.localPosition = startPos + new Vector3(Mathf.Cos((flickerOffset.x*360 +90)*Mathf.Deg2Rad) * flickerRadius,
                                                          Mathf.Sin(flickerOffset.y *360*Mathf.Deg2Rad) * flickerRadius, 0);
 
-        intensityOffset += Time.deltaTime * Random.Range(-intensityDeltaRange, intensityDeltaRange);
+        intensityOffset += TimeManager.instance.gameDeltaTime * Random.Range(-intensityDeltaRange, intensityDeltaRange);
         lightComponent.intensity = startIntensity + Mathf.Sin(intensityOffset)*intensityRange;
     }
 }

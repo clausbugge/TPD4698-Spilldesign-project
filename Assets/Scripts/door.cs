@@ -7,6 +7,9 @@ public class door : MonoBehaviour {
     private bool triggered = false;
     private SoundCaller sc;
     public AudioClip[] doorOpeningSounds;
+    [Range(0,360)]
+    public float arcAngle = 90.0f;
+    public float openTimeInSeconds = 2.0f;
     void Awake()
     {
         sc = GetComponent<SoundCaller>();
@@ -19,17 +22,15 @@ public class door : MonoBehaviour {
         float oldAngle = 0;
         float newAngle = 0;
         float deltaAngle = 0;
-        float anglePrSec = 45;
-        float desiredAngles = 90;
-        float duration = desiredAngles / anglePrSec;
+        float anglePrSec = arcAngle/openTimeInSeconds;
         Vector3 around = transform.TransformPoint(new Vector3(.5f, -.5f, 0));
-        for (float i = 0; i < duration; i+=Time.deltaTime)
+        for (float i = 0; i < openTimeInSeconds; i+= TimeManager.instance.gameDeltaTime)
         {
-            float v = i / duration;
+            float v = i / openTimeInSeconds;
             //v = v * v * (3 - 2 * v); //smoothify
             v = v * v * v;
             oldAngle = newAngle;
-            newAngle = (desiredAngles * v) + (0 * (1 - v));
+            newAngle = (arcAngle * v) + (0 * (1 - v));
             deltaAngle = newAngle -oldAngle;
             //angle += deltaAngle;
             transform.RotateAround(around, direction, deltaAngle);
@@ -37,7 +38,7 @@ public class door : MonoBehaviour {
             yield return null;
         }
 
-        transform.RotateAround(around, direction, desiredAngles - newAngle); //make sure we have correct angle (error margin based on fps)
+        transform.RotateAround(around, direction, arcAngle - newAngle); //make sure we have correct angle (error margin based on fps)
         moving = false;
     }
 

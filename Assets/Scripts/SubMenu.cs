@@ -4,14 +4,20 @@ using UnityEngine;
 using UnityEngine.UI;
 public class SubMenu : MonoBehaviour {
 
+    
     public enum BUTTONS
     {
         NEW_GAME,
         LEVEL_SELECT,
         EXIT,
         BACK,
-        SELECT_LEVEL
+        SELECT_LEVEL,
+        RESUME_GAME,
+        RESTART_LEVEL,
+        TO_MAIN_MENU
     }
+
+    public int defaultButton = 0;
 
     private GameObject[] menuObjects; //are identified by being texts. all need TextPulse script
     private int highlightedButton;
@@ -23,8 +29,8 @@ public class SubMenu : MonoBehaviour {
 	void Start () {
         sc = gameObject.GetComponent<SoundCaller>();
         int i = 0;
-        menuObjects = new GameObject[gameObject.GetComponentsInChildren<Text>().Length];
-		foreach (Text menuObject in gameObject.GetComponentsInChildren<Text>())
+        menuObjects = new GameObject[gameObject.GetComponentsInChildren<TextPulse>().Length];
+		foreach (TextPulse menuObject in gameObject.GetComponentsInChildren<TextPulse>())
         {
             menuObjects[i] = menuObject.gameObject;
             menuObjects[i].GetComponent<TextPulse>().setButtonInfo(i, (int)buttonIDs[i]);
@@ -34,6 +40,10 @@ public class SubMenu : MonoBehaviour {
         menuObjects[highlightedButton].GetComponent<TextPulse>().highlight();
 	}
 
+    void OnEnable()
+    {
+        changeHighlightedButton(defaultButton);
+    }
     public void changeHighlightedButton(int newButton)
     {
         if (newButton != highlightedButton)

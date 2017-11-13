@@ -45,7 +45,7 @@ public class CameraScript : MonoBehaviour
         Vector3 directionVector = (endPos- transform.position).normalized;
         float distance = (endPos - transform.position).magnitude; //TODO: maybe add overload for moveobject which takes just one vector
         StartCoroutine(Tools.moveObject(gameObject, directionVector, duration, distance));
-        for (float i = 0; i < duration; i += Time.deltaTime)
+        for (float i = 0; i < duration; i += TimeManager.instance.gameDeltaTime)
         {
 
             float pd = i / duration;
@@ -75,7 +75,7 @@ public class CameraScript : MonoBehaviour
         Vector3 directionVector = (endPos - transform.position).normalized;
         float distance = (endPos - transform.position).magnitude; //TODO: maybe add overload for moveobject which takes just one vector
         StartCoroutine(Tools.moveObject(gameObject, directionVector, duration, distance));
-        for (float i = 0; i < duration; i += Time.deltaTime)
+        for (float i = 0; i < duration; i += TimeManager.instance.gameDeltaTime)
         {
             float pd = i / duration;
             lookatPos = elevator.transform.position + (Vector3.down*3/*endView - camOrigin*/) * pd;
@@ -83,7 +83,23 @@ public class CameraScript : MonoBehaviour
             yield return null;
         }
     }
-
+    public IEnumerator gameOverZoom(float animationDuration)
+    {
+        targetOffset = Vector2.zero;
+        float startZDistance = transform.position.z;
+        float zDistancePostZoom = -6.0f;
+        Vector3 newPos = transform.position;
+        float pd;
+        float zoomDuration = animationDuration * 0.66f;
+        for (float i = 0; i < zoomDuration; i+=TimeManager.instance.gameDeltaTime)
+        {
+            pd = i / zoomDuration;
+            newPos = transform.position; //needed because position moves between updates because of offset
+            newPos.z= startZDistance * (1 - pd) + zDistancePostZoom * (pd);
+            transform.position = newPos;
+            yield return null;
+        }
+    }
     // Update is called once per frame
     void FixedUpdate ()
     {
@@ -92,7 +108,7 @@ public class CameraScript : MonoBehaviour
             float followSpeed = 1.0f;
             Vector3 distanceVector = target.transform.position + (new Vector3(targetOffset.x, targetOffset.y, 0)) - transform.position;
             float distanceFromTarget = distanceVector.magnitude;
-            transform.Translate(new Vector3(distanceVector.x, distanceVector.y, 0) * distanceFromTarget * followSpeed * Time.fixedDeltaTime);
+            transform.Translate(new Vector3(distanceVector.x, distanceVector.y, 0) * distanceFromTarget * followSpeed * TimeManager.instance.fixedGameDeltaTime);
         }
         
 	}
@@ -107,7 +123,7 @@ public class CameraScript : MonoBehaviour
         float multiplier = fadeIn ? -1.0f : 1.0f;
         float start = fadeIn ? 1.0f : 0.0f;
         float a = 0;
-        for (float i = 0; i < fadeTime; i+=Time.deltaTime)
+        for (float i = 0; i < fadeTime; i+= TimeManager.instance.gameDeltaTime)
         {
             a = (i / fadeTime) * multiplier;
             fadeTexture.SetPixel(0, 0, new Color(fadeColor.r, fadeColor.g, fadeColor.b, start+a));

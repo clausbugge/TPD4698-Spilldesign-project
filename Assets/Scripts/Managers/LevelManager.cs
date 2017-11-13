@@ -23,11 +23,37 @@ public class LevelManager : MonoBehaviour
         
     }
 
+    public void restartLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    public void triggerGameOver()
+    {
+        TimeManager.instance.pauseGameTime();
+        PauseMenuScript.instance.children[0].SetActive(!PauseMenuScript.instance.children[0].activeSelf);
+    }
+    
+    public void loadMainMenu()
+    {
+        SceneManager.LoadScene("StartGame");
+    }
+    
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            bool pauseOpen = PauseMenuScript.instance.children[1].activeSelf;
+            if (pauseOpen)
+            {
+                TimeManager.instance.resumeGameTime();
+                PauseMenuScript.instance.children[1].SetActive(false);
+                
+            }
+            else
+            {
+                TimeManager.instance.pauseGameTime();
+                PauseMenuScript.instance.children[1].SetActive(true);
+            }
         }
     }
 
@@ -68,7 +94,7 @@ public class LevelManager : MonoBehaviour
 
     public IEnumerator nextLevel()
     {
-        if (gameLoadedOnce)
+        if (currentLevel.ToString() !="0")
         {
             yield return StartCoroutine(Camera.main.GetComponent<CameraScript>().fade(false, 4));
         }

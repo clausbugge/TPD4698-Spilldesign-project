@@ -626,9 +626,11 @@ MonoBehaviour:
   ghostDashingSprite: {fileID: 21300000, guid: 3475859587a4607488e4b3963bf574ae, type: 3}
   humanSprite: {fileID: 21300000, guid: 8bf92ca1357901a4b83c8948cbf8cd7c, type: 3}
   ghostSprite: {fileID: 21300000, guid: c306b03ec1bdf7f449eed1746bc05c20, type: 3}
-  dashParticleSystem: {fileID: 1212154026376036, guid: a62ef9fade7a10147837b732a680face,
+  dasherPrefab: {fileID: 1158741671787958, guid: 0ab168bea34176f4fb11a3dc58bf34df,
     type: 2}
-  playerPosIndicatorParticleSystem: {fileID: 1269494497952838, guid: ce3904d07448eb74dac9596ed6b9dea7,
+  playerPosIndicatorParticleSystem: {fileID: 1965534277425628, guid: 1407a4ff31985b347bcaa26369326841,
+    type: 2}
+  swapSplashParticleSystem: {fileID: 1748319353408186, guid: a62ef9fade7a10147837b732a680face,
     type: 2}
   dashSounds:
   - {fileID: 8300000, guid: a629fe08f1689044d8457375b3fe7dd0, type: 3}
@@ -645,7 +647,7 @@ MonoBehaviour:
   state: 0
   ghostState: 0
   distanceAllowedOutside: 1
-  distanceAllowedInDarkness: 8
+  distanceAllowedInDarkness: 10
   distanceAllowedOutsideDarkness: 0.8
 --- !u!114 &114360755618693994
 MonoBehaviour:
@@ -7336,7 +7338,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 1.2
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -7778,7 +7780,7 @@ ParticleSystem:
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
     donutRadius: 0.2
-    m_Position: {x: 0, y: 0.4, z: 0}
+    m_Position: {x: 0, y: 0.19, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
     m_Scale: {x: 1, y: 1, z: 1}
     placementMode: 0
@@ -10599,7 +10601,7 @@ ParticleSystemRenderer:
   m_ReflectionProbeUsage: 0
   m_Materials:
   - {fileID: 2100000, guid: ec6d22f023e40d7418f831f829e99e34, type: 2}
-  - {fileID: 2100000, guid: aae36e7b0df374148ad1d41cf8e74d48, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

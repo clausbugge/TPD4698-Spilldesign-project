@@ -49,7 +49,7 @@ public class GhostAnimation : MonoBehaviour
             {
                 spriteDirectionIndex = downAnimationIndexStart;
             }
-            animationUpdateTimer += Time.deltaTime;
+            animationUpdateTimer += TimeManager.instance.gameDeltaTime;
             if (velocity.SqrMagnitude() > 0 && animationUpdateTimer > 0.1f)
             {
                 animationUpdateTimer = 0.0f;

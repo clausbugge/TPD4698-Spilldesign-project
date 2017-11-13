@@ -25,7 +25,7 @@ public class SpeechBubbleSpawner : MonoBehaviour
     void Update()
     {
 
-        timeSinceTextSpawn += Time.deltaTime;
+        timeSinceTextSpawn += TimeManager.instance.gameDeltaTime;
 
         //hack for spawning text bubble
         if (Input.GetKeyDown(KeyCode.T))
