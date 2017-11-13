@@ -119,6 +119,7 @@ public class TextPulse : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             case (int)SubMenu.BUTTONS.TO_MAIN_MENU:
                 TimeManager.instance.resumeGameTime();
                 LevelManager.instance.loadMainMenu();
+                MusicManager.instance.playSong(MusicManager.songEnums.TITLE_SCREEN);
                 transform.parent.gameObject.SetActive(false);
                 break;
             default:

@@ -423,10 +423,6 @@ public class InputHandler : MonoBehaviour {
         }
         else if (distanceFromBreakingPoint > distanceAllowedOutside)
         {
-            if (isPointInDark(breakingPoint))
-            {
-                LevelManager.instance.triggerGameOver();
-            }
             StartCoroutine(dashToBreakingPoint(distanceFromBreakingPoint));
         }
         else
@@ -455,6 +451,13 @@ public class InputHandler : MonoBehaviour {
         Vector2 direction = new Vector2(transform.position.x - breakingPoint.x, transform.position.y - breakingPoint.y).normalized;
         yield return StartCoroutine(Tools.moveObject(gameObject, -direction, 0.2f, distanceFromBreakingPoint*1.3f));
         changeHeroState(HERO_STATE.IDLE);
+
+        if (isPointInDark(breakingPoint))
+        {
+            changeHeroState(HERO_STATE.DISABLED);
+            yield return StartCoroutine(deathAnimation());
+            LevelManager.instance.triggerGameOver();
+        }
     }
 
     IEnumerator dashToDarknessPoint(float distanceFromdarknessPoint)
@@ -467,5 +470,29 @@ public class InputHandler : MonoBehaviour {
         Destroy(dasher);
         changeGhostState(GHOST_STATE.HUMAN);
         changeHeroState(HERO_STATE.IDLE);     
+    }
+
+    IEnumerator deathAnimation()
+    {
+        rubberBandParticlesChild.SetActive(false);
+        float deathTime = 3.0f;
+        StartCoroutine(Camera.main.GetComponent<CameraScript>().gameOverZoom(deathTime));
+        Vector3 newRot = transform.rotation.eulerAngles;
+        Vector3 startScale = transform.localScale;
+        Vector3 newScale = startScale;
+        float pd;
+        for (float i = 0; i < deathTime; i+=TimeManager.instance.gameDeltaTime)
+        {
+            pd = i / deathTime;
+            newScale = new Vector2(startScale.x * (1.0f - pd) , startScale.y * (1.0f - pd));
+            //newScale.x = startScale.x * (0.85f - pd)+0.15f;
+            //newScale.x = startScale.y * (0.85f - pd) + 0.15f;
+            newRot.z = i*720.0f;
+            transform.rotation = Quaternion.Euler(newRot);
+            transform.localScale = newScale;
+            yield return null;
+        }
+
+        yield return null;
     }
 }

@@ -83,7 +83,23 @@ public class CameraScript : MonoBehaviour
             yield return null;
         }
     }
-
+    public IEnumerator gameOverZoom(float duration)
+    {
+        targetOffset = Vector2.zero;
+        float startZDistance = transform.position.z;
+        float zDistancePostZoom = -6.0f;
+        Vector3 newPos = transform.position;
+        float pd;
+        float zoomDuration = duration * 0.66f;
+        for (float i = 0; i < duration; i+=TimeManager.instance.gameDeltaTime)
+        {
+            pd = i / duration;
+            newPos = transform.position; //needed because position moves between updates because of offset
+            newPos.z= startZDistance * (1 - pd) + zDistancePostZoom * (pd);
+            transform.position = newPos;
+            yield return null;
+        }
+    }
     // Update is called once per frame
     void FixedUpdate ()
     {
