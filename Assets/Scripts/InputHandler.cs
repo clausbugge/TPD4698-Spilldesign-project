@@ -280,6 +280,7 @@ public class InputHandler : MonoBehaviour {
         }
         if (!isInDark) //swap failed
         {
+            GetComponent<SpeechBubbleSpawner>().SpawnSpeechBubble("Ghostie is afraid of the light!");
             yield return StartCoroutine(Tools.shakeObject(dasher, Vector3.back, 20, 0.25f,2));
             yield return StartCoroutine(Tools.moveObject(dasher, -newVelNormal, dashTimer, dashRange));
             Destroy(dasher);
@@ -393,6 +394,8 @@ public class InputHandler : MonoBehaviour {
                 }
                 borderRubberBandParticlesChild.transform.rotation = Quaternion.Euler(newRot);
                 borderRubberBandParticlesChild.SetActive(true);
+
+                GetComponent<SpeechBubbleSpawner>().SpawnSpeechBubble("I cannot go further!");
             }
         }
         else
@@ -441,7 +444,22 @@ public class InputHandler : MonoBehaviour {
                 newRot.z = 90.0f - Mathf.Acos(distanceNormalized.x) * Mathf.Rad2Deg;
             }
             rubberBandParticlesChild.transform.rotation = Quaternion.Euler(newRot);
-            rubberBandParticlesChild.SetActive(true); 
+            rubberBandParticlesChild.SetActive(true);
+
+            switch (ghostState)
+            {
+                case GHOST_STATE.GHOST: //TODO: refactor
+                    GetComponent<SpeechBubbleSpawner>().SpawnSpeechBubble("The light, it burns!", 3);
+                    break;
+                case GHOST_STATE.HUMAN:
+                    GetComponent<SpeechBubbleSpawner>().SpawnSpeechBubble("Darkness is scary!", 3);
+                    break;
+                default:
+                    break;
+            }
+
+
+            
         }
     }
 
