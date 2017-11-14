@@ -35,6 +35,7 @@ public class ElevatorDoor : MonoBehaviour {
     {
         GameObject newHero = Instantiate(heroObject);
         Camera.main.GetComponent<CameraScript>().target = null;
+        Camera.main.orthographicSize = 1.0f; //TODO: maybe not hardcode this in the future
         Vector3 spawnPos = transform.position;
         spawnPos.z = -0.5f;
         newHero.transform.position = spawnPos;

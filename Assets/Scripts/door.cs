@@ -7,7 +7,7 @@ public class door : MonoBehaviour {
     private bool triggered = false;
     private SoundCaller sc;
     public AudioClip[] doorOpeningSounds;
-    [Range(0,360)]
+    [Range(-360,360)]
     public float arcAngle = 90.0f;
     public float openTimeInSeconds = 2.0f;
     void Awake()

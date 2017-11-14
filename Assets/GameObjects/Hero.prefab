@@ -647,7 +647,7 @@ MonoBehaviour:
   state: 0
   ghostState: 0
   distanceAllowedOutside: 1
-  distanceAllowedInDarkness: 10
+  distanceAllowedInDarkness: 20
   distanceAllowedOutsideDarkness: 0.8
 --- !u!114 &114360755618693994
 MonoBehaviour:

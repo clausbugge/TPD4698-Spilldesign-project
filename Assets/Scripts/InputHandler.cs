@@ -224,6 +224,7 @@ public class InputHandler : MonoBehaviour {
                 gameObject.GetComponent<SpriteRenderer>().sprite = humanSprite;
                 ghostHighlightChildComponent.enabled = false;
                 playerPosIndicatorParticleSystem.SetActive(false);
+                borderRubberBandParticlesChild.SetActive(false);
                 break;
             default:
                 break;

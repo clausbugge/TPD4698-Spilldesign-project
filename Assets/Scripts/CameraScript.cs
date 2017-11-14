@@ -8,10 +8,12 @@ public class CameraScript : MonoBehaviour
     public GameObject target; //target to follow
     public Vector2 targetOffset;
     public Color fadeColor;
+    public float orthographicPlaySize = 3.5f;
     private Texture2D fadeTexture;
     public float defaultFadeTime;
     private float startDistance;
     private int cameraCinematicDistance = 3;
+
     private void Awake()
     {
         startDistance = transform.position.z;
@@ -45,12 +47,17 @@ public class CameraScript : MonoBehaviour
         Vector3 directionVector = (endPos- transform.position).normalized;
         float distance = (endPos - transform.position).magnitude; //TODO: maybe add overload for moveobject which takes just one vector
         StartCoroutine(Tools.moveObject(gameObject, directionVector, duration, distance));
+
+        float startSize = GetComponent<Camera>().orthographicSize;
+        float goalSize = 1.0f;
+        
         for (float i = 0; i < duration; i += TimeManager.instance.gameDeltaTime)
         {
 
             float pd = i / duration;
             lookatPos = camOrigin + (elevator.transform.position - camOrigin) * pd;
             transform.LookAt(lookatPos);
+            GetComponent<Camera>().orthographicSize = Mathf.Lerp(startSize, goalSize, pd);
             yield return null;
         }
     }
@@ -74,28 +81,46 @@ public class CameraScript : MonoBehaviour
         Vector3 lookatPos = camOrigin;
         Vector3 directionVector = (endPos - transform.position).normalized;
         float distance = (endPos - transform.position).magnitude; //TODO: maybe add overload for moveobject which takes just one vector
-        StartCoroutine(Tools.moveObject(gameObject, directionVector, duration, distance));
+        StartCoroutine(Tools.moveObject(gameObject, directionVector, duration, distance,Tools.INTERPOLATION_TYPE.SMOOTH,3));
+
+        float startSize = GetComponent<Camera>().orthographicSize; 
+        float goalSize = orthographicPlaySize;
+
         for (float i = 0; i < duration; i += TimeManager.instance.gameDeltaTime)
         {
             float pd = i / duration;
             lookatPos = elevator.transform.position + (Vector3.down*3/*endView - camOrigin*/) * pd;
             transform.LookAt(lookatPos);
+            GetComponent<Camera>().orthographicSize = Mathf.Lerp(startSize, goalSize, pd*pd*pd);
             yield return null;
         }
     }
     public IEnumerator gameOverZoom(float animationDuration)
     {
         targetOffset = Vector2.zero;
-        float startZDistance = transform.position.z;
-        float zDistancePostZoom = -6.0f;
         Vector3 newPos = transform.position;
         float pd;
         float zoomDuration = animationDuration * 0.66f;
-        for (float i = 0; i < zoomDuration; i+=TimeManager.instance.gameDeltaTime)
+
+        //orthographic zoom
+        float startSize = Camera.main.orthographicSize;
+        float endSize = 2.0f;
+        for (float i = 0; i < zoomDuration; i += TimeManager.instance.gameDeltaTime)
         {
             pd = i / zoomDuration;
             newPos = transform.position; //needed because position moves between updates because of offset
-            newPos.z= startZDistance * (1 - pd) + zDistancePostZoom * (pd);
+            Camera.main.orthographicSize = Mathf.Lerp(startSize, endSize, i * i * i);
+            yield return null;
+        }
+
+        //perspective zoom
+        float startZDistance = transform.position.z;
+        float zDistancePostZoom = -6.0f;
+        for (float i = 0; i < zoomDuration; i += TimeManager.instance.gameDeltaTime)
+        {
+            pd = i / zoomDuration;
+            newPos = transform.position; //needed because position moves between updates because of offset
+            newPos.z = startZDistance * (1 - pd) + zDistancePostZoom * (pd);
             transform.position = newPos;
             yield return null;
         }

@@ -1020,6 +1020,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doorOpeningSounds:
   - {fileID: 8300000, guid: ae0042f3fb82da04b877427a81d92c2e, type: 3}
+  arcAngle: 90
+  openTimeInSeconds: 2
 --- !u!114 &415987589
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3029,6 +3031,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doorOpeningSounds:
   - {fileID: 8300000, guid: ae0042f3fb82da04b877427a81d92c2e, type: 3}
+  arcAngle: 90
+  openTimeInSeconds: 2
 --- !u!114 &832744508
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3563,8 +3567,8 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
-  orthographic size: 6.65
+  orthographic: 1
+  orthographic size: 3
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -4464,6 +4468,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doorOpeningSounds:
   - {fileID: 8300000, guid: ae0042f3fb82da04b877427a81d92c2e, type: 3}
+  arcAngle: 90
+  openTimeInSeconds: 2
 --- !u!114 &1190578163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4946,6 +4952,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doorOpeningSounds:
   - {fileID: 8300000, guid: ae0042f3fb82da04b877427a81d92c2e, type: 3}
+  arcAngle: 90
+  openTimeInSeconds: 2
 --- !u!114 &1388159020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5878,6 +5886,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doorOpeningSounds:
   - {fileID: 8300000, guid: ae0042f3fb82da04b877427a81d92c2e, type: 3}
+  arcAngle: 90
+  openTimeInSeconds: 2
 --- !u!114 &1754248633
 MonoBehaviour:
   m_ObjectHideFlags: 0
