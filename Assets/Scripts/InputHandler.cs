@@ -452,7 +452,7 @@ public class InputHandler : MonoBehaviour {
         yield return StartCoroutine(Tools.moveObject(gameObject, -direction, 0.2f, distanceFromBreakingPoint*1.3f));
         changeHeroState(HERO_STATE.IDLE);
 
-        if (isPointInDark(breakingPoint))
+        if (ghostState == GHOST_STATE.HUMAN  && isPointInDark(breakingPoint))
         {
             changeHeroState(HERO_STATE.DISABLED);
             yield return StartCoroutine(deathAnimation());
