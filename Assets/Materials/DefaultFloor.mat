@@ -86,6 +86,7 @@ Material:
     - _OldSchool: 1
     - _OutlineThickness: 0.437
     - _Parallax: 0.02
+    - _PixelColorShades: 16
     - _PixelTightness: 150
     - _Shininess: 1
     - _SmoothnessTextureChannel: 0

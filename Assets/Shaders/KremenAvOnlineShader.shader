@@ -2,7 +2,7 @@
 {
 	Properties
 	{
-		_PixelTightness("PixelTightness",int) = 150
+		
 		_MainTex("Texture", 2D) = "white" {}
 		[Toggle]_IsPixelated("Pixelated", Float) = 0
 		[Toggle]_HardAttenuation("HardAttenuation", Float) = 0
@@ -10,6 +10,8 @@
 		//[Toggle]_SoftAttenuation("SoftAttenuation", Float) = 0
 		[Toggle]_SolidColor("SolidColor", Float) = 0
 		[Toggle]_OldSchool("OldSchoolPixelated", Float) = 0
+		_PixelTightness("PixelTightness",int) = 150
+		_PixelColorShades("PixelColorShades",Range(2,256)) = 8
 
 	}
 		SubShader
@@ -86,6 +88,7 @@
 			float _HardAttenuation;
 			int _HardAttenuationThreshold;
 			int _PixelTightness;
+			int _PixelColorShades;
 			int _SolidColor;
 			float _OldSchool;
 			struct vertexInput {
@@ -170,13 +173,11 @@
 					float4 finalColor = _LightColor0*attenuation;
 					if (_OldSchool == 1.0f)
 					{
-						int bit = 16; //not really BIT bit, but more like.. "how many shades per color" you want (so 16 means 16^3 colors))
-						float b = round(bit);
-						finalColor = _LightColor0*attenuation*bit;
+						finalColor = _LightColor0*attenuation*_PixelColorShades;
 						finalColor.r = round(finalColor.r);
 						finalColor.g = round(finalColor.g);
 						finalColor.b = round(finalColor.b);
-						finalColor /= bit;
+						finalColor /= _PixelColorShades;
 					}
 					return float4(tex2D(_MainTex, i.pos).rgb*finalColor *shadow, 1.0); //***use pos instead of uv to highlight light colors more***
 				}
