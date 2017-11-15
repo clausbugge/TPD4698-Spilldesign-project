@@ -18,6 +18,7 @@ public class LeverScript : MonoBehaviour
     public Sprite onSprite;
     public Sprite offSprite;
     public AudioClip[] flipSwitchSounds;
+    private GameObject objectOnLever;
     // Use this for initialization
     void Start()
     {
@@ -69,7 +70,7 @@ public class LeverScript : MonoBehaviour
             if (obj != null)
             {
                 GetComponent<SoundCaller>().attemptSound(flipSwitchSounds[Random.Range(0,flipSwitchSounds.Length)],5);
-                obj.GetComponent<Triggerable>().startTrigger();
+                obj.GetComponent<Triggerable>().startTrigger(objectOnLever);
             }
         }
     }
@@ -78,7 +79,8 @@ public class LeverScript : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            playerOnTrigger = true;
+            objectOnLever = collision.gameObject;
+            playerOnTrigger = true; //TODO: not necessary...
         }
     }
     public void OnTriggerExit2D(Collider2D collision)

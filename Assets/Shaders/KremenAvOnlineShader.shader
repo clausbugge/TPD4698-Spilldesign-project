@@ -2,13 +2,14 @@
 {
 	Properties
 	{
+		_PixelTightness("PixelTightness",int) = 150
 		_MainTex("Texture", 2D) = "white" {}
 		[Toggle]_IsPixelated("Pixelated", Float) = 0
 		[Toggle]_HardAttenuation("HardAttenuation", Float) = 0
 		_HardAttenuationThreshold("HardAttenuationThreshold", Range(5,30)) = 15
 		//[Toggle]_SoftAttenuation("SoftAttenuation", Float) = 0
 		[Toggle]_SolidColor("SolidColor", Float) = 0
-		
+		[Toggle]_OldSchool("OldSchoolPixelated", Float) = 0
 
 	}
 		SubShader
@@ -84,8 +85,9 @@
 			float _IsPixelated;
 			float _HardAttenuation;
 			int _HardAttenuationThreshold;
+			int _PixelTightness;
 			int _SolidColor;
-
+			float _OldSchool;
 			struct vertexInput {
 				float4 vertex : POSITION;
 				float4 uv : TEXCOORD2;
@@ -143,34 +145,64 @@
 					//PIXEL LIGHT WITH/WITHOUT SMOOTH ATTENUATION
 					float3 pixelAttenuation = float3(1.0 - length(vertexToLightSource.x / lightRange), 1.0 - length(vertexToLightSource.y / lightRange), 1.0 - length(vertexToLightSource.z / lightRange));
 					pixelAttenuation *= 1000; //multiply by 1000 to get better mod possibilities
-					int modValue = 400 / (lightRange); //this gives approx 5-6 pixels per light range
+					int modValue = _PixelTightness / (lightRange); //this gives approx 5-6 pixels per light range
 					int3 pixelRemainder = int3(pixelAttenuation.x % modValue, pixelAttenuation.y % modValue, pixelAttenuation.z % modValue);
 					pixelAttenuation.x -= pixelRemainder.x - (modValue);
 					pixelAttenuation.y -= pixelRemainder.y - (modValue);
 					pixelAttenuation.z -= pixelRemainder.z - (modValue);
 					pixelAttenuation /= 1000;
 					//WITH ATTENUATION
-					attenuation *= pixelAttenuation.x*pixelAttenuation.y*pixelAttenuation.z * 3;
+					//attenuation *= pixelAttenuation.x*pixelAttenuation.y*pixelAttenuation.z * 3;
 					//WITHOUT ATTENUATION
-					//attenuation = pixelAttenuation.x*pixelAttenuation.y*pixelAttenuation.z;
+					attenuation = pixelAttenuation.x*pixelAttenuation.y*pixelAttenuation.z * 3;
 					//need discard if no attenuation, not 100% sure why. maybe floating point error
 					//NO DISCARD with attenuation
-					//if (attenuation < 0.1)
-					//{
-						//discard;
-					//}
+					if (attenuation < 0.1)
+					{
+						discard;
+					}
 					//STRONGER LIGHT HIGHLIGHT
 					if (attenuation > 0.01)
 					{
 						attenuation*= 0.96;
 						attenuation += 0.04;
 					}
-
-					return float4(tex2D(_MainTex, i.pos).rgb*_LightColor0*shadow*attenuation, 1.0); //***use pos instead of uv to highlight light colors more***
+					float4 finalColor = _LightColor0*attenuation;
+					if (_OldSchool == 1.0f)
+					{
+						int bit = 16; //not really BIT bit, but more like.. "how many shades per color" you want (so 16 means 16^3 colors))
+						float b = round(bit);
+						finalColor = _LightColor0*attenuation*bit;
+						finalColor.r = round(finalColor.r);
+						finalColor.g = round(finalColor.g);
+						finalColor.b = round(finalColor.b);
+						finalColor /= bit;
+					}
+					return float4(tex2D(_MainTex, i.pos).rgb*finalColor *shadow, 1.0); //***use pos instead of uv to highlight light colors more***
 				}
+				
+				//if (_OldSchool == 1.0f)
+				//{
+				//	float pixelAttenuation = attenuation;
+				//	int bit = 32;
+				//	float b = round(bit);
+				//	float4 newColor = _LightColor0*pixelAttenuation*bit;
+				//	//float4 addIfRoundUp;
+				//	/*addIfRoundUp.r = newColor.r % bit < (bit * 0.5) ? 0.0 : 16;
+				//	addIfRoundUp.g = newColor.g % bit < (bit * 0.5) ? 0.0 : 16;
+				//	addIfRoundUp.b = newColor.b % bit < (bit * 0.5) ? 0.0 : 16;
+				//	newColor.r = newColor.r - (newColor.r % bit) + addIfRoundUp.r;
+				//	newColor.g = newColor.g - (newColor.g % bit) + addIfRoundUp.g;
+				//	newColor.b = newColor.b - (newColor.b % bit) + addIfRoundUp.b;*/
+				//	newColor.r = round(newColor.r);
+				//	newColor.g = round(newColor.g);
+				//	newColor.b = round(newColor.b);
+				//	newColor /= bit;
+				//	return float4(tex2D(_MainTex, i.pos).rgb*newColor*shadow, 1.0);
+				//}
 				return float4(tex2D(_MainTex, i.pos).rgb*_LightColor0*shadow*attenuation, 1.0);
 				
-			}
+			}	
 			ENDCG
 		}
 

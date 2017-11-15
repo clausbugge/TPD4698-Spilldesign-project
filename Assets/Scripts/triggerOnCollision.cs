@@ -24,7 +24,7 @@ public class triggerOnCollision : MonoBehaviour {
             {
                 if (obj != null)
                 {
-                    obj.GetComponent<Triggerable>().startTrigger();
+                    obj.GetComponent<Triggerable>().startTrigger(collision.gameObject);
                 }
             }
         }

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Triggerable : MonoBehaviour {
 
-    public void startTrigger()//GameObject triggeringObject)
+    public void startTrigger(GameObject triggeringObject)//GameObject triggeringObject)
     {
-        gameObject.SendMessage("trigger",SendMessageOptions.DontRequireReceiver);//, triggeringObject);
+        gameObject.SendMessage("trigger",triggeringObject, SendMessageOptions.DontRequireReceiver);//, triggeringObject);
     }
 }

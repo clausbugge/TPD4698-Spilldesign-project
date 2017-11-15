@@ -23,9 +23,12 @@ public class ElevatorDoor : MonoBehaviour {
             }
         }
     }
-    public void trigger()
+    public void trigger(GameObject triggeringObject)
     {
-        if (!triggered && !moving)
+        if (triggeringObject.tag == "Player" && 
+            triggeringObject.GetComponent<InputHandler>().ghostState == InputHandler.GHOST_STATE.HUMAN && 
+            !triggered && 
+            !moving)
         {
             StartCoroutine(finishLevel());
         }
