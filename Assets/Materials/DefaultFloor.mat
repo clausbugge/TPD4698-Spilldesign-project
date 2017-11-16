@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: DefaultFloor
-  m_Shader: {fileID: 4800000, guid: 754d5ff7d69a8d64c919f19e6c54f461, type: 3}
+  m_Shader: {fileID: 4800000, guid: 4c52255027a8fcf4fbb466697c3b7a8f, type: 3}
   m_ShaderKeywords: ETC1_EXTERNAL_ALPHA _EMISSION _GLOSSYREFLECTIONS_OFF _ISPIXELATED_ON
     _OLDSCHOOL_ON _SPECULARHIGHLIGHTS_OFF
   m_LightmapFlags: 1
@@ -86,8 +86,8 @@ Material:
     - _OldSchool: 1
     - _OutlineThickness: 0.437
     - _Parallax: 0.02
-    - _PixelColorShades: 16
-    - _PixelTightness: 150
+    - _PixelColorShades: 8
+    - _PixelTightness: 74.25
     - _Shininess: 1
     - _SmoothnessTextureChannel: 0
     - _SoftAttenuation: 0

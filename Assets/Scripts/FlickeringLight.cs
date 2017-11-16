@@ -37,7 +37,9 @@ public class FlickeringLight : MonoBehaviour
         transform.localPosition = startPos + new Vector3(Mathf.Cos((flickerOffset.x*360 +90)*Mathf.Deg2Rad) * flickerRadius,
                                                          Mathf.Sin(flickerOffset.y *360*Mathf.Deg2Rad) * flickerRadius, 0);
 
-        intensityOffset += TimeManager.instance.gameDeltaTime * Random.Range(-intensityDeltaRange, intensityDeltaRange);
-        lightComponent.intensity = startIntensity + Mathf.Sin(intensityOffset)*intensityRange;
+        //intensityOffset += TimeManager.instance.gameDeltaTime * Random.Range(-intensityDeltaRange, intensityDeltaRange);
+        //lightComponent.intensity = startIntensity + Mathf.Sin(intensityOffset)*intensityRange;
+
+        lightComponent.intensity = startIntensity + Mathf.Sin(Time.time*3)*0.01f;
     }
 }

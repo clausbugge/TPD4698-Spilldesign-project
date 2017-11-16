@@ -135,7 +135,16 @@
 					//attenuation += _HardAttenuationThreshold * 5;
 					attenuation /= 1000;
 					//color = tex2D(_MainTex, i.uv).rgb*_LightColor0*shadow*attenuation; //***use pos instead of uv to highlight light colors more***
-				 	return float4(tex2D(_MainTex, i.pos).rgb*_LightColor0*shadow*attenuation, 1.0);
+					float4 finalColor = _LightColor0*attenuation;
+					if (_OldSchool == 1.0f)
+					{
+						finalColor = _LightColor0*attenuation*_PixelColorShades;
+						finalColor.r = round(finalColor.r);
+						finalColor.g = round(finalColor.g);
+						finalColor.b = round(finalColor.b);
+						finalColor /= _PixelColorShades;
+					}
+				 	return float4(tex2D(_MainTex, i.pos).rgb*finalColor*shadow, 1.0);
 				}
 				if (_SolidColor == 1.0f && distanceToLight < lightRange)
 				{
@@ -145,31 +154,45 @@
 				
 				if (_IsPixelated == 1.0f)
 				{
-					//PIXEL LIGHT WITH/WITHOUT SMOOTH ATTENUATION
-					float3 pixelAttenuation = float3(1.0 - length(vertexToLightSource.x / lightRange), 1.0 - length(vertexToLightSource.y / lightRange), 1.0 - length(vertexToLightSource.z / lightRange));
-					pixelAttenuation *= 1000; //multiply by 1000 to get better mod possibilities
-					int modValue = _PixelTightness / (lightRange); //this gives approx 5-6 pixels per light range
-					int3 pixelRemainder = int3(pixelAttenuation.x % modValue, pixelAttenuation.y % modValue, pixelAttenuation.z % modValue);
-					pixelAttenuation.x -= pixelRemainder.x - (modValue);
-					pixelAttenuation.y -= pixelRemainder.y - (modValue);
-					pixelAttenuation.z -= pixelRemainder.z - (modValue);
-					pixelAttenuation /= 1000;
+					vertexToLightSource *= 1000;
+					int modValue = _PixelTightness;
+					int3 pixelRemainder = int3(vertexToLightSource.x % modValue, vertexToLightSource.y % modValue, vertexToLightSource.z % modValue);
+					vertexToLightSource.x -= pixelRemainder.x - modValue;
+					vertexToLightSource.y -= pixelRemainder.y - modValue;
+					vertexToLightSource.z -= pixelRemainder.z - modValue;
+					vertexToLightSource /= 1000;
+					distanceToLight = length(float3(vertexToLightSource.x, vertexToLightSource.y, vertexToLightSource.z));
+					attenuation = 1 - (distanceToLight / lightRange);
+					attenuation *= 3;
+					
+
+					//PIXEL LIGHT WITH/WITHOUT SMOOTH ATTENUATION //OOOOOOLD
+					/*float3 pixelAttenuation = float3(1.0 - length((vertexToLightSource.x) / (lightRange)),
+													 1.0 - length((vertexToLightSource.y) / (lightRange)),
+													 1.0 - length((vertexToLightSource.z) / (lightRange)));*/
+					//pixelAttenuation *= 1000; //multiply by 1000 to get better mod possibilities
+					//int modValue = _PixelTightness / (lightRange); //lower = more "pixels"
+					//int3 pixelRemainder = int3(pixelAttenuation.x % modValue, pixelAttenuation.y % modValue, pixelAttenuation.z % modValue);
+					//pixelAttenuation.x -= pixelRemainder.x - (modValue);
+					//pixelAttenuation.y -= pixelRemainder.y - (modValue);
+					//pixelAttenuation.z -= pixelRemainder.z - (modValue);
+					//pixelAttenuation /= 1000;
 					//WITH ATTENUATION
 					//attenuation *= pixelAttenuation.x*pixelAttenuation.y*pixelAttenuation.z * 3;
 					//WITHOUT ATTENUATION
-					attenuation = pixelAttenuation.x*pixelAttenuation.y*pixelAttenuation.z * 3;
+					//attenuation = pixelAttenuation.x * pixelAttenuation.y * pixelAttenuation.z*3;
 					//need discard if no attenuation, not 100% sure why. maybe floating point error
 					//NO DISCARD with attenuation
-					if (attenuation < 0.1)
-					{
-						discard;
-					}
-					//STRONGER LIGHT HIGHLIGHT
-					if (attenuation > 0.01)
-					{
-						attenuation*= 0.96;
-						attenuation += 0.04;
-					}
+					//if (attenuation < 0.1)
+					//{
+					//	discard;
+					//}
+					////STRONGER LIGHT HIGHLIGHT
+					//if (attenuation > 0.01)
+					//{
+					//	attenuation*= 0.96;
+					//	attenuation += 0.04;
+					//}
 					float4 finalColor = _LightColor0*attenuation;
 					if (_OldSchool == 1.0f)
 					{
@@ -201,7 +224,16 @@
 				//	newColor /= bit;
 				//	return float4(tex2D(_MainTex, i.pos).rgb*newColor*shadow, 1.0);
 				//}
-				return float4(tex2D(_MainTex, i.pos).rgb*_LightColor0*shadow*attenuation, 1.0);
+				float4 finalColor = _LightColor0*attenuation;
+				if (_OldSchool == 1.0f)
+				{
+					finalColor = _LightColor0*attenuation*_PixelColorShades;
+					finalColor.r = round(finalColor.r);
+					finalColor.g = round(finalColor.g);
+					finalColor.b = round(finalColor.b);
+					finalColor /= _PixelColorShades;
+				}
+				return float4(tex2D(_MainTex, i.pos).rgb*finalColor*shadow, 1.0);
 				
 			}	
 			ENDCG
