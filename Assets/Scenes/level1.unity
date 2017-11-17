@@ -1027,6 +1027,7 @@ MonoBehaviour:
   target: {fileID: 700454754}
   targetOffset: {x: 0, y: 0}
   fadeColor: {r: 0, g: 0, b: 0, a: 1}
+  orthographicPlaySize: 3.5
   defaultFadeTime: 1.5
 --- !u!81 &956815303
 AudioListener:
@@ -1119,6 +1120,7 @@ GameObject:
   - component: {fileID: 1134202900}
   - component: {fileID: 1134202899}
   - component: {fileID: 1134202902}
+  - component: {fileID: 1134202903}
   m_Layer: 0
   m_Name: Point light (1)
   m_TagString: Untagged
@@ -1147,9 +1149,9 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 2
-  m_Color: {r: 0, g: 0, b: 1, a: 1}
-  m_Intensity: 0.3
-  m_Range: 15
+  m_Color: {r: 0.36397058, g: 0.36397058, b: 0.75, a: 1}
+  m_Intensity: 0.65
+  m_Range: 7.01
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
@@ -1181,7 +1183,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1134202898}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.5, y: 0, z: -1.8}
+  m_LocalPosition: {x: -2.5, y: 1.26, z: -1.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1198,6 +1200,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e7a7b43eb3b4184cbfe5a0e2caf0679, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1134202903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1134202898}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29cfa8f63291fdb4ea7ac8310f062702, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flickerRange: {x: 0, y: 0}
+  flickerDeltaRange: {x: 0, y: 0}
+  randomFlickerDirection: 0
+  intensityRange: 0.005
+  intensityDeltaRange: 0.85
 --- !u!1 &1167442148
 GameObject:
   m_ObjectHideFlags: 0
@@ -1225,9 +1243,9 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 2
-  m_Color: {r: 0.5955882, g: 0.12408088, b: 0, a: 1}
-  m_Intensity: 0.5
-  m_Range: 15
+  m_Color: {r: 0.50735295, g: 0.22087884, b: 0.1454909, a: 1}
+  m_Intensity: 0.8
+  m_Range: 5.28
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
@@ -1259,7 +1277,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1167442148}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.34, y: 0.66, z: -1.8}
+  m_LocalPosition: {x: -7.56, y: -0.15, z: -1.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1288,10 +1306,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cfa8f63291fdb4ea7ac8310f062702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flickerRadius: 1
-  flickerDeltaRange: 0
-  intensityRange: 0
-  intensityDeltaRange: 0
+  flickerRange: {x: 0.02, y: 0.02}
+  flickerDeltaRange: {x: 1, y: 1}
+  randomFlickerDirection: 0
+  intensityRange: 0.005
+  intensityDeltaRange: 1
 --- !u!1 &1208939776
 GameObject:
   m_ObjectHideFlags: 0
@@ -1965,10 +1984,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cfa8f63291fdb4ea7ac8310f062702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flickerRadius: 0
-  flickerDeltaRange: 0
-  intensityRange: 0
-  intensityDeltaRange: 0
+  flickerRange: {x: 0, y: 0}
+  flickerDeltaRange: {x: 0, y: 0}
+  randomFlickerDirection: 0
+  intensityRange: 0.01
+  intensityDeltaRange: 1
 --- !u!114 &1609266639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2024,7 +2044,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1609266637}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.926, y: 8.844, z: -2}
+  m_LocalPosition: {x: -2.59, y: 9.41, z: -2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2208,10 +2228,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cfa8f63291fdb4ea7ac8310f062702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flickerRadius: 0.46
-  flickerDeltaRange: 0.453
-  intensityRange: 1
-  intensityDeltaRange: 0.523
+  flickerRange: {x: 0, y: 0}
+  flickerDeltaRange: {x: 0, y: 0}
+  randomFlickerDirection: 0
+  intensityRange: 0.04
+  intensityDeltaRange: 0.5
 --- !u!114 &1880503405
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2244,9 +2265,9 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 2
-  m_Color: {r: 0, g: 0.99264705, b: 0.13007112, a: 1}
-  m_Intensity: 0.5
-  m_Range: 10.79
+  m_Color: {r: 0.13321799, g: 0.5661765, b: 0.18995054, a: 1}
+  m_Intensity: 0.66
+  m_Range: 5.25
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
@@ -2278,7 +2299,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1880503403}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.19, y: -0.65, z: -1.8}
+  m_LocalPosition: {x: 2.49, y: -0.29, z: -1.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
