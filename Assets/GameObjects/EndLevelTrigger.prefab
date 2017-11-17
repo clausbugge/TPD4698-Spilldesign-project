@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 82062321839401550}
   - component: {fileID: 114965767090751350}
   - component: {fileID: 114552820215928934}
-  m_Layer: 10
+  m_Layer: 2
   m_Name: EndLevelTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1065801775234842}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.5299988, y: -1.16, z: 0}
+  m_LocalPosition: {x: -2.974525, y: -24.108578, z: -0.1}
   m_LocalScale: {x: 1, y: 1, z: 0.5}
   m_Children: []
   m_Father: {fileID: 0}

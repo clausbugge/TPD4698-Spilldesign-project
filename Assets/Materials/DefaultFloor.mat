@@ -97,7 +97,7 @@ Material:
     - _SrcBlend: 1
     - _Th: 0.856
     - _UVSec: 0
-    - _WallHeight: -1.8
+    - _WallHeight: -1.98
     - _ZWrite: 1
     - _circularAttenuation: 0
     - _isPixelated: 0

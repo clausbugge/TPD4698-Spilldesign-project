@@ -148,39 +148,39 @@
 			finalColor = _LightColor0*attenuation*_PixelColorShades;
 			finalColor = float3(round(finalColor.r), round(finalColor.g), round(finalColor.b)) / _PixelColorShades;
 
-			return float4(tex2D(_MainTex, i.pos).rgb*finalColor *shadow, 1.0); //***use pos instead of uv to highlight light colors more***
+			return float4(tex2D(_MainTex, i.uv).rgb*finalColor *shadow, 1.0); //***use pos instead of uv to highlight light colors more***
 
 		}
 			ENDCG
 		}
-		//Pass
-		//{
-		//	Tags{ "LightMode" = "ShadowCaster" }
-		//	ZWrite On ZTest Less Cull Off
-		//	Offset 1, 1
+		Pass
+		{
+			Tags{ "LightMode" = "ShadowCaster" }
+			ZWrite On ZTest Less Cull Off
+			Offset 1, 1
 
-		//	CGPROGRAM
-		//	#pragma vertex vert
-		//	#pragma fragment frag
-		//	#pragma multi_compile_shadowcaster
-		//	#include "UnityCG.cginc"
+			CGPROGRAM
+			#pragma vertex vert
+			#pragma fragment frag
+			#pragma multi_compile_shadowcaster
+			#include "UnityCG.cginc"
 
-		//	struct v2f {
-		//		V2F_SHADOW_CASTER;
-		//	};
+			struct v2f {
+				V2F_SHADOW_CASTER;
+			};
 
-		//	v2f vert(appdata_base v)
-		//	{
-		//		v2f o;
-		//		TRANSFER_SHADOW_CASTER_NORMALOFFSET(o)
-		//			return o;
-		//	}
+			v2f vert(appdata_base v)
+			{
+				v2f o;
+				TRANSFER_SHADOW_CASTER_NORMALOFFSET(o)
+					return o;
+			}
 
-		//	float4 frag(v2f i) : SV_Target
-		//	{
-		//		SHADOW_CASTER_FRAGMENT(i)
-		//	}
-		//		ENDCG
-		//	}
+			float4 frag(v2f i) : SV_Target
+			{
+				SHADOW_CASTER_FRAGMENT(i)
+			}
+				ENDCG
+			}
 		}
 }

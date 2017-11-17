@@ -2610,8 +2610,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cfa8f63291fdb4ea7ac8310f062702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flickerRadius: 0
-  flickerDeltaRange: 0
+  flickerRange: {x: 0, y: 0}
+  flickerDeltaRange: {x: 0, y: 0}
+  randomFlickerDirection: 0
   intensityRange: 0.01
   intensityDeltaRange: 0.1
 --- !u!1 &1149079028
@@ -2906,8 +2907,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cfa8f63291fdb4ea7ac8310f062702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flickerRadius: 1
-  flickerDeltaRange: 0
+  flickerRange: {x: 0, y: 0}
+  flickerDeltaRange: {x: 0, y: 0}
+  randomFlickerDirection: 0
   intensityRange: 0
   intensityDeltaRange: 0
 --- !u!114 &1167442153
@@ -3033,7 +3035,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4334440288803178, guid: b66ba3f6994eb4d4486308775020ae11, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.1
       objectReference: {fileID: 0}
     - target: {fileID: 4334440288803178, guid: b66ba3f6994eb4d4486308775020ae11, type: 2}
       propertyPath: m_LocalRotation.x
@@ -4974,8 +4976,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cfa8f63291fdb4ea7ac8310f062702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flickerRadius: 1
-  flickerDeltaRange: 0
+  flickerRange: {x: 0, y: 0}
+  flickerDeltaRange: {x: 0, y: 0}
+  randomFlickerDirection: 0
   intensityRange: 0
   intensityDeltaRange: 0
 --- !u!114 &2046631030
