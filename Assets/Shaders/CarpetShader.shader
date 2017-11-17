@@ -1,4 +1,4 @@
-﻿Shader "SingleColorNoCulling"
+﻿Shader "CarpetAndDoors"
 {
 	Properties
 	{
@@ -8,6 +8,7 @@
 	{
 		Pass
 		{
+			Blend One One
 			Cull Off
 			CGPROGRAM
 			#pragma vertex vert  

@@ -1729,8 +1729,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cfa8f63291fdb4ea7ac8310f062702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flickerRadius: 1
-  flickerDeltaRange: 0
+  flickerRange: {x: 0, y: 0}
+  flickerDeltaRange: {x: 0, y: 0}
+  randomFlickerDirection: 0
   intensityRange: 0
   intensityDeltaRange: 0
 --- !u!114 &561932124
@@ -1923,8 +1924,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cfa8f63291fdb4ea7ac8310f062702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flickerRadius: 0
-  flickerDeltaRange: 0.027
+  flickerRange: {x: 0, y: 0}
+  flickerDeltaRange: {x: 0, y: 0}
+  randomFlickerDirection: 0
   intensityRange: 1
   intensityDeltaRange: 0.035
 --- !u!114 &592485414
@@ -2184,8 +2186,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cfa8f63291fdb4ea7ac8310f062702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flickerRadius: 1
-  flickerDeltaRange: 0
+  flickerRange: {x: 0, y: 0}
+  flickerDeltaRange: {x: 0, y: 0}
+  randomFlickerDirection: 0
   intensityRange: 0
   intensityDeltaRange: 0
 --- !u!114 &670513900
@@ -2365,8 +2368,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cfa8f63291fdb4ea7ac8310f062702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flickerRadius: 1
-  flickerDeltaRange: 0.019
+  flickerRange: {x: 0, y: 0}
+  flickerDeltaRange: {x: 0, y: 0}
+  randomFlickerDirection: 0
   intensityRange: 1
   intensityDeltaRange: 0.03
 --- !u!114 &692843653
@@ -3980,8 +3984,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cfa8f63291fdb4ea7ac8310f062702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flickerRadius: 1
-  flickerDeltaRange: 0
+  flickerRange: {x: 0, y: 0}
+  flickerDeltaRange: {x: 0, y: 0}
+  randomFlickerDirection: 0
   intensityRange: 0
   intensityDeltaRange: 0
 --- !u!114 &1049243323
@@ -4006,8 +4011,8 @@ Light:
   serializedVersion: 8
   m_Type: 2
   m_Color: {r: 0.5955882, g: 0.12408088, b: 0, a: 1}
-  m_Intensity: 0.6
-  m_Range: 4.01
+  m_Intensity: 0.5
+  m_Range: 8
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
@@ -4200,8 +4205,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cfa8f63291fdb4ea7ac8310f062702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flickerRadius: 1
-  flickerDeltaRange: 0
+  flickerRange: {x: 0, y: 0}
+  flickerDeltaRange: {x: 0, y: 0}
+  randomFlickerDirection: 0
   intensityRange: 0
   intensityDeltaRange: 0
 --- !u!1 &1190578159
@@ -6730,8 +6736,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cfa8f63291fdb4ea7ac8310f062702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flickerRadius: 1
-  flickerDeltaRange: 0
+  flickerRange: {x: 0, y: 0}
+  flickerDeltaRange: {x: 0, y: 0}
+  randomFlickerDirection: 0
   intensityRange: 0
   intensityDeltaRange: 0
 --- !u!114 &1849998109
@@ -6757,7 +6764,7 @@ Light:
   m_Type: 2
   m_Color: {r: 0.5955882, g: 0.12408088, b: 0, a: 1}
   m_Intensity: 0.5
-  m_Range: 6.96
+  m_Range: 8
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:

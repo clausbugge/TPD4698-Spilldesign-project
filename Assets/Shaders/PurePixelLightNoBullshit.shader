@@ -147,6 +147,7 @@
 			float3 finalColor = _LightColor0*attenuation;
 			finalColor = _LightColor0*attenuation*_PixelColorShades;
 			finalColor = float3(round(finalColor.r), round(finalColor.g), round(finalColor.b)) / _PixelColorShades;
+
 			return float4(tex2D(_MainTex, i.pos).rgb*finalColor *shadow, 1.0); //***use pos instead of uv to highlight light colors more***
 
 		}
