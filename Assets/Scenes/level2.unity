@@ -20,7 +20,7 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.058391012, g: 0.061001085, b: 0.07352942, a: 1}
+  m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
@@ -2519,6 +2519,7 @@ GameObject:
   - component: {fileID: 1134202900}
   - component: {fileID: 1134202899}
   - component: {fileID: 1134202902}
+  - component: {fileID: 1134202903}
   m_Layer: 0
   m_Name: blue1
   m_TagString: Untagged
@@ -2598,6 +2599,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e7a7b43eb3b4184cbfe5a0e2caf0679, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1134202903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1134202898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29cfa8f63291fdb4ea7ac8310f062702, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flickerRadius: 0
+  flickerDeltaRange: 0
+  intensityRange: 0.01
+  intensityDeltaRange: 0.1
 --- !u!1 &1149079028
 GameObject:
   m_ObjectHideFlags: 0
@@ -2827,9 +2843,9 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 2
-  m_Color: {r: 0.5735294, g: 0.33649167, b: 0.27411333, a: 1}
+  m_Color: {r: 1, g: 0.625, b: 0.625, a: 1}
   m_Intensity: 0.5
-  m_Range: 12.6
+  m_Range: 5.09
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:

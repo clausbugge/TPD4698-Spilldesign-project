@@ -15,7 +15,7 @@ public class FlickeringLight : MonoBehaviour
     public float intensityRange;
     [Range(0,1)]
     public float intensityDeltaRange;
-
+    float curIntensity = 0.0f;
     private Light lightComponent;
     
     // Use this for initialization
@@ -39,7 +39,7 @@ public class FlickeringLight : MonoBehaviour
 
         //intensityOffset += TimeManager.instance.gameDeltaTime * Random.Range(-intensityDeltaRange, intensityDeltaRange);
         //lightComponent.intensity = startIntensity + Mathf.Sin(intensityOffset)*intensityRange;
-
-        lightComponent.intensity = startIntensity + Mathf.Sin(Time.time*3)*0.01f;
+        curIntensity += TimeManager.instance.gameDeltaTime * intensityDeltaRange;
+        lightComponent.intensity = startIntensity + Mathf.Sin(curIntensity*2*Mathf.PI)*intensityRange;
     }
 }
