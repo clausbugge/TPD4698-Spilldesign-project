@@ -4,7 +4,16 @@ using System.Collections;
 
 public class LevelManager : MonoBehaviour
 {
+    private static readonly string[] levelNames =
+    {
+        "level0",
+        "tutorial1",
+        "level1",
+        "level2",
+        "level3"
+    };
 
+    private static int levelIndex = 0;
     public static LevelManager instance;
     private static int currentLevel;
     bool gameLoadedOnce = false;
@@ -102,12 +111,13 @@ public class LevelManager : MonoBehaviour
         {
             gameLoadedOnce = true;
         }
-        
-        
-        
+
+        string nextLvlName = "Scenes/" + levelNames[levelIndex];
+        levelIndex++;
+        /*
         string nextLvlName = "Scenes/level" + currentLevel.ToString(); //important: all scenes have to be in Scenes folder
         currentLevel++;
-
+        */
         //if (!SceneManager.GetSceneByName(nextLvlName).IsValid()) //TODO: can't get this to work for now. cba to fix
         {
 
