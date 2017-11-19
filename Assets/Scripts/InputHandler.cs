@@ -303,6 +303,7 @@ public class InputHandler : MonoBehaviour {
             dasher.transform.position = dashOrigin;//easy swap solution
             breakingPoint = Vector2.zero;
             changeGhostState(GHOST_STATE.GHOST);
+            gameObject.GetComponent<SpriteRenderer>().sprite = ghostSprite;
             borderParticlesChild.transform.SetParent(dasher.transform);
             borderParticlesChild.transform.localPosition = Vector3.zero;
             Destroy(Instantiate(swapSplashParticleSystem, transform.position, Quaternion.Euler(Vector3.zero)), 0.9f); //create and destroy splash effect. hardcoded duration. cba to fix
