@@ -59,7 +59,10 @@ public class ElevatorDoor : MonoBehaviour {
         Vector3 moveDir = Vector3.down;
         moveDir.z = 0.0f;
         float moveTime = 3.5f;
-        StartCoroutine(Tools.moveObject(newHero, moveDir, moveTime, 3, Tools.INTERPOLATION_TYPE.LERP));
+
+        newHero.GetComponent<Rigidbody2D>().velocity = new Vector2(0, -.1f);
+
+        yield return StartCoroutine(Tools.moveObject(newHero, moveDir, moveTime, 3, Tools.INTERPOLATION_TYPE.LERP));
         Camera.main.GetComponent<CameraScript>().target = newHero;
         newHero.GetComponent<InputHandler>().changeHeroState(InputHandler.HERO_STATE.IDLE);
     }
@@ -75,11 +78,12 @@ public class ElevatorDoor : MonoBehaviour {
         yield return StartCoroutine(Tools.moveObject(rightDoor, Vector3.right, 2, 1f));
         yield return StartCoroutine(redCarpet.GetComponent<RedCarpet>().openCarpet());
 
-        
+        hero.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0.1f);
+
         Vector3 moveDir = (-hero.transform.position + transform.position).normalized;
         moveDir.z = 0.0f;
         float moveTime = 2.0f;
-        StartCoroutine(Tools.moveObject(hero, moveDir, moveTime, 3, Tools.INTERPOLATION_TYPE.LERP));
+        yield return StartCoroutine(Tools.moveObject(hero, moveDir, moveTime, 3, Tools.INTERPOLATION_TYPE.LERP));
         LevelManager.instance.initiateNextLevel();
     }
 }
