@@ -223,6 +223,13 @@ public class InputHandler : MonoBehaviour {
         borderParticlesChild.transform.SetParent(transform);
         borderParticlesChild.transform.localPosition = Vector3.zero;
         Destroy(dasher);
+
+        if (isPointInDark(gameObject.transform.position))
+        {
+            changeHeroState(HERO_STATE.DISABLED);
+            yield return StartCoroutine(deathAnimation());
+            LevelManager.instance.triggerGameOver("Too scared, need light when the ghost returns!");
+        }
         yield return null;
     }
 
@@ -503,7 +510,7 @@ public class InputHandler : MonoBehaviour {
         {
             changeHeroState(HERO_STATE.DISABLED);
             yield return StartCoroutine(deathAnimation());
-            LevelManager.instance.triggerGameOver();
+            LevelManager.instance.triggerGameOver("Stuck in the darkness, i have failed");
         }
     }
 

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
@@ -36,10 +37,11 @@ public class LevelManager : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-    public void triggerGameOver()
+    public void triggerGameOver(string deathReason = "Hello darkness")
     {
         TimeManager.instance.pauseGameTime();
         PauseMenuScript.instance.children[0].SetActive(!PauseMenuScript.instance.children[0].activeSelf);
+        PauseMenuScript.instance.children[0].transform.GetChild(1).GetComponent<Text>().text = deathReason;
     }
     
     public void loadMainMenu()
