@@ -130,6 +130,26 @@ public class InputHandler : MonoBehaviour {
         return true;
     }
 
+    bool isCollidingWithFloor(Vector3 point)
+    {
+        RaycastHit hit;
+        var collisionFound = Physics.Raycast(new Vector3(point.x, point.y, 1), new Vector3(0,0,-1), out hit);
+        if (collisionFound)
+        {
+            //Hit is detected, you can now check with the RaycastHit how far away and what object you hit and apply logic there.
+            Debug.Log("Raycast hit object " + hit.transform.name);
+            Debug.Log("Distance between object and " + hit.transform.name + ": " + hit.distance);
+
+            return true;
+        }
+        else
+        {
+            Debug.Log("raycast found nothing");
+        }
+
+        return false;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -268,7 +288,8 @@ public class InputHandler : MonoBehaviour {
         sc.attemptSound(dashSounds[Random.Range(0, dashSounds.Length)]);
         yield return StartCoroutine(Tools.moveObject(dasher, newVelNormal, dashTimer, dashRange)); //dash away
         bool isInDark = isPointInDark(dasher.transform.position);
-        if (isInDark) //Swap successful
+        bool isOnFloor = isCollidingWithFloor(dasher.transform.position);
+        if (isInDark && isOnFloor) //Swap successful
         {
             dashOrigin = transform.position;
             transform.position = dasher.transform.position;
@@ -279,9 +300,16 @@ public class InputHandler : MonoBehaviour {
             borderParticlesChild.transform.localPosition = Vector3.zero;
             Destroy(Instantiate(swapSplashParticleSystem, transform.position, Quaternion.Euler(Vector3.zero)), 0.9f); //create and destroy splash effect. hardcoded duration. cba to fix
         }
-        if (!isInDark) //swap failed
+        else //swap failed
         {
-            GetComponent<SpeechBubbleSpawner>().SpawnSpeechBubble("Ghostie is afraid of the light!");
+            if(isOnFloor)
+            {
+                GetComponent<SpeechBubbleSpawner>().SpawnSpeechBubble("Ghostie is afraid of the light!");
+            }
+            else
+            {
+                GetComponent<SpeechBubbleSpawner>().SpawnSpeechBubble("Ghostie cannot dash outside the building!");
+            }
             yield return StartCoroutine(Tools.shakeObject(dasher, Vector3.back, 20, 0.25f,2));
             yield return StartCoroutine(Tools.moveObject(dasher, -newVelNormal, dashTimer, dashRange));
             Destroy(dasher);
