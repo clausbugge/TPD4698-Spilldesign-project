@@ -47,7 +47,10 @@ public class door : MonoBehaviour {
         if (!triggered && !moving)
         {
             StartCoroutine(rotateLeft(Vector3.back));
-            sc.attemptSound(doorOpeningSounds[Random.Range(0, doorOpeningSounds.Length)],0.02f);
+            int test = Random.Range(0, doorOpeningSounds.Length);
+            print(test);
+            print(doorOpeningSounds.Length);
+            sc.attemptSound(doorOpeningSounds[test], 0.02f);
             triggered = !triggered;
         }
         if (triggered && !moving)

@@ -69,8 +69,8 @@ public class FlickeringLight : MonoBehaviour
         //transform.rotation = Quaternion.Euler( new Vector3(startRot + curRot, 90,0));
     }
 
-    public void setStartingRotation(float newRot)
-    {
+    //public void setStartingRotation(float newRot)
+    //{
         //startRot = newRot;
-    }
+    //}
 }

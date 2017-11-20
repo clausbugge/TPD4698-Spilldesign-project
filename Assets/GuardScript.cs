@@ -41,19 +41,16 @@ public class GuardScript : MonoBehaviour {
     {
         if (direction.y >= 0)
         {
-            print(Mathf.Acos(direction.x) * Mathf.Rad2Deg);
             return Mathf.Acos(direction.x) * Mathf.Rad2Deg;
         }
         else
         {
             if (direction.x >= 0)
             {
-                print("1");
                 return Mathf.Asin(direction.y) * Mathf.Rad2Deg;
             }
             else
             {
-                print(Mathf.Acos(direction.x) * Mathf.Rad2Deg + 90.0f);
                 return Mathf.Acos(direction.x) * Mathf.Rad2Deg + 90.0f;
             }
         }
@@ -67,7 +64,6 @@ public class GuardScript : MonoBehaviour {
             currentSprite = sprites[curSpriteID];
             Vector2 newDir = rb2d.velocity.normalized;
             flashLightRotator.transform.rotation = Quaternion.Euler(0, 0, getAngle(newDir));
-            //flashLightRotator.transform.GetChild(0).GetComponent<FlickeringLight>().setStartingRotation(flashLightRotator.transform.rotation.z);
             GetComponent<SpriteRenderer>().sprite = currentSprite;
         }
 	}
