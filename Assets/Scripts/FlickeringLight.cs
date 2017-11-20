@@ -66,7 +66,7 @@ public class FlickeringLight : MonoBehaviour
         //angle
         rotTimer += TimeManager.instance.gameDeltaTime*angleDeltaRange;
         curRot = Mathf.Sin(rotTimer * 2 * Mathf.PI) *angleRange;
-        //transform.rotation = Quaternion.Euler( new Vector3(startRot + curRot, 90,0));
+        transform.localRotation = Quaternion.Euler( new Vector3(startRot + curRot, 90,0));
     }
 
     //public void setStartingRotation(float newRot)

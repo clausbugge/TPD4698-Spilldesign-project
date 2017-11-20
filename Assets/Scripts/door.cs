@@ -48,8 +48,6 @@ public class door : MonoBehaviour {
         {
             StartCoroutine(rotateLeft(Vector3.back));
             int test = Random.Range(0, doorOpeningSounds.Length);
-            print(test);
-            print(doorOpeningSounds.Length);
             sc.attemptSound(doorOpeningSounds[test], 0.02f);
             triggered = !triggered;
         }

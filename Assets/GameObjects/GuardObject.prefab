@@ -54,6 +54,8 @@ GameObject:
   - component: {fileID: 212984831753084344}
   - component: {fileID: 114023504444898226}
   - component: {fileID: 50131995691271820}
+  - component: {fileID: 82782686390353598}
+  - component: {fileID: 114288669974607554}
   m_Layer: 0
   m_Name: GuardObject
   m_TagString: Untagged
@@ -95,7 +97,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1716433653264690}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.71, y: 6.96, z: -0.1}
+  m_LocalPosition: {x: -1.83, y: 7.85, z: -0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4064539902576938}
@@ -122,6 +124,86 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!82 &82782686390353598
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1716433653264690}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!108 &108392621972724456
 Light:
   m_ObjectHideFlags: 1
@@ -132,9 +214,9 @@ Light:
   serializedVersion: 8
   m_Type: 0
   m_Color: {r: 0.9634889, g: 1, b: 0.7352941, a: 1}
-  m_Intensity: 0.38
-  m_Range: 5.94
-  m_SpotAngle: 35
+  m_Intensity: 0.225
+  m_Range: 6.5
+  m_SpotAngle: 60
   m_CookieSize: 10
   m_Shadows:
     m_Type: 1
@@ -143,7 +225,7 @@ Light:
     m_Strength: 1
     m_Bias: 0
     m_NormalBias: 0
-    m_NearPlane: 0.06
+    m_NearPlane: 0.07
   m_Cookie: {fileID: 0}
   m_DrawHalo: 0
   m_Flare: {fileID: 0}
@@ -169,13 +251,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5bfdc5e16654b34db89fb96a08aa3f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patrolDirection: {x: 1, y: 1}
+  patrolDirection: {x: 0, y: 1}
   patrolSpeed: 2
   sprites:
-  - {fileID: 21300006, guid: fda810441bbc3384581f64f844bdc2bd, type: 3}
-  - {fileID: 21300004, guid: fda810441bbc3384581f64f844bdc2bd, type: 3}
-  - {fileID: 21300002, guid: fda810441bbc3384581f64f844bdc2bd, type: 3}
-  - {fileID: 21300000, guid: fda810441bbc3384581f64f844bdc2bd, type: 3}
+  - {fileID: 21300006, guid: 9b3172c44086b7244bd5bd38e95d6988, type: 3}
+  - {fileID: 21300004, guid: 9b3172c44086b7244bd5bd38e95d6988, type: 3}
+  - {fileID: 21300002, guid: 9b3172c44086b7244bd5bd38e95d6988, type: 3}
+  - {fileID: 21300000, guid: 9b3172c44086b7244bd5bd38e95d6988, type: 3}
+  spotGhostSound: {fileID: 8300000, guid: 9f16a5a2411aa8044a795fcae79fdff0, type: 3}
 --- !u!114 &114164473893822770
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -190,10 +273,22 @@ MonoBehaviour:
   flickerRange: {x: 0, y: 0.1}
   flickerDeltaRange: {x: 1, y: 0}
   randomFlickerDirection: 0
-  intensityRange: 0.05
-  intensityDeltaRange: 0.1
+  intensityRange: 0.025
+  intensityDeltaRange: 0.33
   angleRange: 1.5
   angleDeltaRange: 0.5
+--- !u!114 &114288669974607554
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1716433653264690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fda423c9697e564c9771a76643f7814, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volume: 1
 --- !u!212 &212984831753084344
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -226,7 +321,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: fda810441bbc3384581f64f844bdc2bd, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9b3172c44086b7244bd5bd38e95d6988, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

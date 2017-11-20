@@ -18,10 +18,18 @@ public class LeverScript : MonoBehaviour
     public Sprite onSprite;
     public Sprite offSprite;
     public AudioClip[] flipSwitchSounds;
+    public AudioClip switchError;
     private GameObject objectOnLever;
-    // Use this for initialization
+    private Timer leverCooldown;
+    private SoundCaller sc;
+    void Awake()
+    {
+        sc = GetComponent<SoundCaller>();
+        leverCooldown = new Timer(2.5f);
+    }
     void Start()
     {
+
         switch (state) //just checking what is set in inspector
         {
             case LEVER_STATE.ON:
@@ -41,21 +49,30 @@ public class LeverScript : MonoBehaviour
         if (playerOnTrigger && Input.GetAxis("Interact") == 1 && !triggerButtonAlreadyDown)
         {
             triggerButtonAlreadyDown = true;
-            switch(state)
+            if (leverCooldown.hasEnded())
             {
-                case LEVER_STATE.ON:
-                    
-                    GetComponent<SpriteRenderer>().sprite = offSprite;
-                    state = LEVER_STATE.OFF;
-                    break;
-                case LEVER_STATE.OFF:
-                    GetComponent<SpriteRenderer>().sprite = onSprite;
-                    state = LEVER_STATE.ON;
-                    break;
-                default:
-                    break;
+                leverCooldown.restart();
+                switch (state)
+                {
+                    case LEVER_STATE.ON:
+
+                        GetComponent<SpriteRenderer>().sprite = offSprite;
+                        state = LEVER_STATE.OFF;
+                        break;
+                    case LEVER_STATE.OFF:
+                        GetComponent<SpriteRenderer>().sprite = onSprite;
+                        state = LEVER_STATE.ON;
+                        break;
+                    default:
+                        break;
+                }
+                sc.attemptSound(flipSwitchSounds[Random.Range(0, flipSwitchSounds.Length)], 5);
+                onTrigger();
             }
-            onTrigger();
+            else
+            {
+                sc.attemptSound(switchError);
+            }
         }
         if (Input.GetAxis("Interact") == 0)
         {
@@ -69,10 +86,9 @@ public class LeverScript : MonoBehaviour
         {
             if (obj != null)
             {
-                GetComponent<SoundCaller>().attemptSound(flipSwitchSounds[Random.Range(0,flipSwitchSounds.Length)],5);
                 obj.GetComponent<Triggerable>().startTrigger(objectOnLever);
             }
-        }
+        }   
     }
 
     public void OnTriggerEnter2D(Collider2D collision)

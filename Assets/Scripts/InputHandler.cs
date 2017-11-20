@@ -1,6 +1,7 @@
-﻿using System.Collections;
+﻿//using System;
+using System.Collections;
 using UnityEngine;
-
+//using UnityEngine.Random
 public class InputHandler : MonoBehaviour {
     public enum HERO_STATE
     {
@@ -62,6 +63,7 @@ public class InputHandler : MonoBehaviour {
     
     private Light ghostHighlightChildComponent;
     private SoundCaller sc;
+    private Rigidbody2D rb2d;
 
     private Vector2 breakingPoint; //for where human/ghost enters dark/light
     private Vector2 darknessBreakingPoint; //for where ghost leaves legal radius
@@ -74,6 +76,7 @@ public class InputHandler : MonoBehaviour {
     private Vector2 lastDirection;
     private void Awake()
     {
+        rb2d = GetComponent<Rigidbody2D>();
         sc = GetComponent<SoundCaller>();
         dashOrigin = Vector2.zero;
         ghostHighlightChild = transform.GetChild(1).gameObject;
@@ -114,22 +117,56 @@ public class InputHandler : MonoBehaviour {
             {
                 point.z = -0.1f; //TODO:hacky mc duck. fix for a future rework of everything. (hack is needed because of billboarding and 2d-physics
                 float distance = (light.transform.position - point).magnitude;
-                if (light.type == LightType.Point && distance < light.range)
+                if (distance < light.range)
                 {
-                    float distance2d = ((Vector2)light.transform.position - (Vector2)point).magnitude;
-                    Ray2D ray = new Ray2D();
-                    ray.origin = point;
-                    ray.direction = ((Vector2)light.transform.position - (Vector2)point).normalized;
-                    if (!Physics2D.Raycast(ray.origin, ray.direction, distance2d))//, soup))
+                    if (light.type == LightType.Point)
                     {
-                        return false;
+                        float distance2d = ((Vector2)light.transform.position - (Vector2)point).magnitude;
+                        Ray2D ray = new Ray2D();
+                        ray.origin = point;
+                        ray.direction = ((Vector2)light.transform.position - (Vector2)point).normalized;
+                        if (!Physics2D.Raycast(ray.origin, ray.direction, distance2d))//, soup))
+                        {
+                            return false;
+                        }
+                    }
+                    if (light.type == LightType.Spot)
+                    {
+                        Transform guardTransform = light.gameObject.transform.parent.parent;
+                        Vector2 enemyVel = guardTransform.GetComponent<Rigidbody2D>().velocity;
+                        float angle = Vector2.Angle( transform.position - guardTransform.position, enemyVel);
+                        
+                        if (Mathf.Abs(angle) < light.spotAngle/2)
+                        {
+                            
+                            if (ghostState == GHOST_STATE.GHOST)
+                            {
+                                StartCoroutine(ghostSpotted(guardTransform, angle));
+                                
+                            }
+                            return false;
+                        }
                     }
                 }
-                if (light.type == LightType.Spot)
-                { }
+
+                
             }
         }
         return true;
+    }
+
+    private IEnumerator ghostSpotted(Transform transformOfSpotter, float spotAngle)
+    {
+        if (transform.position.y > transformOfSpotter.position.y)
+        {
+            spotAngle *= -1;
+        }
+        StartCoroutine(transformOfSpotter.GetComponent<GuardScript>().spotGhost(spotAngle));
+        changeHeroState(HERO_STATE.DISABLED);
+        rb2d.velocity = Vector2.zero;
+        yield return new WaitForSeconds(0.75f);
+        StartCoroutine(startDash());
+        
     }
 
     bool isCollidingWithFloor(Vector3 point)
@@ -187,13 +224,6 @@ public class InputHandler : MonoBehaviour {
             playerPosIndicatorParticleSystem.transform.rotation = Quaternion.Euler(newIndicatorPSRot);
             ParticleSystem ps = playerPosIndicatorParticleSystem.GetComponent<ParticleSystem>();
             ParticleSystem.ShapeModule pss = ps.shape;
-            //pss.radius = (dasher.transform.position - transform.position).magnitude / 2.0f;
-            //Vector3 newPssPos = pss.position;
-            //newPssPos.x = pss.radius; //(dasher.transform.position - transform.position).magnitude;
-           // pss.position = newPssPos;
-            
-            //ParticleSystem.EmissionModule pse = ps.emission;
-            //pse.rateOverTime = (transform.position - dasher.transform.position).magnitude*500.0f;
         }
     }
 
@@ -267,7 +297,7 @@ public class InputHandler : MonoBehaviour {
             case HERO_STATE.MOVING:
                 break;
             case HERO_STATE.DISABLED:
-                gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                rb2d.velocity = Vector2.zero;
                 break;
             case HERO_STATE.IDLE:
                 break;
@@ -361,7 +391,7 @@ public class InputHandler : MonoBehaviour {
         fixedDt = TimeManager.instance.fixedGameDeltaTime;
         if (state == HERO_STATE.DASHING)
         {
-            gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
+            rb2d.velocity = Vector2.zero;
         }
         if (state != HERO_STATE.DASHING && state != HERO_STATE.DISABLED)
         {
@@ -420,7 +450,7 @@ public class InputHandler : MonoBehaviour {
             {
                 ParticleSystem.MainModule psm = borderRubberBandParticlesChild.GetComponent<ParticleSystem>().main;
                 psm.startSpeed = distanceFromBreakingPoint;// *0.4f;
-                gameObject.GetComponent<Rigidbody2D>().velocity *= Mathf.Pow((((distanceAllowedOutsideDarkness * 1.5f) - distanceFromBreakingPoint) / (distanceAllowedOutsideDarkness * 1.5f)), 3);
+                rb2d.velocity *= Mathf.Pow((((distanceAllowedOutsideDarkness * 1.5f) - distanceFromBreakingPoint) / (distanceAllowedOutsideDarkness * 1.5f)), 3);
                 Vector2 distanceNormalized = new Vector2(transform.position.x - darknessBreakingPoint.x, transform.position.y - darknessBreakingPoint.y).normalized;
                 Vector3 newRot = borderRubberBandParticlesChild.transform.rotation.eulerAngles;
                 if (transform.position.y - darknessBreakingPoint.y > 0)
@@ -448,7 +478,7 @@ public class InputHandler : MonoBehaviour {
 
     private void handleVelocity(bool inLegalZoneNextFrame) //should only be called from fixedUpdate
     {
-        gameObject.GetComponent<Rigidbody2D>().velocity = newVelocity;
+        rb2d.velocity = newVelocity;
         float distanceFromBreakingPoint = (transform.position - new Vector3(breakingPoint.x, breakingPoint.y, 0)).magnitude;
         if (inLegalZoneNextFrame)
         {
@@ -471,7 +501,7 @@ public class InputHandler : MonoBehaviour {
         {
             ParticleSystem.MainModule psm= rubberBandParticlesChild.GetComponent<ParticleSystem>().main;
             psm.startSpeed = distanceFromBreakingPoint;// *0.4f;
-            gameObject.GetComponent<Rigidbody2D>().velocity *= Mathf.Pow((((distanceAllowedOutside* 1.5f) - distanceFromBreakingPoint) / (distanceAllowedOutside * 1.5f)),3);
+            rb2d.velocity *= Mathf.Pow((((distanceAllowedOutside* 1.5f) - distanceFromBreakingPoint) / (distanceAllowedOutside * 1.5f)),3);
             Vector2 distanceNormalized = new Vector2(transform.position.x - breakingPoint.x, transform.position.y - breakingPoint.y).normalized;
             Vector3 newRot = rubberBandParticlesChild.transform.rotation.eulerAngles;
             if (transform.position.y - breakingPoint.y > 0)

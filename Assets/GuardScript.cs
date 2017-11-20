@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,15 +12,20 @@ public class GuardScript : MonoBehaviour {
         LEFT,
         RIGHT
     }
+    
     public Vector2 patrolDirection;
     public float patrolSpeed;
     private Rigidbody2D rb2d;
     public Sprite[] sprites;
+    public AudioClip spotGhostSound;
     private Sprite currentSprite;
     private int curSpriteID;
     private GameObject flashLightRotator;
+    private bool spottedGhost = false;
+    private SoundCaller sc;
     // Use this for initialization
     void Start () {
+        sc = GetComponent<SoundCaller>();
         rb2d = GetComponent<Rigidbody2D>();
         rb2d.velocity = patrolDirection * patrolSpeed;
         patrolDirection.Normalize();
@@ -56,8 +62,9 @@ public class GuardScript : MonoBehaviour {
         }
     }
 	// Update is called once per frame
-	void FixedUpdate () {
-		if (justBeforeCollision()) //need changes to support real time modifications in inspector, but not needed atm
+	void FixedUpdate ()
+    {
+        if (!spottedGhost && justBeforeCollision()) //need changes to support real time modifications in inspector, but not needed atm
         {
             rb2d.velocity *= -1;
             curSpriteID = curSpriteID + 1 - 2 * ((curSpriteID) % 2); //yep
@@ -85,4 +92,31 @@ public class GuardScript : MonoBehaviour {
         return false;
     }
 
+    public IEnumerator spotGhost(float angle)
+    {
+        spottedGhost = true;
+        if (rb2d.velocity.x > 0)
+        {
+            angle *= -1;
+        }
+        Vector2 oldVel = rb2d.velocity;
+        rb2d.velocity = Vector2.zero;
+        sc.attemptSound(spotGhostSound);
+
+        float lookTime = 0.3f;
+        float oldAngle = flashLightRotator.transform.rotation.eulerAngles.z;
+        float newAngle = oldAngle;
+        for (float i = 0; i < lookTime; i+=TimeManager.instance.fixedGameDeltaTime)
+        {
+            float pd = i / lookTime;
+            newAngle = oldAngle + angle * pd;
+            flashLightRotator.transform.rotation = Quaternion.Euler(0, 0, newAngle);
+            yield return null;
+        }
+        yield return new WaitForSeconds(2.2f);
+
+        flashLightRotator.transform.rotation = Quaternion.Euler(0, 0, oldAngle);
+        rb2d.velocity = oldVel;
+        spottedGhost = false;
+    }
 }
