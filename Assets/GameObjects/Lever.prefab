@@ -170,6 +170,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 1737dfe269d1f0b4a8e49e4b18d05909, type: 3}
   - {fileID: 8300000, guid: d615fcc06fa69114caf91e45d81b2f8b, type: 3}
   - {fileID: 8300000, guid: 192a58be6e59d214787328efaf498489, type: 3}
+  switchError: {fileID: 8300000, guid: 70b3a6db1e9cb0e45aa47f2ff0be47c8, type: 3}
 --- !u!114 &114894055034260210
 MonoBehaviour:
   m_ObjectHideFlags: 1

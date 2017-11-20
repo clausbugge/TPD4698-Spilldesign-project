@@ -73,16 +73,17 @@ public static class Tools
         Vector3 startAngles = go.transform.eulerAngles;
         System.Func<float, float> interpolationFunc = getInterpolationFunc(type);
         float newValue = 0.0f;
+        float pd = 0;
 
         for (float i = 0; i < duration; i += TimeManager.instance.gameDeltaTime) //might be buggy. not tested super much
         {
-            float pd = i / duration;
+            pd = i / duration;
             newValue = interpolationFunc(pd);
             newValue = Mathf.Pow(newValue, power);
-            go.transform.eulerAngles = startAngles+(eulerAngles * newValue);
+            go.transform.rotation = Quaternion.Euler(startAngles+(eulerAngles * newValue));
             yield return null;
         }
-      //  go.transform.eulerAngles = startAngles + (eulerAngles);
+        go.transform.rotation = Quaternion.Euler(startAngles + eulerAngles);
     }
 
     //TODO: NOT TESTED AT ALL:

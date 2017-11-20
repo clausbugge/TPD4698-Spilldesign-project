@@ -134,7 +134,8 @@ public class InputHandler : MonoBehaviour {
                     {
                         Transform guardTransform = light.gameObject.transform.parent.parent;
                         Vector2 enemyVel = guardTransform.GetComponent<Rigidbody2D>().velocity;
-                        float angle = Vector2.Angle( transform.position - guardTransform.position, enemyVel);
+                        Vector2 posToCheck = state != HERO_STATE.DASHING ? transform.position : dasher.transform.position;
+                        float angle = Vector2.Angle(posToCheck - (Vector2)guardTransform.position, enemyVel);
                         
                         if (Mathf.Abs(angle) < light.spotAngle/2)
                         {
@@ -148,8 +149,7 @@ public class InputHandler : MonoBehaviour {
                         }
                     }
                 }
-
-                
+   
             }
         }
         return true;
@@ -157,14 +157,14 @@ public class InputHandler : MonoBehaviour {
 
     private IEnumerator ghostSpotted(Transform transformOfSpotter, float spotAngle)
     {
+        rb2d.velocity = Vector2.zero;
         if (transform.position.y > transformOfSpotter.position.y)
         {
             spotAngle *= -1;
         }
-        StartCoroutine(transformOfSpotter.GetComponent<GuardScript>().spotGhost(spotAngle));
         changeHeroState(HERO_STATE.DISABLED);
-        rb2d.velocity = Vector2.zero;
-        yield return new WaitForSeconds(0.75f);
+        StartCoroutine(transformOfSpotter.GetComponent<GuardScript>().spotGhost(spotAngle));
+        yield return StartCoroutine(Tools.rotateObject(gameObject, new Vector3(0, 0, 720), 0.75f,Tools.INTERPOLATION_TYPE.LERP));
         StartCoroutine(startDash());
         
     }
@@ -407,23 +407,26 @@ public class InputHandler : MonoBehaviour {
                 lastDirection = newVelocity;
             }           
             newVelocity = newVelocity.normalized * speed;
-            bool nextPosInDark = isPointInDark(transform.position + new Vector3(newVelocity.x, newVelocity.y, 0) * fixedDt);
-            
-            switch(ghostState)
+            bool nextPosInDark = isPointInDark(transform.position + new Vector3(newVelocity.x, newVelocity.y, 0) * fixedDt); //this function is getting kinda silly, and can now disable the hero, so need new check...
+            if (state != HERO_STATE.DISABLED)
             {
-                case GHOST_STATE.GHOST: //TODO: refactor
-                    handleVelocity(nextPosInDark);
-                    if (nextPosInDark)
-                    {
-                        handleDarknessBounce();
-                    }
-                    break;
-                case GHOST_STATE.HUMAN:
-                    handleVelocity(!nextPosInDark);
-                    break;
-                default:
-                    break;
+                switch (ghostState)
+                {
+                    case GHOST_STATE.GHOST: //TODO: refactor
+                        handleVelocity(nextPosInDark);
+                        if (nextPosInDark)
+                        {
+                            handleDarknessBounce();
+                        }
+                        break;
+                    case GHOST_STATE.HUMAN:
+                        handleVelocity(!nextPosInDark);
+                        break;
+                    default:
+                        break;
+                }
             }
+            
         }
     }
     

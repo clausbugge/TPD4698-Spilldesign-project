@@ -20,12 +20,13 @@ public class LeverScript : MonoBehaviour
     public AudioClip[] flipSwitchSounds;
     public AudioClip switchError;
     private GameObject objectOnLever;
+    public float cooldownTime = 2.0f;
     private Timer leverCooldown;
     private SoundCaller sc;
     void Awake()
     {
         sc = GetComponent<SoundCaller>();
-        leverCooldown = new Timer(2.5f);
+        leverCooldown = new Timer(cooldownTime);
     }
     void Start()
     {
