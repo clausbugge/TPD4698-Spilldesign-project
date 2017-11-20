@@ -170,7 +170,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1827641440283114}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.29, y: -1.42, z: -0.52}
+  m_LocalPosition: {x: -8.34, y: -2.08, z: -0.52}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4230381543735178}
@@ -524,6 +524,20 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 0
+  m_FalloffTable:
+    m_Table[0]: 0
+    m_Table[1]: 0
+    m_Table[2]: 0
+    m_Table[3]: 0
+    m_Table[4]: 0
+    m_Table[5]: 0
+    m_Table[6]: 0
+    m_Table[7]: 0
+    m_Table[8]: 0
+    m_Table[9]: 0
+    m_Table[10]: 0
+    m_Table[11]: 0
+    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -560,6 +574,20 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 0
+  m_FalloffTable:
+    m_Table[0]: 0
+    m_Table[1]: 0
+    m_Table[2]: 0
+    m_Table[3]: 0
+    m_Table[4]: 0
+    m_Table[5]: 0
+    m_Table[6]: 0
+    m_Table[7]: 0
+    m_Table[8]: 0
+    m_Table[9]: 0
+    m_Table[10]: 0
+    m_Table[11]: 0
+    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -575,8 +603,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cfa8f63291fdb4ea7ac8310f062702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flickerRadius: 0
-  flickerDeltaRange: 0
+  flickerRange: {x: 0, y: 0}
+  flickerDeltaRange: {x: 0, y: 0}
+  randomFlickerDirection: 0
   intensityRange: 0
   intensityDeltaRange: 0
 --- !u!114 &114306188506170338
@@ -602,8 +631,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cfa8f63291fdb4ea7ac8310f062702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flickerRadius: 0
-  flickerDeltaRange: 0
+  flickerRange: {x: 0, y: 0}
+  flickerDeltaRange: {x: 0, y: 0}
+  randomFlickerDirection: 0
   intensityRange: 0
   intensityDeltaRange: 0
 --- !u!114 &114331145588502232
@@ -618,14 +648,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 1
-  humanIdleDashingSprite: {fileID: 21300000, guid: 59810f7e07b05bc46af62c185a36af02,
+  humanIdleDashingSprite: {fileID: 21300000, guid: 311f0cba285572a429ed80c88d500b7f,
     type: 3}
-  ghostIdleDashingSprite: {fileID: 21300000, guid: 3475859587a4607488e4b3963bf574ae,
+  ghostIdleDashingSprite: {fileID: 21300000, guid: 196add32c50e13f488302f1aea1c331c,
     type: 3}
-  humanDashingSprite: {fileID: 21300000, guid: a7598a1d44b5be64180b411ae7f7fb7c, type: 3}
-  ghostDashingSprite: {fileID: 21300000, guid: 3475859587a4607488e4b3963bf574ae, type: 3}
-  humanSprite: {fileID: 21300000, guid: 8bf92ca1357901a4b83c8948cbf8cd7c, type: 3}
-  ghostSprite: {fileID: 21300000, guid: c306b03ec1bdf7f449eed1746bc05c20, type: 3}
+  humanDashingSprite: {fileID: 21300000, guid: 311f0cba285572a429ed80c88d500b7f, type: 3}
+  ghostDashingSprite: {fileID: 21300000, guid: 196add32c50e13f488302f1aea1c331c, type: 3}
+  humanSprite: {fileID: 21300000, guid: 311f0cba285572a429ed80c88d500b7f, type: 3}
+  ghostSprite: {fileID: 21300000, guid: 196add32c50e13f488302f1aea1c331c, type: 3}
   dasherPrefab: {fileID: 1158741671787958, guid: 0ab168bea34176f4fb11a3dc58bf34df,
     type: 2}
   playerPosIndicatorParticleSystem: {fileID: 1965534277425628, guid: 1407a4ff31985b347bcaa26369326841,

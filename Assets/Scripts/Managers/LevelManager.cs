@@ -1,10 +1,20 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
+    private static readonly string[] levelNames =
+    {
+        "level0",
+        "tutorial1",
+        "level1",
+        "level2",
+        "level3"
+    };
 
+    private static int levelIndex = 0;
     public static LevelManager instance;
     private static int currentLevel;
     bool gameLoadedOnce = false;
@@ -27,10 +37,11 @@ public class LevelManager : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-    public void triggerGameOver()
+    public void triggerGameOver(string deathReason = "Hello darkness")
     {
         TimeManager.instance.pauseGameTime();
         PauseMenuScript.instance.children[0].SetActive(!PauseMenuScript.instance.children[0].activeSelf);
+        PauseMenuScript.instance.children[0].transform.GetChild(1).GetComponent<Text>().text = deathReason;
     }
     
     public void loadMainMenu()
@@ -102,12 +113,13 @@ public class LevelManager : MonoBehaviour
         {
             gameLoadedOnce = true;
         }
-        
-        
-        
+
+        string nextLvlName = "Scenes/" + levelNames[levelIndex];
+        levelIndex++;
+        /*
         string nextLvlName = "Scenes/level" + currentLevel.ToString(); //important: all scenes have to be in Scenes folder
         currentLevel++;
-
+        */
         //if (!SceneManager.GetSceneByName(nextLvlName).IsValid()) //TODO: can't get this to work for now. cba to fix
         {
 

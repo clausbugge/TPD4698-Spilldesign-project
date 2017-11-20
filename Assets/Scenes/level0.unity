@@ -459,6 +459,21 @@ Prefab:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 212457293940985436, guid: 2d2784e88429c704a8f9abdf60295e6e,
+        type: 2}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 212457293940985436, guid: 2d2784e88429c704a8f9abdf60295e6e,
+        type: 2}
+      propertyPath: m_Color.g
+      value: 0.47843137
+      objectReference: {fileID: 0}
+    - target: {fileID: 212457293940985436, guid: 2d2784e88429c704a8f9abdf60295e6e,
+        type: 2}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2d2784e88429c704a8f9abdf60295e6e, type: 2}
   m_IsPrefabParent: 0
@@ -1071,7 +1086,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 3a8f143148dcc72479b32d4b3d1d595b, type: 2}
+  - {fileID: 2100000, guid: b4be174e3e7e5714c8279e56dee3df12, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1245,6 +1260,7 @@ GameObject:
   - component: {fileID: 431662885}
   - component: {fileID: 431662884}
   - component: {fileID: 431662883}
+  - component: {fileID: 431662887}
   m_Layer: 0
   m_Name: Floor1 (5)
   m_TagString: Untagged
@@ -1319,6 +1335,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 49
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &431662887
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 431662882}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.99999994, y: 1, z: 6.1232336e-17}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &438073506
 GameObject:
   m_ObjectHideFlags: 0
@@ -1426,6 +1454,7 @@ GameObject:
   - component: {fileID: 454003302}
   - component: {fileID: 454003301}
   - component: {fileID: 454003300}
+  - component: {fileID: 454003304}
   m_Layer: 0
   m_Name: Floor1 (1)
   m_TagString: Untagged
@@ -1500,6 +1529,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 23
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &454003304
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 454003299}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.99999994, y: 1, z: 6.1232336e-17}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &467029992
 GameObject:
   m_ObjectHideFlags: 0
@@ -1778,6 +1819,20 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
+  m_FalloffTable:
+    m_Table[0]: 0
+    m_Table[1]: 0
+    m_Table[2]: 0
+    m_Table[3]: 0
+    m_Table[4]: 0
+    m_Table[5]: 0
+    m_Table[6]: 0
+    m_Table[7]: 0
+    m_Table[8]: 0
+    m_Table[9]: 0
+    m_Table[10]: 0
+    m_Table[11]: 0
+    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -1973,6 +2028,20 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
+  m_FalloffTable:
+    m_Table[0]: 0
+    m_Table[1]: 0
+    m_Table[2]: 0
+    m_Table[3]: 0
+    m_Table[4]: 0
+    m_Table[5]: 0
+    m_Table[6]: 0
+    m_Table[7]: 0
+    m_Table[8]: 0
+    m_Table[9]: 0
+    m_Table[10]: 0
+    m_Table[11]: 0
+    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -2002,6 +2071,7 @@ GameObject:
   - component: {fileID: 662973904}
   - component: {fileID: 662973903}
   - component: {fileID: 662973902}
+  - component: {fileID: 662973906}
   m_Layer: 0
   m_Name: Floor1
   m_TagString: Untagged
@@ -2076,6 +2146,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &662973906
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 662973901}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.99999994, y: 1, z: 6.1232336e-17}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &666774614
 Prefab:
   m_ObjectHideFlags: 0
@@ -2140,6 +2222,21 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4982913593368426, guid: 2d2784e88429c704a8f9abdf60295e6e, type: 2}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 212457293940985436, guid: 2d2784e88429c704a8f9abdf60295e6e,
+        type: 2}
+      propertyPath: m_Color.r
+      value: 0.5882353
+      objectReference: {fileID: 0}
+    - target: {fileID: 212457293940985436, guid: 2d2784e88429c704a8f9abdf60295e6e,
+        type: 2}
+      propertyPath: m_Color.g
+      value: 0.59607846
+      objectReference: {fileID: 0}
+    - target: {fileID: 212457293940985436, guid: 2d2784e88429c704a8f9abdf60295e6e,
+        type: 2}
+      propertyPath: m_Color.b
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -2235,6 +2332,20 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
+  m_FalloffTable:
+    m_Table[0]: 0
+    m_Table[1]: 0
+    m_Table[2]: 0
+    m_Table[3]: 0
+    m_Table[4]: 0
+    m_Table[5]: 0
+    m_Table[6]: 0
+    m_Table[7]: 0
+    m_Table[8]: 0
+    m_Table[9]: 0
+    m_Table[10]: 0
+    m_Table[11]: 0
+    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -2264,6 +2375,7 @@ GameObject:
   - component: {fileID: 688857852}
   - component: {fileID: 688857851}
   - component: {fileID: 688857850}
+  - component: {fileID: 688857854}
   m_Layer: 0
   m_Name: Floor1 (4)
   m_TagString: Untagged
@@ -2338,6 +2450,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 45
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &688857854
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 688857849}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.99999994, y: 1, z: 6.1232336e-17}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &692843651
 GameObject:
   m_ObjectHideFlags: 0
@@ -2394,7 +2518,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 2
-  m_Color: {r: 0.8088235, g: 0.708828, b: 0.49362022, a: 1}
+  m_Color: {r: 0.72156864, g: 0, b: 0, a: 1}
   m_Intensity: 0.55
   m_Range: 11
   m_SpotAngle: 30
@@ -2417,6 +2541,20 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
+  m_FalloffTable:
+    m_Table[0]: 0
+    m_Table[1]: 0
+    m_Table[2]: 0
+    m_Table[3]: 0
+    m_Table[4]: 0
+    m_Table[5]: 0
+    m_Table[6]: 0
+    m_Table[7]: 0
+    m_Table[8]: 0
+    m_Table[9]: 0
+    m_Table[10]: 0
+    m_Table[11]: 0
+    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -3086,7 +3224,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 3a8f143148dcc72479b32d4b3d1d595b, type: 2}
+  - {fileID: 2100000, guid: b4be174e3e7e5714c8279e56dee3df12, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3232,6 +3370,7 @@ GameObject:
   - component: {fileID: 920991499}
   - component: {fileID: 920991498}
   - component: {fileID: 920991497}
+  - component: {fileID: 920991501}
   m_Layer: 0
   m_Name: Floor1 (3)
   m_TagString: Untagged
@@ -3306,6 +3445,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 38
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &920991501
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 920991496}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.99999994, y: 1, z: 6.1232336e-17}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &927315615
 GameObject:
   m_ObjectHideFlags: 0
@@ -3759,6 +3910,21 @@ Prefab:
       propertyPath: triggerList.Array.data[1]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 212457293940985436, guid: 2d2784e88429c704a8f9abdf60295e6e,
+        type: 2}
+      propertyPath: m_Color.r
+      value: 0.72156864
+      objectReference: {fileID: 0}
+    - target: {fileID: 212457293940985436, guid: 2d2784e88429c704a8f9abdf60295e6e,
+        type: 2}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 212457293940985436, guid: 2d2784e88429c704a8f9abdf60295e6e,
+        type: 2}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2d2784e88429c704a8f9abdf60295e6e, type: 2}
   m_IsPrefabParent: 0
@@ -3869,6 +4035,7 @@ GameObject:
   - component: {fileID: 1038498916}
   - component: {fileID: 1038498915}
   - component: {fileID: 1038498914}
+  - component: {fileID: 1038498918}
   m_Layer: 0
   m_Name: Floor1 (2)
   m_TagString: Untagged
@@ -3943,6 +4110,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 30
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1038498918
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1038498913}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.99999994, y: 1, z: 6.1232336e-17}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1049243320
 GameObject:
   m_ObjectHideFlags: 0
@@ -4033,6 +4212,20 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
+  m_FalloffTable:
+    m_Table[0]: 0
+    m_Table[1]: 0
+    m_Table[2]: 0
+    m_Table[3]: 0
+    m_Table[4]: 0
+    m_Table[5]: 0
+    m_Table[6]: 0
+    m_Table[7]: 0
+    m_Table[8]: 0
+    m_Table[9]: 0
+    m_Table[10]: 0
+    m_Table[11]: 0
+    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -4112,6 +4305,21 @@ Prefab:
       propertyPath: triggerList.Array.data[1]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 212457293940985436, guid: 2d2784e88429c704a8f9abdf60295e6e,
+        type: 2}
+      propertyPath: m_Color.r
+      value: 0.72156864
+      objectReference: {fileID: 0}
+    - target: {fileID: 212457293940985436, guid: 2d2784e88429c704a8f9abdf60295e6e,
+        type: 2}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 212457293940985436, guid: 2d2784e88429c704a8f9abdf60295e6e,
+        type: 2}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2d2784e88429c704a8f9abdf60295e6e, type: 2}
   m_IsPrefabParent: 0
@@ -4165,6 +4373,20 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
+  m_FalloffTable:
+    m_Table[0]: 0
+    m_Table[1]: 0
+    m_Table[2]: 0
+    m_Table[3]: 0
+    m_Table[4]: 0
+    m_Table[5]: 0
+    m_Table[6]: 0
+    m_Table[7]: 0
+    m_Table[8]: 0
+    m_Table[9]: 0
+    m_Table[10]: 0
+    m_Table[11]: 0
+    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -4388,7 +4610,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 3a8f143148dcc72479b32d4b3d1d595b, type: 2}
+  - {fileID: 2100000, guid: 1c3ab1db7eebc314687aa86dd7931068, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4872,7 +5094,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 3a8f143148dcc72479b32d4b3d1d595b, type: 2}
+  - {fileID: 2100000, guid: 88db0bd193cdf9148b3ed08e0d40e857, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6526,6 +6748,7 @@ GameObject:
   - component: {fileID: 1849120836}
   - component: {fileID: 1849120835}
   - component: {fileID: 1849120834}
+  - component: {fileID: 1849120838}
   m_Layer: 0
   m_Name: Floor1 (6)
   m_TagString: Untagged
@@ -6600,6 +6823,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 58
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1849120838
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1849120833}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.99999994, y: 1, z: 6.1232336e-17}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1849952643
 GameObject:
   m_ObjectHideFlags: 0
@@ -6785,6 +7020,20 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
+  m_FalloffTable:
+    m_Table[0]: 0
+    m_Table[1]: 0
+    m_Table[2]: 0
+    m_Table[3]: 0
+    m_Table[4]: 0
+    m_Table[5]: 0
+    m_Table[6]: 0
+    m_Table[7]: 0
+    m_Table[8]: 0
+    m_Table[9]: 0
+    m_Table[10]: 0
+    m_Table[11]: 0
+    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -7033,6 +7282,7 @@ GameObject:
   - component: {fileID: 2076166638}
   - component: {fileID: 2076166637}
   - component: {fileID: 2076166636}
+  - component: {fileID: 2076166639}
   m_Layer: 0
   m_Name: Floor1
   m_TagString: Untagged
@@ -7107,6 +7357,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e7a7b43eb3b4184cbfe5a0e2caf0679, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &2076166639
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2076166634}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.99999994, y: 1, z: 6.1232336e-17}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &2095776734
 Prefab:
   m_ObjectHideFlags: 0

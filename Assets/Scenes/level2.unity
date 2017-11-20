@@ -1515,6 +1515,7 @@ GameObject:
   - component: {fileID: 742817821}
   - component: {fileID: 742817820}
   - component: {fileID: 742817819}
+  - component: {fileID: 742817822}
   m_Layer: 0
   m_Name: Floor1 (1)
   m_TagString: Untagged
@@ -1589,6 +1590,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e7a7b43eb3b4184cbfe5a0e2caf0679, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &742817822
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 742817817}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 6.1232336e-17}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &758802642
 GameObject:
   m_ObjectHideFlags: 0
@@ -2149,6 +2162,7 @@ GameObject:
   - component: {fileID: 969516543}
   - component: {fileID: 969516542}
   - component: {fileID: 969516541}
+  - component: {fileID: 969516544}
   m_Layer: 0
   m_Name: Floor1 (2)
   m_TagString: Untagged
@@ -2223,6 +2237,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e7a7b43eb3b4184cbfe5a0e2caf0679, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &969516544
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 969516539}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 6.1232336e-17}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &976588964
 GameObject:
   m_ObjectHideFlags: 0
@@ -2571,6 +2597,20 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
+  m_FalloffTable:
+    m_Table[0]: 0
+    m_Table[1]: 0
+    m_Table[2]: 0
+    m_Table[3]: 0
+    m_Table[4]: 0
+    m_Table[5]: 0
+    m_Table[6]: 0
+    m_Table[7]: 0
+    m_Table[8]: 0
+    m_Table[9]: 0
+    m_Table[10]: 0
+    m_Table[11]: 0
+    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -2867,6 +2907,20 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
+  m_FalloffTable:
+    m_Table[0]: 0
+    m_Table[1]: 0
+    m_Table[2]: 0
+    m_Table[3]: 0
+    m_Table[4]: 0
+    m_Table[5]: 0
+    m_Table[6]: 0
+    m_Table[7]: 0
+    m_Table[8]: 0
+    m_Table[9]: 0
+    m_Table[10]: 0
+    m_Table[11]: 0
+    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -3123,6 +3177,7 @@ GameObject:
   - component: {fileID: 1339552652}
   - component: {fileID: 1339552651}
   - component: {fileID: 1339552650}
+  - component: {fileID: 1339552653}
   m_Layer: 0
   m_Name: Floor1 (6)
   m_TagString: Untagged
@@ -3197,6 +3252,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e7a7b43eb3b4184cbfe5a0e2caf0679, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &1339552653
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1339552648}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 6.1232336e-17}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1407674581
 GameObject:
   m_ObjectHideFlags: 0
@@ -3209,6 +3276,7 @@ GameObject:
   - component: {fileID: 1407674585}
   - component: {fileID: 1407674584}
   - component: {fileID: 1407674583}
+  - component: {fileID: 1407674586}
   m_Layer: 0
   m_Name: Floor1 (4)
   m_TagString: Untagged
@@ -3283,6 +3351,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e7a7b43eb3b4184cbfe5a0e2caf0679, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &1407674586
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1407674581}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 6.1232336e-17}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1423845671
 GameObject:
   m_ObjectHideFlags: 0
@@ -3874,6 +3954,20 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
+  m_FalloffTable:
+    m_Table[0]: 0
+    m_Table[1]: 0
+    m_Table[2]: 0
+    m_Table[3]: 0
+    m_Table[4]: 0
+    m_Table[5]: 0
+    m_Table[6]: 0
+    m_Table[7]: 0
+    m_Table[8]: 0
+    m_Table[9]: 0
+    m_Table[10]: 0
+    m_Table[11]: 0
+    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -4352,6 +4446,7 @@ GameObject:
   - component: {fileID: 1851202707}
   - component: {fileID: 1851202706}
   - component: {fileID: 1851202705}
+  - component: {fileID: 1851202708}
   m_Layer: 0
   m_Name: Floor1 (3)
   m_TagString: Untagged
@@ -4426,6 +4521,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e7a7b43eb3b4184cbfe5a0e2caf0679, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &1851202708
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1851202703}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 6.1232336e-17}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1860311593
 GameObject:
   m_ObjectHideFlags: 0
@@ -5025,6 +5132,20 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
+  m_FalloffTable:
+    m_Table[0]: 0
+    m_Table[1]: 0
+    m_Table[2]: 0
+    m_Table[3]: 0
+    m_Table[4]: 0
+    m_Table[5]: 0
+    m_Table[6]: 0
+    m_Table[7]: 0
+    m_Table[8]: 0
+    m_Table[9]: 0
+    m_Table[10]: 0
+    m_Table[11]: 0
+    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -5041,6 +5162,7 @@ GameObject:
   - component: {fileID: 2082283751}
   - component: {fileID: 2082283750}
   - component: {fileID: 2082283749}
+  - component: {fileID: 2082283752}
   m_Layer: 0
   m_Name: Floor1 (5)
   m_TagString: Untagged
@@ -5115,6 +5237,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e7a7b43eb3b4184cbfe5a0e2caf0679, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &2082283752
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2082283747}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 6.1232336e-17}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &2111427849
 Prefab:
   m_ObjectHideFlags: 0
