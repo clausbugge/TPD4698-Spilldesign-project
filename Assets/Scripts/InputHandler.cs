@@ -114,7 +114,7 @@ public class InputHandler : MonoBehaviour {
             {
                 point.z = -0.1f; //TODO:hacky mc duck. fix for a future rework of everything. (hack is needed because of billboarding and 2d-physics
                 float distance = (light.transform.position - point).magnitude;
-                if (distance < light.range)
+                if (light.type == LightType.Point && distance < light.range)
                 {
                     float distance2d = ((Vector2)light.transform.position - (Vector2)point).magnitude;
                     Ray2D ray = new Ray2D();
@@ -125,6 +125,8 @@ public class InputHandler : MonoBehaviour {
                         return false;
                     }
                 }
+                if (light.type == LightType.Spot)
+                { }
             }
         }
         return true;

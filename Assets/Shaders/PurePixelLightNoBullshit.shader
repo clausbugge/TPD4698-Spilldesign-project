@@ -1,5 +1,13 @@
-﻿Shader "Custom/PurePixelLightNoBullshit"
+﻿// Upgrade NOTE: replaced '_LightMatrix0' with 'unity_WorldToLight'
+
+// Upgrade NOTE: replaced '_LightMatrix0' with 'unity_WorldToLight'
+
+// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
+
+
+Shader "Custom/PurePixelLightNoBullshit"
 {
+//	UNITY_SHADER_NO_UPGRADE
 	Properties
 	{
 		_TopPillarColor("TopPillarColor", COLOR) = (0,0,0,0)
@@ -73,23 +81,28 @@
 
 #pragma vertex vert  
 #pragma fragment frag 
-#include "UnityCG.cginc" 
-#include "UnityCG.cginc"
-#include "Lighting.cginc"
+
 
 			// compile shader into multiple variants, with and without shadows
 			// (we don't care about any lightmaps yet, so skip these variants)
-#pragma multi_compile_fwdadd_fullshadows nolightmap nodirlightmap nodynlightmap //dunno what these other do. dunno if they improve performance
+#pragma multi_compile_lightpass// multi_compile_fwdadd_fullshadows nolightmap nodirlightmap nodynlightmap //dunno what these other do. dunno if they improve performance
 			// shadow helper functions and macros
-#include "UnityPBSLighting.cginc"
+#include "UnityCG.cginc" 
 #include "AutoLight.cginc"
+#include "Lighting.cginc"
+//#include "UnityShaderVariables.cginc"
+//#include "UnityPBSLighting.cginc"
+
 			//#include "UnityShaderVariables.cginc" //included in autolight.cginc I think
 			//uniform float4 _LightColor0; //included in Lighting.cginc
-		sampler2D _MainTex;
+		uniform sampler2D _MainTex;
+		uniform float4x4 _LightMatrix0;
+		//uniform sampler2D _LightTexture0;
 		float4 _MainTex_ST;
 		int _PixelTightness;
 		int _PixelColorShades;
 		float _DiscardThreshold;
+		
 
 		struct vertexInput {
 			float4 vertex : POSITION;
@@ -99,10 +112,18 @@
 
 		struct v2f
 		{
+			float4 vertex : TEXCOORD6;
 			float4 pos : SV_POSITION;
-			float4 worldPos : TEXCOORD0;
-			SHADOW_COORDS(1)
-			float2 uv : TEXCOORD2;
+			float4 posWorld : TEXCOORD0;
+			// position of the vertex (and fragment) in world space 
+			float4 posLight : TEXCOORD1;
+			// position of the vertex (and fragment) in light space
+			float3 normalDir : TEXCOORD2;
+			// surface normal vector in world space
+
+			//SHADOW_COORDS(3)
+			LIGHTING_COORDS(4, 5)
+			//float2 uv : TEXCOORD2;
 			float3 normal : NORMAL;
 		};
 
@@ -111,20 +132,37 @@
 			v2f o;
 
 			o.pos = UnityObjectToClipPos(v.vertex);
-			o.worldPos = mul(UNITY_MATRIX_M, v.vertex);
-			o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-			TRANSFER_SHADOW(o);
+			o.posWorld = mul(UNITY_MATRIX_M, v.vertex);
+			o.posLight = mul(_LightMatrix0, o.posWorld);
+			//o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+			//TRANSFER_SHADOW(o);
+			
+			TRANSFER_VERTEX_TO_FRAGMENT(o);
 			o.normal = v.normal;
+			o.normalDir = normalize(mul(float4(v.normal, 0.0), unity_WorldToObject).xyz);
+			
+			o.vertex = v.vertex;
 			return o;
 		}
 
 		fixed4 frag(v2f i) : COLOR
 		{
+			
+			float4 vertexWorld = mul(unity_ObjectToWorld, i.vertex);
+
+			float3 lightCoord = mul(_LightMatrix0, vertexWorld).xyz;
+			float3 toLight = _WorldSpaceLightPos0.xyz - vertexWorld.xyz;
+
+			float lightRange = length(toLight) / length(lightCoord);
+
 
 			float shadow = SHADOW_ATTENUATION(i);
-			float3 vertexToLightSource = _WorldSpaceLightPos0.xyz - i.worldPos.xyz;
+
+			float3 vertexToLightSource = _WorldSpaceLightPos0.xyz - i.posWorld.xyz;
+
 			float distanceToLight = length(vertexToLightSource);
-			float lightRange = 1 / _LightPositionRange.w;
+
+			//float lightRange = 1 / _LightPositionRange.w;
 
 			vertexToLightSource *= 1000; //higher mod possibilities. _PixelTightness has be to higher for to compensate
 			int modValue = _PixelTightness;
@@ -135,8 +173,13 @@
 			vertexToLightSource /= 1000;
 
 			distanceToLight = length(float3(vertexToLightSource.x, vertexToLightSource.y, vertexToLightSource.z));
-			float attenuation = (1 - (distanceToLight / lightRange))*3;
-			if (i.normal.x > -0.5 && i.worldPos.z <= _WorldSpaceLightPos0.z)
+
+			float attenuation = (1 -(distanceToLight / lightRange)) * 3;
+			//float attenuation = (1 -(distanceToLight / lightRange)) * 4;
+			//attenuation = lightRange;
+
+			//attenuation = LIGHT_ATTENUATION(i)*9;
+			if (i.normal.x > -0.5 && i.posWorld.z <= _WorldSpaceLightPos0.z)
 			{
 				discard;
 			}
@@ -144,13 +187,37 @@
 			{
 				discard;
 			}
-			float3 finalColor = _LightColor0*attenuation;
+			float3 finalColor = _LightColor0;
 			finalColor = _LightColor0*attenuation*_PixelColorShades;
 			finalColor = float3(round(finalColor.r), round(finalColor.g), round(finalColor.b)) / _PixelColorShades;
-
-			return float4(tex2D(_MainTex, i.uv).rgb*finalColor *shadow, 1.0); //***use pos instead of uv to highlight light colors more***
-
+#if POINT
+			return float4(finalColor *shadow, 1.0); //***use pos instead of uv to highlight light colors more***
+#endif
+			float4 returnValue = float4(normalize(tex2D(_LightTexture0, i.posLight.xy / i.posLight.w + float2(0.5, 0.5))).a*finalColor*shadow, 1.0);
+			if (normalize(tex2D(_LightTexture0, i.posLight.xy / i.posLight.w + float2(0.5, 0.5))).a >= 0.2)
+			{
+				return returnValue;
+				
+			}
+			
+			discard;
+			return returnValue;
+			//float distance = length(vertexToLightSource);
+			//attenuation = 1.0 / distance; // linear attenuation 
+			//float3 finalColor = attenuation* _LightColor0.rgb;
+			//finalColor = _LightColor0*attenuation*_PixelColorShades;
+			//finalColor = float3(round(finalColor.r), round(finalColor.g), round(finalColor.b)) / _PixelColorShades;
+			//float cookieAttenuation = tex2D(_LightTexture0, i.posLight.xy / i.posLight.w + float2(0.5, 0.5)).a;
+			//cookieAttenuation = normalize(cookieAttenuation);
+			//cookieAttenuation = 1;
+			////cookieAttenuation = -1;
+			//if (cookieAttenuation == -1)
+			//{
+			//	//discard;
+			//}
+			
 		}
+
 			ENDCG
 		}
 		Pass
