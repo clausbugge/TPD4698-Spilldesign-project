@@ -139,13 +139,18 @@ public class InputHandler : MonoBehaviour {
                         
                         if (Mathf.Abs(angle) < light.spotAngle/2)
                         {
-                            
-                            if (ghostState == GHOST_STATE.GHOST)
+                            float distance2d = ((Vector2)light.transform.position - (Vector2)point).magnitude;
+                            Ray2D ray = new Ray2D();
+                            ray.origin = point;
+                            ray.direction = ((Vector2)light.transform.position - (Vector2)point).normalized;
+                            if (!Physics2D.Raycast(ray.origin, ray.direction, distance2d))//, soup))
                             {
-                                StartCoroutine(ghostSpotted(guardTransform, angle));
-                                
+                                if (ghostState == GHOST_STATE.GHOST)
+                                {
+                                    StartCoroutine(ghostSpotted(guardTransform, angle));
+                                }
+                                return false;
                             }
-                            return false;
                         }
                     }
                 }
