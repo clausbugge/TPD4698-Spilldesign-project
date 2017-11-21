@@ -22,7 +22,7 @@ public class SubMenu : MonoBehaviour {
     }
 
     public int defaultButton = 0;
-
+    //public int menuOptionsWidth = 1; //1 means "no" width. as you only go down
     private GameObject[] menuObjects; //are identified by being texts. all need TextPulse script
     private int highlightedButton;
     private bool directionDown = false;
@@ -66,14 +66,26 @@ public class SubMenu : MonoBehaviour {
         if (Input.GetAxis("Vertical") != 0 && directionDown == false)
         {
             directionDown = true;            
-            int newButton = (highlightedButton + Mathf.RoundToInt(Input.GetAxis("Vertical")*-1)) % menuObjects.Length; //*-1 because we add buttons from top to buttom, while axis go from bottom to top
+            int newButton = (highlightedButton + Mathf.RoundToInt(Input.GetAxis("Vertical")*-1)/**menuOptionsWidth*/) % menuObjects.Length; //*-1 because we add buttons from top to buttom, while axis go from bottom to top
             if (newButton < 0)
             {
                 newButton = menuObjects.Length -1;
             }
             changeHighlightedButton(newButton);
         }
-        if (Input.GetAxis("Vertical") == 0)
+
+        //if (Input.GetAxis("Horizontal") != 0 && directionDown == false)
+        //{
+        //    directionDown = true;
+        //    int newButton = (highlightedButton + Mathf.RoundToInt(Input.GetAxis("Horizontal") * -1) * menuOptionsWidth) % menuObjects.Length; //*-1 because we add buttons from top to buttom, while axis go from bottom to top
+        //    if (newButton < 0)
+        //    {
+        //        newButton = menuObjects.Length - 1;
+        //    }
+        //    changeHighlightedButton(newButton);
+        //}
+
+        if (Input.GetAxis("Vertical") == 0 && Input.GetAxis("Horizontal") == 0)
         {
             directionDown = false;
         }

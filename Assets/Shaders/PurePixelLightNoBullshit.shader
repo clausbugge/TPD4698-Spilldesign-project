@@ -16,6 +16,9 @@ Shader "Custom/PurePixelLightNoBullshit"
 		_PixelColorShades("PixelColorShades",Range(2,256)) = 8
 		_DiscardThreshold("DiscardThreshold",Range(0.001,0.2)) = 0.01
 		_WallHeight("WallHeight", Range(-0.1,-3)) = -1.8
+		_BumpMap("BumpMap",2D) = "bump"{}
+		_BumpMapZoom("BumpMapZoom",int) = 100000
+		_BumpMapInfluence("BumpMapInfluence",Range(-1.5,1.5)) = 0.1
 		
 	}
 		SubShader
@@ -104,8 +107,9 @@ Shader "Custom/PurePixelLightNoBullshit"
 		int _PixelTightness;
 		int _PixelColorShades;
 		float _DiscardThreshold;
-		
-
+		sampler2D _BumpMap;
+		int _BumpMapZoom;
+		float _BumpMapInfluence;
 		struct vertexInput {
 			float4 vertex : POSITION;
 			float4 uv : TEXCOORD2;
@@ -173,52 +177,72 @@ Shader "Custom/PurePixelLightNoBullshit"
 			{
 				return fixed4(0,0,0,0);
 			}
-			fixed3 finalColor = _LightColor0;
-			finalColor = _LightColor0*attenuation*_PixelColorShades;
-			finalColor = fixed3(round(finalColor.r), round(finalColor.g), round(finalColor.b)) / _PixelColorShades;
+			fixed3 finalColor = _LightColor0*attenuation*_PixelColorShades;
 			
-			if (i.posWorld.x < 0) //soooooooo.. this is a hack and I have no idea why/how it works. why isn't +=1 enough?
+
+
+
+
+			if (i.normal.z <= -0.9)
 			{
-				i.posWorld.x += 100; 
-			}
-			if (i.posWorld.y < 0)
-			{
-				i.posWorld.y += 100;
+				fixed2 test = i.posWorld * 100;
+				int modValueTwo = _PixelTightness;
+				test.x -= (test.x %modValueTwo) - modValueTwo;
+				test.y -= (test.y %modValueTwo) - modValueTwo;
+
+				fixed bump = (tex2D(_BumpMap, test / (100*_BumpMapZoom))).a;
+				//finalColor *= bump;
+				//bump *= 16; //I don't think 16 should be modified
+				//int result = bump;
+
+				finalColor -= int(bump*16) * _BumpMapInfluence;
+
+				if (i.posWorld.x < 0) //soooooooo.. this is a hack and I have no idea why/how it works. why isn't +=1 enough?
+				{
+					i.posWorld.x += 100;
+				}
+				if (i.posWorld.y < 0)
+				{
+					i.posWorld.y += 100;
+				}
+				//finalColor += bump*0.1;
+				i.posWorld.x *= 100;
+				i.posWorld.y *= 100;
+				fixed2 chessChecker = fixed2(abs(i.posWorld.x) % 100, abs(i.posWorld.y) % 100);
+				//a:
+				/*if (chessChecker.x > 50 && chessChecker.y > 50)
+				{
+				finalColor *= 0.5;
+				}
+				if (chessChecker.x < 50 && chessChecker.y < 50)
+				{
+				finalColor *= 0.5;
+				}*/
+				//b:
+				if (chessChecker.x > 50 && chessChecker.y > 50)
+				{
+					finalColor *= 0.5;
+				}
+				//c:
+				/*if (chessChecker.x > 50 || chessChecker.y > 50)
+				{
+				finalColor *= 0.5;
+				}*/
+				//d:
+				/*if (chessChecker.x > 5 && chessChecker.y > 5)
+				{
+				finalColor *= 0.5;
+				}*/
+				//e:
+				/*if (chessChecker.x > 85 || chessChecker.y > 85)
+				{
+				finalColor *= 0.5;
+				}*/
 			}
 
-			i.posWorld.x *= 100;
-			i.posWorld.y *= 100;
-			fixed2 chessChecker = fixed2(abs(i.posWorld.x) % 100, abs(i.posWorld.y) % 100);
-			//a:
-			/*if (chessChecker.x > 50 && chessChecker.y > 50)
-			{
-				finalColor *= 0.5;
-			}
-			if (chessChecker.x < 50 && chessChecker.y < 50)
-			{
-				finalColor *= 0.5;
-			}*/
-			//b:
-			if (chessChecker.x > 50 && chessChecker.y > 50)
-			{
-				finalColor *= 0.5;
-			}
-			//c:
-			/*if (chessChecker.x > 50 || chessChecker.y > 50)
-			{
-				finalColor *= 0.5;
-			}*/
-			//d:
-			/*if (chessChecker.x > 5 && chessChecker.y > 5)
-			{
-				finalColor *= 0.5;
-			}*/
-			//e:
-			/*if (chessChecker.x > 85 || chessChecker.y > 85)
-			{
-				finalColor *= 0.5;
-			}*/
-
+			
+			
+			finalColor = fixed3(round(finalColor.r), round(finalColor.g), round(finalColor.b)) / _PixelColorShades;
 
 #if POINT
 			return fixed4(finalColor *shadow, 1.0);

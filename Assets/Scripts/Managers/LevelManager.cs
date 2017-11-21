@@ -17,7 +17,6 @@ public class LevelManager : MonoBehaviour
     private static int levelIndex = 0;
     public static LevelManager instance;
     private static int currentLevel;
-   // bool gameLoadedOnce = false;
     void Awake()
     {
         if (instance == null)
@@ -51,7 +50,7 @@ public class LevelManager : MonoBehaviour
     
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && SceneManager.GetActiveScene().name != "StartGame")
         {
             bool pauseOpen = PauseMenuScript.instance.children[1].activeSelf;
             if (pauseOpen)
@@ -70,20 +69,21 @@ public class LevelManager : MonoBehaviour
 
     void Start()
     {
-        currentLevel = 0;
-        //DEBUG: this whole check if 100% for debugging so you can start scene from different levels but still hear music and transition to next level
-        //assumes all level start with L/l and 6th element is levelNumber
-        if (SceneManager.GetActiveScene().name[0] != 'L' && SceneManager.GetActiveScene().name[0] != 'l')
-        {
-         //   StartCoroutine(nextLevel());
-        }
-        else
-        {
+        //Old code. don't think it does anything anymore
+        //currentLevel = 0;
+        ////DEBUG: this whole check if 100% for debugging so you can start scene from different levels but still hear music and transition to next level
+        ////assumes all level start with L/l and 6th element is levelNumber
+        //if (SceneManager.GetActiveScene().name[0] != 'L' && SceneManager.GetActiveScene().name[0] != 'l')
+        //{
+        // //   StartCoroutine(nextLevel());
+        //}
+        //else
+        //{
 
-            currentLevel = int.Parse(SceneManager.GetActiveScene().name[5].ToString());
-           // print(currentLevel);
-            //MusicManager.instance.playSong();
-        }
+        //    currentLevel = int.Parse(SceneManager.GetActiveScene().name[5].ToString());
+        //   // print(currentLevel);
+        //    //MusicManager.instance.playSong();
+        //}
 
     }
 
@@ -99,19 +99,16 @@ public class LevelManager : MonoBehaviour
 
     public void loadLevel(int levelToLoad)
     {
-        currentLevel = levelToLoad;
+        levelIndex = levelToLoad;
         StartCoroutine(nextLevel());
     }
 
     public IEnumerator nextLevel()
     {
-        if (currentLevel.ToString() !="0")
+
+        if (SceneManager.GetActiveScene().name != "StartGame")
         {
             yield return StartCoroutine(Camera.main.GetComponent<CameraScript>().fade(false, 4));
-        }
-        else
-        {
-            //gameLoadedOnce = true;
         }
 
         string nextLvlName = "Scenes/" + levelNames[levelIndex];

@@ -716,7 +716,7 @@ Transform:
   m_GameObject: {fileID: 308952062}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 8.249998, y: 1, z: 0}
-  m_LocalScale: {x: 0.5, y: 4.56, z: 2}
+  m_LocalScale: {x: 0.5, y: 4.5, z: 2}
   m_Children: []
   m_Father: {fileID: 1817971998}
   m_RootOrder: 17
@@ -2544,7 +2544,7 @@ MonoBehaviour:
   flickerRange: {x: 0, y: 0}
   flickerDeltaRange: {x: 0, y: 0}
   randomFlickerDirection: 0
-  intensityRange: 0.005
+  intensityRange: 0.004
   intensityDeltaRange: 0.15
   angleRange: 0
   angleDeltaRange: 0
@@ -2680,7 +2680,7 @@ Transform:
   m_GameObject: {fileID: 1150284932}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 8.249998, y: 6, z: 0}
-  m_LocalScale: {x: 0.5, y: 1.4592, z: 2}
+  m_LocalScale: {x: 0.5, y: 1.5, z: 2}
   m_Children: []
   m_Father: {fileID: 1817971998}
   m_RootOrder: 18
@@ -2788,8 +2788,8 @@ Light:
     m_CustomResolution: -1
     m_Strength: 1
     m_Bias: 0
-    m_NormalBias: 0.638
-    m_NearPlane: 0.63
+    m_NormalBias: 0
+    m_NearPlane: 0.06
   m_Cookie: {fileID: 0}
   m_DrawHalo: 0
   m_Flare: {fileID: 0}
@@ -5007,8 +5007,8 @@ Light:
     m_CustomResolution: -1
     m_Strength: 1
     m_Bias: 0
-    m_NormalBias: 0.638
-    m_NearPlane: 0.63
+    m_NormalBias: 0
+    m_NearPlane: 0.0739
   m_Cookie: {fileID: 0}
   m_DrawHalo: 0
   m_Flare: {fileID: 0}
