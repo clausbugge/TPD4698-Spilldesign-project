@@ -71,7 +71,7 @@ public class SoundCaller : MonoBehaviour
         AudioSource source = findFreeAudioSource();
         if (source != default(AudioSource)) //found available source
         {
-            source.volume = volume;
+            source.volume = volume*MusicManager.instance.soundVolume;
             source.pitch = Random.Range(1 - pitchRange, 1 + pitchRange);
             source.clip = clip;
             source.Play();

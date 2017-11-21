@@ -36,10 +36,6 @@ public class CameraScript : MonoBehaviour
         Vector3 camOrigin = transform.position;
         camOrigin.z = -1;// target != null ? target.transform.position.z : ;
         target = null;
-        float xRot = transform.rotation.x;
-        float angle = xRot;
-        float startZ = transform.localPosition.z;
-        float deltaZ = startZ;
         Vector3 endPos = elevator.transform.position;
         endPos.y -= cameraCinematicDistance;
         endPos.z -= 1;
@@ -65,10 +61,6 @@ public class CameraScript : MonoBehaviour
     {
         Vector3 camOrigin;
         camOrigin.z = -1;
-        float xRot = transform.rotation.x;
-        float angle = xRot;
-        float startZ = transform.localPosition.z;
-        float deltaZ = startZ;
         Vector3 endPos = elevator.transform.position;
         endPos.y -= cameraCinematicDistance;
         endPos.z = newZ;

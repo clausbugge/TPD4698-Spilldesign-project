@@ -5,12 +5,16 @@ public class MusicManager : MonoBehaviour
 {
 
     public static MusicManager instance;
+    
     AudioSource audioSource;
     public AudioClip[] songs;
     public AudioClip[] fanfares;
     public AudioClip[] titleSongs;
     [Range(0, 1)]
     public float volume;
+    public float soundVolume = 1.0f;  //0-1
+    public float musicVolume = 1.0f;  //0-1
+    public float masterVolume = 1.0f; //0-1
     public enum songEnums
     {
         MAIN_THEME,
@@ -33,6 +37,7 @@ public class MusicManager : MonoBehaviour
         }
         DontDestroyOnLoad(this);
         audioSource = GetComponent<AudioSource>();
+        masterVolume = 1.0f;
     }
 
     public void playSong(songEnums songType)
@@ -63,7 +68,7 @@ public class MusicManager : MonoBehaviour
         float curVol = volume;
         for (float i = 0; i < setOver; i += Time.deltaTime)
         {
-            audioSource.volume = curVol - curVol * (i / setOver);
+            audioSource.volume = curVol - curVol * (i / setOver) * masterVolume;
             yield return null;
         }
         audioSource.volume = 0;
@@ -73,19 +78,27 @@ public class MusicManager : MonoBehaviour
         float curVol = fromZero ? 0 : volume;
         for (float i = 0; i < setOver; i += Time.deltaTime)
         {
-            audioSource.volume = curVol + (newVolume-curVol) * (i / setOver);
+            audioSource.volume = curVol + (newVolume-curVol) * (i / setOver) * masterVolume;
             yield return null;
         }
-        audioSource.volume = newVolume;
+        audioSource.volume = newVolume*masterVolume;
     }
-    //public void playSong()
-    //{
-    //    //audioSource.clip = songs[(int)songEnums.MAIN_THEME];
-    //    audioSource.clip = songs[Random.Range(0, songs.Length)];// (int)songEnums.MAIN_THEME];
-    //    audioSource.loop = true;
-    //    audioSource.volume = volume;
-    //    audioSource.PlayDelayed(0.5f); //0.5 second delay
-    //}
+    
+    public void toggleMusic()
+    {
+        musicVolume = (Mathf.Round(musicVolume) + 1) % 2; //simplest for now. fix later maybe
+        audioSource.volume = musicVolume;
+    }
+    public void toggleSound()
+    {
+
+        soundVolume = (Mathf.Round(soundVolume) + 1) % 2; //simplest for now. fix later maybe
+    }
+
+    public void toggleMasterVolume()
+    {
+        masterVolume = (Mathf.Round(masterVolume) + 1) % 2; //simplest for now. fix later maybe
+    }
 
     public void playFanfare()
     {

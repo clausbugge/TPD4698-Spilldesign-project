@@ -22,7 +22,6 @@ public class door : MonoBehaviour {
         float oldAngle = 0;
         float newAngle = 0;
         float deltaAngle = 0;
-        float anglePrSec = arcAngle/openTimeInSeconds;
         Vector3 around = transform.TransformPoint(new Vector3(.5f, -.5f, 0));
         for (float i = 0; i < openTimeInSeconds; i+= TimeManager.instance.gameDeltaTime)
         {

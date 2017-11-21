@@ -11,7 +11,7 @@ public class SpeechBubbleSpawner : MonoBehaviour
     private float timeSinceTextSpawn = 0.0f;
     private float textDuration = 3.0f;
 
-    int counter = 0;
+    //int counter = 0;
 
     bool visible = false;
     // Use this for initialization
@@ -85,7 +85,7 @@ public class SpeechBubbleSpawner : MonoBehaviour
                 visible = true;
                 speechBubble.SetActive(true);
                 bubbleImage.GetComponent<Image>().color = new Color(255, 255, 255, 255);
-                var text = textGameObject.GetComponent<Text>().text = displayText;// + "Counter: " + counter++;
+                //var text = textGameObject.GetComponent<Text>().text = displayText;// + "Counter: " + counter++;
             }
             else
             {

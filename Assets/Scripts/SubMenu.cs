@@ -14,6 +14,9 @@ public class SubMenu : MonoBehaviour {
         SELECT_LEVEL,
         RESUME_GAME,
         RESTART_LEVEL,
+        SETTINGS,
+        TOGGLE_MUSIC,
+        TOGGLE_SOUNDS,
         TO_MAIN_MENU
     }
 

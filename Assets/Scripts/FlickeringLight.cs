@@ -3,7 +3,7 @@
 public class FlickeringLight : MonoBehaviour
 {    
     private Vector3 startPos;
-    private Vector2 flickerOffset;
+    //private Vector2 flickerOffset;
     [Header("Position related")]
     public Vector2 flickerRange;
     //[Range(0, 1)]
@@ -11,7 +11,7 @@ public class FlickeringLight : MonoBehaviour
     public bool randomFlickerDirection;
 
     private float startIntensity;
-    private float intensityOffset;
+    //private float intensityOffset;
     [Header("Intensity related")]
     public float intensityRange;
     [Range(0,1)]
@@ -36,12 +36,12 @@ public class FlickeringLight : MonoBehaviour
     {
         lightComponent = GetComponent<Light>();
         startPos = transform.localPosition;
-        flickerOffset = Vector2.zero;
+       // flickerOffset = Vector2.zero;
 
         startIntensity = lightComponent.intensity;
-        intensityOffset = 0.0f;
+        //intensityOffset = 0.0f;
 
-        startRot = transform.rotation.eulerAngles.x;
+        startRot = 0;
         curRot = 0.0f;
         rotTimer = 0.0f;
 

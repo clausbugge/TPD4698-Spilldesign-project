@@ -68,7 +68,7 @@ public static class Tools
         go.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));//make sure we are straight!
     }
 
-    public static IEnumerator rotateObject(GameObject go, Vector3 eulerAngles, float duration, INTERPOLATION_TYPE type = INTERPOLATION_TYPE.SMOOTH, int power = 1)
+    public static IEnumerator rotateObject(GameObject go, Vector3 eulerAngles, float duration, INTERPOLATION_TYPE type = INTERPOLATION_TYPE.SMOOTH, int power = 1) //works!
     {
         Vector3 startAngles = go.transform.eulerAngles;
         System.Func<float, float> interpolationFunc = getInterpolationFunc(type);

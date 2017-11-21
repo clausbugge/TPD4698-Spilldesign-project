@@ -54,7 +54,6 @@ public class InputHandler : MonoBehaviour {
     private Vector2 newVelocity;
     public HERO_STATE state;
     public GHOST_STATE ghostState;
-    private float dt;
     private float fixedDt;
     private GameObject ghostHighlightChild;
     private GameObject rubberBandParticlesChild;
@@ -192,7 +191,7 @@ public class InputHandler : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        dt = TimeManager.instance.gameDeltaTime;
+        //dt = TimeManager.instance.gameDeltaTime;
 
         switch (state)
         {

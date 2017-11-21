@@ -17,7 +17,7 @@ public class LevelManager : MonoBehaviour
     private static int levelIndex = 0;
     public static LevelManager instance;
     private static int currentLevel;
-    bool gameLoadedOnce = false;
+   // bool gameLoadedOnce = false;
     void Awake()
     {
         if (instance == null)
@@ -111,7 +111,7 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            gameLoadedOnce = true;
+            //gameLoadedOnce = true;
         }
 
         string nextLvlName = "Scenes/" + levelNames[levelIndex];

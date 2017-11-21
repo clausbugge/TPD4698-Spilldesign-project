@@ -94,7 +94,11 @@ public class TextPulse : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
                 break;
             case (int)SubMenu.BUTTONS.LEVEL_SELECT:
                 transform.parent.parent.GetChild(1).gameObject.SetActive(true); //hacky-ish but works
-                transform.parent.parent.GetChild(0).gameObject.SetActive(false);                
+                transform.parent.gameObject.SetActive(false);
+                break;
+            case (int)SubMenu.BUTTONS.SETTINGS:
+                transform.parent.parent.GetChild(2).gameObject.SetActive(true); //hacky-ish but works
+                transform.parent.gameObject.SetActive(false);
                 break;
             case (int)SubMenu.BUTTONS.EXIT:
                 Application.Quit();
@@ -105,7 +109,7 @@ public class TextPulse : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
                 break;
             case (int)SubMenu.BUTTONS.BACK:
                 transform.parent.parent.GetChild(0).gameObject.SetActive(true);
-                transform.parent.parent.GetChild(1).gameObject.SetActive(false);
+                transform.parent.gameObject.SetActive(false);
                 break;
             case (int)SubMenu.BUTTONS.RESUME_GAME:
                 TimeManager.instance.resumeGameTime();
@@ -121,6 +125,12 @@ public class TextPulse : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
                 LevelManager.instance.loadMainMenu();
                 MusicManager.instance.playSong(MusicManager.songEnums.TITLE_SCREEN);
                 transform.parent.gameObject.SetActive(false);
+                break;
+            case (int)SubMenu.BUTTONS.TOGGLE_MUSIC:
+                MusicManager.instance.toggleMusic();
+                break;
+            case (int)SubMenu.BUTTONS.TOGGLE_SOUNDS:
+                MusicManager.instance.toggleSound();
                 break;
             default:
                 break;

@@ -112,18 +112,15 @@ Shader "Custom/PurePixelLightNoBullshit"
 
 		struct v2f
 		{
-			float4 vertex : TEXCOORD6;
+			float4 vertex : TEXCOORD2;
 			float4 pos : SV_POSITION;
 			float4 posWorld : TEXCOORD0;
 			// position of the vertex (and fragment) in world space 
 			float4 posLight : TEXCOORD1;
 			// position of the vertex (and fragment) in light space
-			float3 normalDir : TEXCOORD2;
-			// surface normal vector in world space
 
-			//SHADOW_COORDS(3)
-			LIGHTING_COORDS(4, 5)
-			//float2 uv : TEXCOORD2;
+
+			SHADOW_COORDS(3)
 			float3 normal : NORMAL;
 		};
 
@@ -134,88 +131,99 @@ Shader "Custom/PurePixelLightNoBullshit"
 			o.pos = UnityObjectToClipPos(v.vertex);
 			o.posWorld = mul(UNITY_MATRIX_M, v.vertex);
 			o.posLight = mul(_LightMatrix0, o.posWorld);
-			//o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-			//TRANSFER_SHADOW(o);
+			TRANSFER_SHADOW(o);
 			
-			TRANSFER_VERTEX_TO_FRAGMENT(o);
 			o.normal = v.normal;
-			o.normalDir = normalize(mul(float4(v.normal, 0.0), unity_WorldToObject).xyz);
 			
 			o.vertex = v.vertex;
 			return o;
 		}
 
-		fixed4 frag(v2f i) : COLOR
+		float4 frag(v2f i) : COLOR
 		{
 			
 			float4 vertexWorld = mul(unity_ObjectToWorld, i.vertex);
-
 			float3 lightCoord = mul(_LightMatrix0, vertexWorld).xyz;
 			float3 toLight = _WorldSpaceLightPos0.xyz - vertexWorld.xyz;
 
 			float lightRange = length(toLight) / length(lightCoord);
-
-
 			float shadow = SHADOW_ATTENUATION(i);
-
 			float3 vertexToLightSource = _WorldSpaceLightPos0.xyz - i.posWorld.xyz;
-
 			float distanceToLight = length(vertexToLightSource);
 
-			//float lightRange = 1 / _LightPositionRange.w;
-
-			vertexToLightSource *= 1000; //higher mod possibilities. _PixelTightness has be to higher for to compensate
+			vertexToLightSource *= 100; //higher mod possibilities. _PixelTightness has be to higher for to compensate
 			int modValue = _PixelTightness;
-			int3 pixelRemainder = int3(vertexToLightSource.x % modValue, vertexToLightSource.y % modValue, vertexToLightSource.z % modValue);
+			int3 pixelRemainder = int3(
+				vertexToLightSource.x % modValue, 
+				vertexToLightSource.y % modValue, 
+				vertexToLightSource.z % modValue);
 			vertexToLightSource.x -= pixelRemainder.x - modValue;
 			vertexToLightSource.y -= pixelRemainder.y - modValue;
 			vertexToLightSource.z -= pixelRemainder.z - modValue;
-			vertexToLightSource /= 1000;
+			vertexToLightSource /= 100;
 
 			distanceToLight = length(float3(vertexToLightSource.x, vertexToLightSource.y, vertexToLightSource.z));
 
 			float attenuation = (1 -(distanceToLight / lightRange)) * 3;
-			//float attenuation = (1 -(distanceToLight / lightRange)) * 4;
-			//attenuation = lightRange;
 
-			//attenuation = LIGHT_ATTENUATION(i)*9;
-			if (i.normal.x > -0.5 && i.posWorld.z <= _WorldSpaceLightPos0.z)
+			if ((i.normal.x > -0.5 && i.posWorld.z <= _WorldSpaceLightPos0.z) ||
+				attenuation < _DiscardThreshold)
 			{
-				discard;
-			}
-			if (attenuation < _DiscardThreshold)
-			{
-				discard;
+				return float4(0,0,0,0);
 			}
 			float3 finalColor = _LightColor0;
 			finalColor = _LightColor0*attenuation*_PixelColorShades;
 			finalColor = float3(round(finalColor.r), round(finalColor.g), round(finalColor.b)) / _PixelColorShades;
+			
+			if (i.posWorld.x < 0) //soooooooo.. this is a hack and I have no idea why/how it works. why isn't +=1 enough?
+			{
+				i.posWorld.x += 100; 
+			}
+			if (i.posWorld.y < 0)
+			{
+				i.posWorld.y += 100;
+			}
+
+			i.posWorld.x *= 100;
+			i.posWorld.y *= 100;
+			float2 chessChecker = float2(abs(i.posWorld.x) % 100, abs(i.posWorld.y) % 100);
+			//a:
+			/*if (chessChecker.x > 50 && chessChecker.y > 50)
+			{
+				finalColor *= 0.5;
+			}
+			if (chessChecker.x < 50 && chessChecker.y < 50)
+			{
+				finalColor *= 0.5;
+			}*/
+			//b:
+			if (chessChecker.x > 50 && chessChecker.y > 50)
+			{
+				finalColor *= 0.5;
+			}
+			//c:
+			/*if (chessChecker.x > 50 || chessChecker.y > 50)
+			{
+				finalColor *= 0.5;
+			}*/
+			//d:
+			/*if (chessChecker.x > 5 && chessChecker.y > 5)
+			{
+				finalColor *= 0.5;
+			}*/
+			//e:
+			/*if (chessChecker.x > 85 || chessChecker.y > 85)
+			{
+				finalColor *= 0.5;
+			}*/
+
+
 #if POINT
 			return float4(finalColor *shadow, 1.0); //***use pos instead of uv to highlight light colors more***
 #endif
-			float4 returnValue = float4(normalize(tex2D(_LightTexture0, i.posLight.xy / i.posLight.w + float2(0.5, 0.5))).a*finalColor*shadow, 1.0);
-			if (normalize(tex2D(_LightTexture0, i.posLight.xy / i.posLight.w + float2(0.5, 0.5))).a >= 0.2)
-			{
-				return returnValue;
-				
-			}
-			
-			discard;
-			return returnValue;
-			//float distance = length(vertexToLightSource);
-			//attenuation = 1.0 / distance; // linear attenuation 
-			//float3 finalColor = attenuation* _LightColor0.rgb;
-			//finalColor = _LightColor0*attenuation*_PixelColorShades;
-			//finalColor = float3(round(finalColor.r), round(finalColor.g), round(finalColor.b)) / _PixelColorShades;
-			//float cookieAttenuation = tex2D(_LightTexture0, i.posLight.xy / i.posLight.w + float2(0.5, 0.5)).a;
-			//cookieAttenuation = normalize(cookieAttenuation);
-			//cookieAttenuation = 1;
-			////cookieAttenuation = -1;
-			//if (cookieAttenuation == -1)
-			//{
-			//	//discard;
-			//}
-			
+			float cookieAlpha = normalize(tex2D(_LightTexture0, i.posLight.xy / i.posLight.w + fixed2(0.5, 0.5))).a; //atleast I think it's cookieAlpha
+			fixed4 returnValue = fixed4(cookieAlpha*finalColor*shadow, 1.0);
+			return cookieAlpha >= 0.1 ? returnValue : float4(0, 0, 0, 0);
 		}
 
 			ENDCG
