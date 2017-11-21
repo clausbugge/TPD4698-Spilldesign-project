@@ -11,7 +11,7 @@ Shader "Custom/PurePixelLightNoBullshit"
 	Properties
 	{
 		_TopPillarColor("TopPillarColor", COLOR) = (0,0,0,0)
-		_MainTex("Texture", 2D) = "white" {}
+		//_MainTex("Texture", 2D) = "white" {}
 		_PixelTightness("PixelTightness",int) = 150
 		_PixelColorShades("PixelColorShades",Range(2,256)) = 8
 		_DiscardThreshold("DiscardThreshold",Range(0.001,0.2)) = 0.01
@@ -57,15 +57,17 @@ Shader "Custom/PurePixelLightNoBullshit"
 			o.pos = UnityObjectToClipPos(v.vertex);
 			o.worldPos = mul(UNITY_MATRIX_M, v.vertex);
 			o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+			o.normal = v.normal;
 			return o;
 		}
 
-		float4 frag(v2f i) : COLOR
+		fixed4 frag(v2f i) : COLOR
 		{
-			float3 color = tex2D(_MainTex,i.uv).rgb*UNITY_LIGHTMODEL_AMBIENT.rgb;
-			return (i.normal.x > -0.5 && i.worldPos.z < _WallHeight) ?
-				_TopPillarColor : 
-				float4(color, 1.0);
+			if (i.normal.x > -0.5 && i.worldPos.z < _WallHeight)
+			{
+				return _TopPillarColor;
+			}
+			return fixed4(UNITY_LIGHTMODEL_AMBIENT.rgb, 1.0);
 		}
 			ENDCG
 		}
@@ -95,7 +97,7 @@ Shader "Custom/PurePixelLightNoBullshit"
 
 			//#include "UnityShaderVariables.cginc" //included in autolight.cginc I think
 			//uniform float4 _LightColor0; //included in Lighting.cginc
-		uniform sampler2D _MainTex;
+		//uniform sampler2D _MainTex;
 		uniform float4x4 _LightMatrix0;
 		//uniform sampler2D _LightTexture0;
 		float4 _MainTex_ST;
@@ -112,7 +114,7 @@ Shader "Custom/PurePixelLightNoBullshit"
 
 		struct v2f
 		{
-			float4 vertex : TEXCOORD2;
+			float4 vertex : TEXCOORD6;
 			float4 pos : SV_POSITION;
 			float4 posWorld : TEXCOORD0;
 			// position of the vertex (and fragment) in world space 
@@ -139,17 +141,17 @@ Shader "Custom/PurePixelLightNoBullshit"
 			return o;
 		}
 
-		float4 frag(v2f i) : COLOR
+		fixed4 frag(v2f i) : COLOR
 		{
 			
-			float4 vertexWorld = mul(unity_ObjectToWorld, i.vertex);
-			float3 lightCoord = mul(_LightMatrix0, vertexWorld).xyz;
+			fixed4 vertexWorld = mul(unity_ObjectToWorld, i.vertex);
+			fixed3 lightCoord = mul(_LightMatrix0, vertexWorld).xyz;
 			float3 toLight = _WorldSpaceLightPos0.xyz - vertexWorld.xyz;
 
-			float lightRange = length(toLight) / length(lightCoord);
-			float shadow = SHADOW_ATTENUATION(i);
-			float3 vertexToLightSource = _WorldSpaceLightPos0.xyz - i.posWorld.xyz;
-			float distanceToLight = length(vertexToLightSource);
+			fixed lightRange = length(toLight) / length(lightCoord);
+			fixed shadow = SHADOW_ATTENUATION(i);
+			fixed3 vertexToLightSource = _WorldSpaceLightPos0.xyz - i.posWorld.xyz;
+			fixed distanceToLight = length(vertexToLightSource);
 
 			vertexToLightSource *= 100; //higher mod possibilities. _PixelTightness has be to higher for to compensate
 			int modValue = _PixelTightness;
@@ -162,18 +164,18 @@ Shader "Custom/PurePixelLightNoBullshit"
 			vertexToLightSource.z -= pixelRemainder.z - modValue;
 			vertexToLightSource /= 100;
 
-			distanceToLight = length(float3(vertexToLightSource.x, vertexToLightSource.y, vertexToLightSource.z));
+			distanceToLight = length(fixed3(vertexToLightSource.x, vertexToLightSource.y, vertexToLightSource.z));
 
-			float attenuation = (1 -(distanceToLight / lightRange)) * 3;
+			fixed attenuation = (1 -(distanceToLight / lightRange)) * 3;
 
 			if ((i.normal.x > -0.5 && i.posWorld.z <= _WorldSpaceLightPos0.z) ||
 				attenuation < _DiscardThreshold)
 			{
-				return float4(0,0,0,0);
+				return fixed4(0,0,0,0);
 			}
-			float3 finalColor = _LightColor0;
+			fixed3 finalColor = _LightColor0;
 			finalColor = _LightColor0*attenuation*_PixelColorShades;
-			finalColor = float3(round(finalColor.r), round(finalColor.g), round(finalColor.b)) / _PixelColorShades;
+			finalColor = fixed3(round(finalColor.r), round(finalColor.g), round(finalColor.b)) / _PixelColorShades;
 			
 			if (i.posWorld.x < 0) //soooooooo.. this is a hack and I have no idea why/how it works. why isn't +=1 enough?
 			{
@@ -186,7 +188,7 @@ Shader "Custom/PurePixelLightNoBullshit"
 
 			i.posWorld.x *= 100;
 			i.posWorld.y *= 100;
-			float2 chessChecker = float2(abs(i.posWorld.x) % 100, abs(i.posWorld.y) % 100);
+			fixed2 chessChecker = fixed2(abs(i.posWorld.x) % 100, abs(i.posWorld.y) % 100);
 			//a:
 			/*if (chessChecker.x > 50 && chessChecker.y > 50)
 			{
@@ -219,11 +221,17 @@ Shader "Custom/PurePixelLightNoBullshit"
 
 
 #if POINT
-			return float4(finalColor *shadow, 1.0); //***use pos instead of uv to highlight light colors more***
+			return fixed4(finalColor *shadow, 1.0); //***use pos instead of uv to highlight light colors more***
 #endif
-			float cookieAlpha = normalize(tex2D(_LightTexture0, i.posLight.xy / i.posLight.w + fixed2(0.5, 0.5))).a; //atleast I think it's cookieAlpha
+#if SPOT
+			fixed cookieAlpha = normalize(tex2D(_LightTexture0, i.posLight.xy / i.posLight.w + fixed2(0.5, 0.5))).a; //atleast I think it's cookieAlpha
 			fixed4 returnValue = fixed4(cookieAlpha*finalColor*shadow, 1.0);
-			return cookieAlpha >= 0.1 ? returnValue : float4(0, 0, 0, 0);
+			if (cookieAlpha >= 0.1)
+			{
+				return returnValue;
+			}
+#endif
+			return fixed4(0, 0, 0, 0);
 		}
 
 			ENDCG
