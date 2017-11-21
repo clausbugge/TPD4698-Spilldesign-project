@@ -498,6 +498,36 @@ Prefab:
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 1230348457}
+    - target: {fileID: 114699289247802752, guid: 0d178b790f243f64c91871525e57f88a,
+        type: 2}
+      propertyPath: buttonIDs.Array.data[2]
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 114388936025723764, guid: 0d178b790f243f64c91871525e57f88a,
+        type: 2}
+      propertyPath: buttonIDs.Array.data[0]
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114388936025723764, guid: 0d178b790f243f64c91871525e57f88a,
+        type: 2}
+      propertyPath: buttonIDs.Array.data[1]
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114388936025723764, guid: 0d178b790f243f64c91871525e57f88a,
+        type: 2}
+      propertyPath: buttonIDs.Array.data[2]
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114712365253886196, guid: 0d178b790f243f64c91871525e57f88a,
+        type: 2}
+      propertyPath: buttonIDs.Array.data[0]
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 114712365253886196, guid: 0d178b790f243f64c91871525e57f88a,
+        type: 2}
+      propertyPath: buttonIDs.Array.data[1]
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0d178b790f243f64c91871525e57f88a, type: 2}
   m_IsPrefabParent: 0
@@ -4786,6 +4816,51 @@ Prefab:
         type: 2}
       propertyPath: m_Pivot.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114676036925310148, guid: 48f9481645b169a45a7ee7fe6febaedb,
+        type: 2}
+      propertyPath: buttonIDs.Array.data[2]
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 114676036925310148, guid: 48f9481645b169a45a7ee7fe6febaedb,
+        type: 2}
+      propertyPath: buttonIDs.Array.data[0]
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 114676036925310148, guid: 48f9481645b169a45a7ee7fe6febaedb,
+        type: 2}
+      propertyPath: buttonIDs.Array.data[1]
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 114676036925310148, guid: 48f9481645b169a45a7ee7fe6febaedb,
+        type: 2}
+      propertyPath: buttonIDs.Array.data[3]
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 114639400280341500, guid: 48f9481645b169a45a7ee7fe6febaedb,
+        type: 2}
+      propertyPath: buttonIDs.Array.data[0]
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 114639400280341500, guid: 48f9481645b169a45a7ee7fe6febaedb,
+        type: 2}
+      propertyPath: buttonIDs.Array.data[1]
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 114639400280341500, guid: 48f9481645b169a45a7ee7fe6febaedb,
+        type: 2}
+      propertyPath: buttonIDs.Array.data[2]
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 114490439150693824, guid: 48f9481645b169a45a7ee7fe6febaedb,
+        type: 2}
+      propertyPath: buttonIDs.Array.data[0]
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 114490439150693824, guid: 48f9481645b169a45a7ee7fe6febaedb,
+        type: 2}
+      propertyPath: buttonIDs.Array.data[1]
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 48f9481645b169a45a7ee7fe6febaedb, type: 2}

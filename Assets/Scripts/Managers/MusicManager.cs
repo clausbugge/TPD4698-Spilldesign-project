@@ -15,6 +15,7 @@ public class MusicManager : MonoBehaviour
     public float soundVolume = 1.0f;  //0-1
     public float musicVolume = 1.0f;  //0-1
     public float masterVolume = 1.0f; //0-1
+    private bool musicMuted = false;
     public enum songEnums
     {
         MAIN_THEME,
@@ -65,7 +66,8 @@ public class MusicManager : MonoBehaviour
 
     public IEnumerator silenceMusic(float setOver = 1.5f)
     {
-        float curVol = volume;
+        
+        float curVol = audioSource.volume;
         for (float i = 0; i < setOver; i += Time.deltaTime)
         {
             audioSource.volume = curVol - curVol * (i / setOver) * masterVolume;
@@ -75,19 +77,24 @@ public class MusicManager : MonoBehaviour
     }
     public IEnumerator setVolume(float newVolume, float setOver = 1.5f, bool fromZero = true)
     {
-        float curVol = fromZero ? 0 : volume;
-        for (float i = 0; i < setOver; i += Time.deltaTime)
+        if (!musicMuted) //cba to deal with this shit right now. TODO: future: fix so modifications to sound stay even when muted
         {
-            audioSource.volume = curVol + (newVolume-curVol) * (i / setOver) * masterVolume;
-            yield return null;
+            float curVol = fromZero ? 0 : audioSource.volume;
+            for (float i = 0; i < setOver; i += Time.deltaTime)
+            {
+                audioSource.volume = curVol + (newVolume - curVol) * (i / setOver) * masterVolume;
+                yield return null;
+            }
+            audioSource.volume = newVolume * masterVolume;
         }
-        audioSource.volume = newVolume*masterVolume;
+        
     }
     
     public void toggleMusic()
     {
+        musicMuted = !musicMuted;
         musicVolume = (Mathf.Round(musicVolume) + 1) % 2; //simplest for now. fix later maybe
-        audioSource.volume = musicVolume;
+        audioSource.volume = musicVolume*volume;
     }
     public void toggleSound()
     {

@@ -15,18 +15,24 @@ public class TimeManager : MonoBehaviour {
         if (instance == null)
         {
             instance = this;
+            DontDestroyOnLoad(this);
         }
         else if (instance != this)
         {
             DestroyObject(gameObject);
         }
-        DontDestroyOnLoad(this);
+        
+        
+        
+    }
+
+    void Start()
+    {
         if (GameObject.Find("HUD"))
         {
             fpsText = GameObject.Find("HUD").GetComponentInChildren<Text>();
             fpsText.gameObject.SetActive(false);
         }
-        
     }
 
     public void pauseGameTime()
@@ -37,11 +43,6 @@ public class TimeManager : MonoBehaviour {
     {
         gameTimeMultiplier = 1.0f;
     }
-
-    // Use this for initialization
-    void Start () {
-		
-	}
 	
 	// Update is called once per frame
 	void Update () {

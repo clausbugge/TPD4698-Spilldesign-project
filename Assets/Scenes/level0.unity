@@ -1837,8 +1837,8 @@ MonoBehaviour:
   flickerRange: {x: 0.04, y: 0.04}
   flickerDeltaRange: {x: 0.4, y: 0.4}
   randomFlickerDirection: 0
-  intensityRange: 0.07
-  intensityDeltaRange: 0.125
+  intensityRange: 0.007
+  intensityDeltaRange: 0.5
   angleRange: 0
   angleDeltaRange: 0
 --- !u!114 &592485414
@@ -2242,7 +2242,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 2
-  m_Color: {r: 1, g: 0.3602941, b: 0.3602941, a: 1}
+  m_Color: {r: 1, g: 0.28676468, b: 0.28676468, a: 1}
   m_Intensity: 0.66
   m_Range: 11
   m_SpotAngle: 30

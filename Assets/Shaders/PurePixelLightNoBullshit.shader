@@ -221,7 +221,7 @@ Shader "Custom/PurePixelLightNoBullshit"
 
 
 #if POINT
-			return fixed4(finalColor *shadow, 1.0); //***use pos instead of uv to highlight light colors more***
+			return fixed4(finalColor *shadow, 1.0);
 #endif
 #if SPOT
 			fixed cookieAlpha = normalize(tex2D(_LightTexture0, i.posLight.xy / i.posLight.w + fixed2(0.5, 0.5))).a; //atleast I think it's cookieAlpha

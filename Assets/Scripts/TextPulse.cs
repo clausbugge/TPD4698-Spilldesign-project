@@ -99,6 +99,10 @@ public class TextPulse : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             case (int)SubMenu.BUTTONS.SETTINGS:
                 transform.parent.parent.GetChild(2).gameObject.SetActive(true); //hacky-ish but works
                 transform.parent.gameObject.SetActive(false);
+                if (transform.parent.name =="PauseMenu") //TODO: fix this when reworking(menu stack?)
+                {
+                    transform.parent.parent.GetChild(2).gameObject.GetComponent<SubMenu>().buttonIDs[2] = SubMenu.BUTTONS.BACK_FROM_PLAYING_MENU;
+                }
                 break;
             case (int)SubMenu.BUTTONS.EXIT:
                 Application.Quit();
@@ -110,6 +114,11 @@ public class TextPulse : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             case (int)SubMenu.BUTTONS.BACK:
                 transform.parent.parent.GetChild(0).gameObject.SetActive(true);
                 transform.parent.gameObject.SetActive(false);
+                break;
+            case (int)SubMenu.BUTTONS.BACK_FROM_PLAYING_MENU: //TODO: fix when rework
+                transform.parent.parent.GetChild(1).gameObject.SetActive(true);
+                transform.parent.gameObject.SetActive(false);
+                transform.parent.gameObject.GetComponent<SubMenu>().buttonIDs[2] = SubMenu.BUTTONS.BACK;
                 break;
             case (int)SubMenu.BUTTONS.RESUME_GAME:
                 TimeManager.instance.resumeGameTime();

@@ -524,20 +524,6 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 0
-  m_FalloffTable:
-    m_Table[0]: 0
-    m_Table[1]: 0
-    m_Table[2]: 0
-    m_Table[3]: 0
-    m_Table[4]: 0
-    m_Table[5]: 0
-    m_Table[6]: 0
-    m_Table[7]: 0
-    m_Table[8]: 0
-    m_Table[9]: 0
-    m_Table[10]: 0
-    m_Table[11]: 0
-    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -574,20 +560,6 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 0
-  m_FalloffTable:
-    m_Table[0]: 0
-    m_Table[1]: 0
-    m_Table[2]: 0
-    m_Table[3]: 0
-    m_Table[4]: 0
-    m_Table[5]: 0
-    m_Table[6]: 0
-    m_Table[7]: 0
-    m_Table[8]: 0
-    m_Table[9]: 0
-    m_Table[10]: 0
-    m_Table[11]: 0
-    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -603,11 +575,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cfa8f63291fdb4ea7ac8310f062702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flickerRange: {x: 0, y: 0}
-  flickerDeltaRange: {x: 0, y: 0}
+  flickerRange: {x: 0.02, y: 0.02}
+  flickerDeltaRange: {x: 0.5, y: 0.5}
   randomFlickerDirection: 0
-  intensityRange: 0
-  intensityDeltaRange: 0
+  intensityRange: 0.01
+  intensityDeltaRange: 0.66
+  angleRange: 0
+  angleDeltaRange: 0
 --- !u!114 &114306188506170338
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -636,6 +610,8 @@ MonoBehaviour:
   randomFlickerDirection: 0
   intensityRange: 0
   intensityDeltaRange: 0
+  angleRange: 0
+  angleDeltaRange: 0
 --- !u!114 &114331145588502232
 MonoBehaviour:
   m_ObjectHideFlags: 1
