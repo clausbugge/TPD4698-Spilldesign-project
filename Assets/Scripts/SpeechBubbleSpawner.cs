@@ -85,7 +85,7 @@ public class SpeechBubbleSpawner : MonoBehaviour
                 visible = true;
                 speechBubble.SetActive(true);
                 bubbleImage.GetComponent<Image>().color = new Color(255, 255, 255, 255);
-                //var text = textGameObject.GetComponent<Text>().text = displayText;// + "Counter: " + counter++;
+                textGameObject.GetComponent<Text>().text = displayText;
             }
             else
             {
