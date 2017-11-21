@@ -65,8 +65,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - PixelSnap: 0
-    - _BumpMapInfluence: 1.5
-    - _BumpMapZoom: 500
+    - _BumpMapInfluence: 0.05
+    - _BumpMapZoom: 100
     - _BumpScale: 1
     - _CircularAttenuation: 0
     - _Cutoff: 0.5
@@ -89,7 +89,7 @@ Material:
     - _OldSchool: 1
     - _OutlineThickness: 0.437
     - _Parallax: 0.02
-    - _PixelColorShades: 44.4
+    - _PixelColorShades: 16
     - _PixelTightness: 7
     - _Shininess: 1
     - _SmoothnessTextureChannel: 0
