@@ -12,7 +12,7 @@ public class GuardScript : MonoBehaviour {
         LEFT,
         RIGHT
     }
-    
+    bool turning = false;
     public Vector2 patrolDirection;
     public float patrolSpeed;
     private Rigidbody2D rb2d;
@@ -66,14 +66,40 @@ public class GuardScript : MonoBehaviour {
     {
         if (!spottedGhost && justBeforeCollision()) //need changes to support real time modifications in inspector, but not needed atm
         {
-            rb2d.velocity *= -1;
-            curSpriteID = curSpriteID + 1 - 2 * ((curSpriteID) % 2); //yep
-            currentSprite = sprites[curSpriteID];
-            Vector2 newDir = rb2d.velocity.normalized;
-            flashLightRotator.transform.rotation = Quaternion.Euler(0, 0, getAngle(newDir));
-            GetComponent<SpriteRenderer>().sprite = currentSprite;
+            StartCoroutine(turn());
         }
 	}
+
+    IEnumerator turn()
+    {
+        turning = true;
+        Vector2 oldvel = rb2d.velocity;
+        Vector2 oldDir = rb2d.velocity.normalized;
+        Vector2 newDir = rb2d.velocity.normalized * -1;
+        rb2d.velocity = Vector2.zero;
+        curSpriteID = curSpriteID + 1 - 2 * ((curSpriteID) % 2); //yep
+        currentSprite = sprites[curSpriteID];
+        
+        
+        float turnTimer = 2.2f;
+        float newZ;
+        float pd;
+        for (float i = 0; i < turnTimer; i+=Time.deltaTime)
+        {
+            pd = i / turnTimer;
+            newZ = getAngle(oldDir)*(1- pd) + getAngle(newDir)*pd;
+            flashLightRotator.transform.rotation = Quaternion.Euler(0, 0, newZ);
+            rb2d.velocity = oldvel * -pd*pd;
+            if (pd > 0.5)
+            {
+                GetComponent<SpriteRenderer>().sprite = currentSprite;
+            }
+            yield return null;
+        }
+        flashLightRotator.transform.rotation = Quaternion.Euler(0, 0, getAngle(newDir));
+        rb2d.velocity = oldvel * -1;
+        turning = false;
+    }
 
     bool justBeforeCollision()
     {
@@ -94,29 +120,32 @@ public class GuardScript : MonoBehaviour {
 
     public IEnumerator spotGhost(float angle)
     {
-        spottedGhost = true;
-        if (rb2d.velocity.x > 0)
-        {
-            angle *= -1;
-        }
-        Vector2 oldVel = rb2d.velocity;
-        rb2d.velocity = Vector2.zero;
         sc.attemptSound(spotGhostSound);
-
-        float lookTime = 0.3f;
-        float oldAngle = flashLightRotator.transform.rotation.eulerAngles.z;
-        float newAngle = oldAngle;
-        for (float i = 0; i < lookTime; i+=TimeManager.instance.fixedGameDeltaTime)
+        if (!turning)
         {
-            float pd = i / lookTime;
-            newAngle = oldAngle + angle * pd;
-            flashLightRotator.transform.rotation = Quaternion.Euler(0, 0, newAngle);
-            yield return null;
-        }
-        yield return new WaitForSeconds(2.2f);
+            spottedGhost = true;
+            if (rb2d.velocity.x > 0)
+            {
+                angle *= -1;
+            }
+            Vector2 oldVel = rb2d.velocity;
+            rb2d.velocity = Vector2.zero;
 
-        flashLightRotator.transform.rotation = Quaternion.Euler(0, 0, oldAngle);
-        rb2d.velocity = oldVel;
-        spottedGhost = false;
+            float lookTime = 0.3f;
+            float oldAngle = flashLightRotator.transform.rotation.eulerAngles.z;
+            float newAngle = oldAngle;
+            for (float i = 0; i < lookTime; i += TimeManager.instance.fixedGameDeltaTime)
+            {
+                float pd = i / lookTime;
+                newAngle = oldAngle + angle * pd;
+                flashLightRotator.transform.rotation = Quaternion.Euler(0, 0, newAngle);
+                yield return null;
+            }
+            yield return new WaitForSeconds(2.2f);
+
+            flashLightRotator.transform.rotation = Quaternion.Euler(0, 0, oldAngle);
+            rb2d.velocity = oldVel;
+            spottedGhost = false;
+        }
     }
 }

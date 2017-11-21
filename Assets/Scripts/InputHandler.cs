@@ -132,9 +132,10 @@ public class InputHandler : MonoBehaviour {
                     if (light.type == LightType.Spot)
                     {
                         Transform guardTransform = light.gameObject.transform.parent.parent;
-                        Vector2 enemyVel = guardTransform.GetComponent<Rigidbody2D>().velocity;
+                        Vector2 test = new Vector2(Mathf.Cos((light.gameObject.transform.parent.transform.rotation.eulerAngles.z % 360) * Mathf.Deg2Rad),
+                                                   Mathf.Sin((light.gameObject.transform.parent.transform.rotation.eulerAngles.z % 360) * Mathf.Deg2Rad));
                         Vector2 posToCheck = state != HERO_STATE.DASHING ? transform.position : dasher.transform.position;
-                        float angle = Vector2.Angle(posToCheck - (Vector2)guardTransform.position, enemyVel);
+                        float angle = Vector2.Angle(posToCheck - (Vector2)guardTransform.position, test);
                         
                         if (Mathf.Abs(angle) < light.spotAngle/2)
                         {
