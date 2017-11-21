@@ -225,13 +225,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 39385673}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
   m_LocalPosition: {x: 1.3400002, y: 0, z: -1}
   m_LocalScale: {x: 0.5, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
 --- !u!114 &39385680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -812,8 +812,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 2
-  m_Color: {r: 0.41749567, g: 0.41749567, b: 0.8602941, a: 1}
-  m_Intensity: 0.5
+  m_Color: {r: 0.61960787, g: 0.61960787, b: 1, a: 1}
+  m_Intensity: 0.65
   m_Range: 6
   m_SpotAngle: 30
   m_CookieSize: 10
@@ -835,20 +835,6 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_FalloffTable:
-    m_Table[0]: 0
-    m_Table[1]: 0
-    m_Table[2]: 0
-    m_Table[3]: 0
-    m_Table[4]: 0
-    m_Table[5]: 0
-    m_Table[6]: 0
-    m_Table[7]: 0
-    m_Table[8]: 0
-    m_Table[9]: 0
-    m_Table[10]: 0
-    m_Table[11]: 0
-    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -888,8 +874,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cfa8f63291fdb4ea7ac8310f062702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flickerRange: {x: 0.001, y: 0.001}
-  flickerDeltaRange: {x: 0.5, y: 0.5}
+  flickerRange: {x: 0.005, y: 0.005}
+  flickerDeltaRange: {x: 0.33, y: 0.33}
   randomFlickerDirection: 0
   intensityRange: 0.003
   intensityDeltaRange: 0.6
@@ -922,8 +908,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 2
-  m_Color: {r: 0.58823526, g: 0.28690886, b: 0.20761243, a: 1}
-  m_Intensity: 0.8
+  m_Color: {r: 1, g: 0.62352943, b: 0.62352943, a: 1}
+  m_Intensity: 0.65
   m_Range: 5.28
   m_SpotAngle: 30
   m_CookieSize: 10
@@ -945,20 +931,6 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_FalloffTable:
-    m_Table[0]: 0
-    m_Table[1]: 0
-    m_Table[2]: 0
-    m_Table[3]: 0
-    m_Table[4]: 0
-    m_Table[5]: 0
-    m_Table[6]: 0
-    m_Table[7]: 0
-    m_Table[8]: 0
-    m_Table[9]: 0
-    m_Table[10]: 0
-    m_Table[11]: 0
-    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -1021,7 +993,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1208939777
 Transform:
   m_ObjectHideFlags: 0
@@ -1825,8 +1797,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cfa8f63291fdb4ea7ac8310f062702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flickerRange: {x: 0, y: 0}
-  flickerDeltaRange: {x: 0, y: 0}
+  flickerRange: {x: 0.02, y: 0.02}
+  flickerDeltaRange: {x: 0.66, y: 0.66}
   randomFlickerDirection: 0
   intensityRange: 0.04
   intensityDeltaRange: 0.1
@@ -1864,7 +1836,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 2
-  m_Color: {r: 0.22637326, g: 0.5808823, b: 0.27282622, a: 1}
+  m_Color: {r: 0.4852941, g: 1, b: 0.55273837, a: 1}
   m_Intensity: 0.66
   m_Range: 4.74
   m_SpotAngle: 30
@@ -1876,7 +1848,7 @@ Light:
     m_Strength: 1
     m_Bias: 0.399
     m_NormalBias: 0.533
-    m_NearPlane: 0.11
+    m_NearPlane: 0.05
   m_Cookie: {fileID: 0}
   m_DrawHalo: 0
   m_Flare: {fileID: 0}
@@ -1887,20 +1859,6 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_FalloffTable:
-    m_Table[0]: 0
-    m_Table[1]: 0
-    m_Table[2]: 0
-    m_Table[3]: 0
-    m_Table[4]: 0
-    m_Table[5]: 0
-    m_Table[6]: 0
-    m_Table[7]: 0
-    m_Table[8]: 0
-    m_Table[9]: 0
-    m_Table[10]: 0
-    m_Table[11]: 0
-    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -2128,7 +2086,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1991578125
 Transform:
   m_ObjectHideFlags: 0
