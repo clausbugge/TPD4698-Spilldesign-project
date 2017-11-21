@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-
 public class FlickeringLight : MonoBehaviour
 {    
     private Vector3 startPos;
@@ -46,9 +45,9 @@ public class FlickeringLight : MonoBehaviour
         rotTimer = 0.0f;
 
     }
-	
-	// Update is called once per frame
-	void Update ()
+
+    // Update is called once per frame
+    void Update ()
     {
         //position
         curFlickerPos += TimeManager.instance.gameDeltaTime * (randomFlickerDirection ? new Vector2(Random.Range(-flickerDeltaRange.x, flickerDeltaRange.x), 
