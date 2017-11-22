@@ -19,7 +19,7 @@ Shader "Custom/PurePixelLightNoBullshit"
 		_BumpMap("BumpMap",2D) = "bump"{}
 		_BumpMapZoom("BumpMapZoom",int) = 100000
 		_BumpMapInfluence("BumpMapInfluence",Range(-1.5,1.5)) = 0.1
-		
+		_ModPrecision("_ModPrecision", int) = 1
 	}
 		SubShader
 		{
@@ -110,6 +110,7 @@ Shader "Custom/PurePixelLightNoBullshit"
 		sampler2D _BumpMap;
 		int _BumpMapZoom;
 		float _BumpMapInfluence;
+		int _ModPrecision;
 		struct vertexInput {
 			float4 vertex : POSITION;
 			float4 uv : TEXCOORD2;
@@ -147,7 +148,8 @@ Shader "Custom/PurePixelLightNoBullshit"
 
 		fixed4 frag(v2f i) : COLOR
 		{
-			
+			int preModMultiplicationValue = 100 * _ModPrecision;
+			int modValue = _PixelTightness*_ModPrecision;
 			fixed4 vertexWorld = mul(unity_ObjectToWorld, i.vertex);
 			fixed3 lightCoord = mul(_LightMatrix0, vertexWorld).xyz;
 			float3 toLight = _WorldSpaceLightPos0.xyz - vertexWorld.xyz;
@@ -157,8 +159,7 @@ Shader "Custom/PurePixelLightNoBullshit"
 			fixed3 vertexToLightSource = _WorldSpaceLightPos0.xyz - i.posWorld.xyz;
 			fixed distanceToLight = length(vertexToLightSource);
 
-			vertexToLightSource *= 100; //higher mod possibilities. _PixelTightness has be to higher for to compensate
-			int modValue = _PixelTightness;
+			vertexToLightSource *= preModMultiplicationValue; //higher mod possibilities. _PixelTightness has be to higher for to compensate
 			int3 pixelRemainder = int3(
 				vertexToLightSource.x % modValue, 
 				vertexToLightSource.y % modValue, 
@@ -166,7 +167,7 @@ Shader "Custom/PurePixelLightNoBullshit"
 			vertexToLightSource.x -= pixelRemainder.x - modValue;
 			vertexToLightSource.y -= pixelRemainder.y - modValue;
 			vertexToLightSource.z -= pixelRemainder.z - modValue;
-			vertexToLightSource /= 100;
+			vertexToLightSource /= (preModMultiplicationValue);
 
 			distanceToLight = length(fixed3(vertexToLightSource.x, vertexToLightSource.y, vertexToLightSource.z));
 
@@ -178,23 +179,14 @@ Shader "Custom/PurePixelLightNoBullshit"
 				return fixed4(0,0,0,0);
 			}
 			fixed3 finalColor = _LightColor0*attenuation*_PixelColorShades;
-			
-
-
-
 
 			if (i.normal.z <= -0.9)
 			{
-				fixed2 test = i.posWorld * 100;
-				int modValueTwo = _PixelTightness;
-				test.x -= (test.x %modValueTwo) - modValueTwo;
-				test.y -= (test.y %modValueTwo) - modValueTwo;
+				fixed2 test = i.posWorld * preModMultiplicationValue;
+				test.x -= (test.x %modValue) - modValue;
+				test.y -= (test.y %modValue) - modValue;
 
-				fixed bump = (tex2D(_BumpMap, test / (100*_BumpMapZoom))).a;
-				//finalColor *= bump;
-				//bump *= 16; //I don't think 16 should be modified
-				//int result = bump;
-
+				fixed bump = (tex2D(_BumpMap, test / (preModMultiplicationValue*_BumpMapZoom))).a;
 				finalColor -= int(bump*16) * _BumpMapInfluence;
 
 				if (i.posWorld.x < 0) //soooooooo.. this is a hack and I have no idea why/how it works. why isn't +=1 enough?
