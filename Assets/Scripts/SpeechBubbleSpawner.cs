@@ -32,7 +32,7 @@ public class SpeechBubbleSpawner : MonoBehaviour
         {
             if (true)//!visible)
             {
-                SpawnSpeechBubble("hey text this is pretty long to please fit the image");
+                //SpawnSpeechBubble("hey text this is pretty long to please fit the image");
             }
             else
             {

@@ -109,7 +109,7 @@ public class TextPulse : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
                 break;
             case (int)SubMenu.BUTTONS.SELECT_LEVEL:
                 int level = (int)char.GetNumericValue(name[6]); //this it not just hacky-ish, this is hacky as fuck. CBA to add custom system for level select..
-                LevelManager.instance.loadLevel(level-1);
+                LevelManager.instance.loadLevel(level);
                 break;
             case (int)SubMenu.BUTTONS.BACK:
                 transform.parent.parent.GetChild(0).gameObject.SetActive(true);
