@@ -13,7 +13,7 @@ public class CameraScript : MonoBehaviour
     public float defaultFadeTime;
     private float startDistance;
     private int cameraCinematicDistance = 3;
-
+    public float followSpeed = 0.33f;
     private void Awake()
     {
         startDistance = transform.position.z;
@@ -122,7 +122,7 @@ public class CameraScript : MonoBehaviour
     {
         if (target != null)
         {
-            float followSpeed = 1.0f;
+            
             Vector3 distanceVector = target.transform.position + (new Vector3(targetOffset.x, targetOffset.y, 0)) - transform.position;
             float distanceFromTarget = distanceVector.magnitude;
             transform.Translate(new Vector3(distanceVector.x, distanceVector.y, 0) * distanceFromTarget * followSpeed * TimeManager.instance.fixedGameDeltaTime);
