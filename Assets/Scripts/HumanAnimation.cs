@@ -28,39 +28,42 @@ public class HumanAnimation : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	void Update ()
-    {
-        Vector2 velocity = m_body.velocity;
-        if (velocity.x > 0)
+	void Update () {
+
+        if (m_inputhandler.ghostState == InputHandler.GHOST_STATE.HUMAN)
         {
-            spriteDirectionIndex = rightAnimationIndexStart;
-        }
-        else if (velocity.x < 0)
-        {
-            spriteDirectionIndex = leftAnimationIndexStart;
-        }
-        else if (velocity.y > 0)
-        {
-            spriteDirectionIndex = upAnimationIndexStart;
-        }
-        else if (velocity.y < 0)
-        {
-            spriteDirectionIndex = downAnimationIndexStart;
-        }
-        animationUpdateTimer += TimeManager.instance.gameDeltaTime;
-        if (velocity.SqrMagnitude() > 0)
-        {
-            if (animationUpdateTimer > 0.15f)
+            Vector2 velocity = m_body.velocity;
+            if (velocity.x > 0)
             {
-                animationUpdateTimer = 0.0f;
-                spriteAnimationIndex++;
-                spriteAnimationIndex = spriteAnimationIndex % amountOfSpritesPerDirection;
-                m_renderer.sprite = sprites[spriteDirectionIndex + spriteAnimationIndex];
+                spriteDirectionIndex = rightAnimationIndexStart;
             }
-        }
-        else
-        {
-            m_renderer.sprite = sprites[spriteDirectionIndex + 1];
+            else if (velocity.x < 0)
+            {
+                spriteDirectionIndex = leftAnimationIndexStart;
+            }
+            else if (velocity.y > 0)
+            {
+                spriteDirectionIndex = upAnimationIndexStart;
+            }
+            else if (velocity.y < 0)
+            {
+                spriteDirectionIndex = downAnimationIndexStart;
+            }
+            animationUpdateTimer += TimeManager.instance.gameDeltaTime;
+            if (velocity.SqrMagnitude() > 0)
+            {
+                if (animationUpdateTimer > 0.15f)
+                {
+                    animationUpdateTimer = 0.0f;
+                    spriteAnimationIndex++;
+                    spriteAnimationIndex = spriteAnimationIndex % amountOfSpritesPerDirection;
+                    m_renderer.sprite = sprites[spriteDirectionIndex + spriteAnimationIndex];
+                }
+            }
+            else
+            {
+                m_renderer.sprite = sprites[spriteDirectionIndex + 1];
+            }
         }
     }
 }
