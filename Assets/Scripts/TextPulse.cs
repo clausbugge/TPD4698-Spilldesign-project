@@ -7,9 +7,9 @@ using System;
 
 public class TextPulse : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public GameObject heroOnMenu;
-    public GameObject mainCamera;
-    public Sprite heroLookingRightSprite;
+    //public GameObject heroOnMenu;
+    //public GameObject mainCamera;
+    //public Sprite heroLookingRightSprite;
     private Text txt;
     private bool highlighted = false;
     private Vector3 startScale;
@@ -65,10 +65,10 @@ public class TextPulse : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     // Update is called once per frame
     void Update()
     {
-        float pulseSpeed = 5.0f;
+        //float pulseSpeed = 5.0f;
         if (highlighted)
         {
-            transform.localScale = Vector3.one + (Vector3.one + Vector3.one * Mathf.Sin(Time.time * pulseSpeed)) * 0.04f;
+            //transform.localScale = Vector3.one + (Vector3.one + Vector3.one * Mathf.Sin(Time.time * pulseSpeed)) * 0.04f;
             if (Input.GetKeyUp(KeyCode.Space) ||
             Input.GetKeyUp(KeyCode.Return) ||
             (Input.GetMouseButtonUp(0) && mouseOver))
@@ -155,11 +155,12 @@ public class TextPulse : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
                 childTransform.GetComponent<SpriteRenderer>().enabled = false;
                 childTransform.GetComponent<TextPulse>().enabled = false;
             }
-            
         }
-        StartCoroutine(Tools.moveObject(heroOnMenu, Vector3.left, 1.6f, 80.0f));
-        heroOnMenu.GetComponent<Image>().sprite = heroLookingRightSprite;
-        StartCoroutine(mainCamera.GetComponent<CameraScript>().fade(false,1.75f));
+
+        //StartCoroutine(Tools.moveObject(heroOnMenu, Vector3.left, 1.6f, 80.0f));
+        //heroOnMenu.GetComponent<Image>().sprite = heroLookingRightSprite;
+        StartCoroutine(Camera.main.GetComponent<CameraScript>().fade(false, 1.75f));
+        
         yield return MusicManager.instance.silenceMusic(1.75f);
         yield return new WaitForSeconds(0.8f);
         LevelManager.instance.loadLevel(0);
